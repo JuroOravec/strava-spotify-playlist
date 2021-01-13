@@ -1,0 +1,30 @@
+openapi: 3.0.1
+info:
+  title: strava-spotify-playlist (strava webhook)
+  description: Server for integrating Strava API with Spotify API (Strava Webhook endpoints)
+  version: 1.0.0
+paths:
+  /callback:
+    get:
+      description: Confirm Strava push subscription
+      parameters:
+        - name: hub.mode
+          in: query
+          schema:
+            type: string
+        - name: hub.challenge
+          in: query
+          schema:
+            type: string
+        - name: hub.verify_token
+          in: query
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully confirmed
+    post:
+      responses:
+        200:
+          description: Returns all examples
+          content: {}
