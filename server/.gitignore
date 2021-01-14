@@ -1,13 +1,10 @@
-dist
-node_modules
-.env
-
 .DS_Store
 node_modules
 dist
 
 # local env files
-.env
+# TODO: MOVE ENVS TO ENCRYPTED AWS S3 OR AWS System Manager
+# .env
 
 # Log files
 npm-debug.log*
