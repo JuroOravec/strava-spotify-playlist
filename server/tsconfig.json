@@ -16,6 +16,6 @@
     "baseUrl": ".",
     "outDir": "dist"
   },
-  "include": ["typings.d.ts", "server/**/*.ts"],
+  "include": ["typings.d.ts", "src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
