@@ -7,6 +7,7 @@ export type OptionalPromise<T> = Promise<T> | T;
 export enum ServerModuleName {
   BASE = 'base',
   ERR_HANDLER = 'errorHandler',
+  HOST = 'host',
   OAUTH = 'oauth',
   OAUTH_FACEBOOK = 'oauthFacebook',
   OAUTH_GOOGLE = 'oauthGoogle',

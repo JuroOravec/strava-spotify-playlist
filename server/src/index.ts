@@ -9,7 +9,6 @@ import { Pool } from 'pg';
 
 import './lib/env';
 import createServerContextManager from './lib/manageServerContext';
-import createLocaltunnel from './lib/localtunnel';
 import isMainProcess from './utils/isMainProcess';
 import createBaseModule, { BaseModule } from './modules/base';
 import createOpenApiModule, { OpenApiModule } from './modules/openapi';
@@ -50,6 +49,7 @@ import createStravaSpotifyModule, {
 import createErrorHandlerModule, {
   ErrorHandlerModule,
 } from './modules/errorHandler';
+import createHostModule, { HostModule } from './modules/host';
 import type { RoutersFn } from './modules/router/types';
 import type { OpenApiSpecInputFn } from './modules/openapi/types';
 import type { OAuthInputFn } from './modules/oauth/types';
@@ -58,6 +58,7 @@ import type { ServerModuleName } from './types';
 type ServerModules = {
   [ServerModuleName.BASE]: BaseModule;
   [ServerModuleName.ERR_HANDLER]: ErrorHandlerModule;
+  [ServerModuleName.HOST]: HostModule;
   [ServerModuleName.OAUTH]: OAuthModule;
   [ServerModuleName.OAUTH_GOOGLE]: OAuthGoogleModule;
   [ServerModuleName.OAUTH_FACEBOOK]: OAuthFacebookModule;
@@ -80,10 +81,22 @@ type ServerModules = {
 const port = parseInt(process.env.PORT || '3000');
 
 const main = async () => {
-  const localtunnel = await createLocaltunnel({
+  // ///////////////////////////
+  // BASE FUNCTIONALITY
+  // ///////////////////////////
+
+  const baseModule = createBaseModule();
+
+  const hostModule = createHostModule({
     port,
-    subdomain: 'strava-spotify-playlist',
+    origin: isProduction() ? 'api.moovingroovin.com' : null,
+    localtunnelEnabled: !isProduction(),
+    localtunnelOptions: {
+      subdomain: 'strava-spotify-playlist',
+    },
   });
+
+  const errorHandlerModule = createErrorHandlerModule();
 
   // ///////////////////////////
   // OPENAPI
@@ -261,7 +274,8 @@ const main = async () => {
     name: 'StravaSpotifyPlaylist',
     // Note: The order of modules determines their install order
     modules: [
-      createBaseModule(),
+      baseModule,
+      hostModule,
       oauthModule,
       oauthFacebookModule,
       oauthGoogleModule,
@@ -280,15 +294,11 @@ const main = async () => {
       stravaWebhookModule,
       stravaSpotifyModule,
       routerModule,
-      createErrorHandlerModule(),
+      errorHandlerModule,
     ],
   });
   await serverContext.install();
   serverContext.listen(port);
-
-  serverContext.server?.on('close', () => {
-    localtunnel.close();
-  });
 
   return serverContext;
 };
