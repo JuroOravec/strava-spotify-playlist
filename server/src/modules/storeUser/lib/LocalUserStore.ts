@@ -4,7 +4,13 @@ import type {
   TokenStore,
   UserTokenProviderInput,
 } from '../../storeToken/types';
-import type { UserModel, UserInput, UserMeta, UserStore } from '../types';
+import type {
+  UserModel,
+  UserInput,
+  UserMeta,
+  UserStore,
+  UserProviderAndEmailInput,
+} from '../types';
 
 class LocalUserStore implements UserStore {
   private store = new Map<string, UserModel>();
@@ -42,6 +48,18 @@ class LocalUserStore implements UserStore {
         return user;
       })
     );
+  }
+
+  async getByTokensOrEmails(
+    data: UserProviderAndEmailInput[]
+  ): Promise<(UserModel | null)[]> {
+    const users = Array.from(this.store.entries(), ([_, user]) => user);
+    const usersByTokens = await this.getByTokens(data);
+    const usersByEmails = data.map(
+      ({ email }) =>
+        users.find((user) => user.email && user.email === email) ?? null
+    );
+    return data.map((_, i) => usersByTokens[i] ?? usersByEmails[i] ?? null);
   }
 
   async insert(userData: UserInput[]): Promise<(UserMeta | null)[]> {
