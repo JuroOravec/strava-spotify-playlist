@@ -1,13 +1,9 @@
 import unionWith from 'lodash/unionWith';
-import differenceWith from 'lodash/differenceWith';
 import min from 'lodash/min';
 import max from 'lodash/max';
-import maxBy from 'lodash/maxBy';
 import isNil from 'lodash/isNil';
 import orderBy from 'lodash/orderBy';
 
-import type { SetRequiredFields } from '../../types';
-import logger from '../../lib/logger';
 import wait from '../../utils/wait';
 import unixTimestamp from '../../utils/unixTimestamp';
 import ServerModule, {
@@ -16,16 +12,12 @@ import ServerModule, {
   Services,
 } from '../../lib/ServerModule';
 import type { UserTrackInput, UserTrackModel } from '../storeTrack/types';
-import type { UserTokenMeta } from '../storeToken/types';
-import areUserTokensEqual from '../storeToken/utils/areUserTokensEqual';
+import type { UserTokenModel } from '../storeToken/types';
 import type { SpotifyHistoryData } from './data';
-import type { SpotifyHistoryDeps, WatchedToken } from './types';
+import type { SpotifyHistoryDeps } from './types';
 
 interface SpotifyHistoryServices extends Services {
-  watchTrackHistory: (
-    watchedTokens: SetRequiredFields<WatchedToken, 'token'>[]
-  ) => void;
-  unwatchTrackHistory: (tokens: UserTokenMeta[]) => void;
+  getTrackHistoryTokens: () => Promise<UserTokenModel[]>;
   onTrackHistoryTick: () => Promise<void>;
   getPlayedTracks: (
     providerUserId: string,
@@ -46,41 +38,15 @@ type ThisModule = ServerModule<
   SpotifyHistoryDeps
 >;
 
-const isWatchedToken = (token: UserTokenMeta) => token.providerId === 'spotify';
-
 const createSpotifyHistoryServices = (): SpotifyHistoryServices => {
-  function watchTrackHistory(
-    this: ThisModule,
-    watchedTokens: SetRequiredFields<WatchedToken, 'token'>[]
-  ): void {
-    const validWatchedTokens = watchedTokens.filter(({ token }) =>
-      isWatchedToken(token)
-    );
-    if (!validWatchedTokens.length) return;
-
-    this.data.watchedTokens = unionWith(
-      this.data.watchedTokens,
-      validWatchedTokens,
-      ({ token: tokenA }, { token: tokenB }) =>
-        areUserTokensEqual(tokenA, tokenB)
-    ).map(({ token, lastTrackTimestamp }) => ({
-      token,
-      lastTrackTimestamp: lastTrackTimestamp ?? null,
-    }));
-  }
-
-  function unwatchTrackHistory(
-    this: ThisModule,
-    tokens: UserTokenMeta[]
-  ): void {
-    const validTokens = tokens.filter(isWatchedToken);
-    if (!validTokens.length) return;
-
-    this.data.watchedTokens = differenceWith(
-      this.data.watchedTokens,
-      validTokens,
-      ({ token: tokenA }, tokenB) => areUserTokensEqual(tokenA, tokenB)
-    );
+  /** Tokens of users whose tracks we are caching */
+  async function getTrackHistoryTokens(
+    this: ThisModule
+  ): Promise<UserTokenModel[]> {
+    assertContext(this.context);
+    const { getTokensByProvider } = this.context.modules.storeToken.services;
+    const tokens = await getTokensByProvider('spotify');
+    return tokens || [];
   }
 
   async function onTrackHistoryTick(this: ThisModule) {
@@ -92,39 +58,31 @@ const createSpotifyHistoryServices = (): SpotifyHistoryServices => {
     } = this.context.modules.storeTrack.services;
     await deleteUserTracksOlderThan(oneDayAgoTimestamp);
 
-    this.data.watchedTokens.reduce(async (aggPromise, watchedToken) => {
-      await aggPromise;
-      assertContext(this.context);
+    (await this.services.getTrackHistoryTokens()).reduce(
+      async (aggPromise, { providerUserId, internalUserId }) => {
+        await aggPromise;
+        assertContext(this.context);
 
-      const {
-        token: { providerUserId, internalUserId },
-        lastTrackTimestamp,
-      } = watchedToken;
+        const {
+          getRecentlyPlayedTracks,
+        } = this.context.modules.spotify.services;
+        const tracks = await getRecentlyPlayedTracks(providerUserId);
 
-      const { getRecentlyPlayedTracks } = this.context.modules.spotify.services;
-      const tracks = await getRecentlyPlayedTracks(providerUserId);
-
-      const newTracks = tracks
-        .map(
+        const newTracks = tracks.map(
           (track): UserTrackInput => ({
             internalUserId,
             spotifyTrackId: track.track.id,
             spotifyTrackUri: track.track.uri,
             startTime: unixTimestamp(track.played_at),
           })
-        )
-        .filter((track) => track.startTime > (lastTrackTimestamp || 0));
+        );
 
-      const newLastTrackTimestamp =
-        maxBy(newTracks, (track) => track.startTime)?.startTime ??
-        lastTrackTimestamp;
+        this.context.modules.storeTrack.services.upsertUserTracks(newTracks);
 
-      watchedToken.lastTrackTimestamp = newLastTrackTimestamp;
-
-      this.context.modules.storeTrack.services.upsertUserTracks(newTracks);
-
-      await wait(this.data.delayPerUser);
-    }, Promise.resolve());
+        await wait(this.data.delayPerUser);
+      },
+      Promise.resolve()
+    );
   }
 
   /**
@@ -254,8 +212,7 @@ const createSpotifyHistoryServices = (): SpotifyHistoryServices => {
   }
 
   return {
-    watchTrackHistory,
-    unwatchTrackHistory,
+    getTrackHistoryTokens,
     onTrackHistoryTick,
     getPlayedTracks,
   };

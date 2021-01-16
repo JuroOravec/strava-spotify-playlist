@@ -1,5 +1,4 @@
 import Ticker from './lib/Ticker';
-import type { WatchedToken } from './types';
 
 type SpotifyHistoryExternalData = {
   /**
@@ -18,8 +17,6 @@ type SpotifyHistoryExternalData = {
 };
 
 interface SpotifyHistoryInternalData {
-  /** Tokens of users whose tracks are caching */
-  watchedTokens: WatchedToken[];
   watcherTimer: Ticker | null;
 }
 
