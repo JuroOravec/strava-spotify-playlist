@@ -7,4 +7,4 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 nvm install node
 node -e "console.log('Running Node.js ' + process.version)"
 # Reverse proxy
-amazon-linux-extras install -y nginx1
+sudo amazon-linux-extras install -y nginx1
