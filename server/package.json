@@ -5,10 +5,10 @@
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com> (https://github.com/jurooravec)",
   "main": "index.ts",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "NODE_ENV=production node dist/index.js",
     "build": "ts-node build/beforeBuild.ts && tsc && ts-node build/afterBuild.ts",
-    "dev": "nodemon src/index.ts | pino-pretty",
-    "dev:debug": "nodemon --exec \"node -r ts-node/register --inspect-brk\" src/index.ts | pino-pretty",
+    "dev": "NODE_ENV=development nodemon src/index.ts | pino-pretty",
+    "dev:debug": "NODE_ENV=development nodemon --exec \"node -r ts-node/register --inspect-brk\" src/index.ts | pino-pretty",
     "lint": "eslint -c .eslintrc.js \"{src, test}/**/*.{js,ts,tsx}\" --quiet",
     "lint:fix": "eslint -c .eslintrc.js \"{src, test}/**/*.{js,ts,tsx}\" --quiet --fix",
     "test": "mocha -r ts-node/register test/**/*.ts --exit",
