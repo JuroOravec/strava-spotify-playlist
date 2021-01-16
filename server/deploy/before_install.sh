@@ -7,7 +7,5 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 nvm install node
 node -e "console.log('Running Node.js ' + process.version)"
 sudo yum install -y gcc-c++ make
-# Process manager
-sudo npm i pm2 -g
 # Reverse proxy
 amazon-linux-extras install -y nginx1
