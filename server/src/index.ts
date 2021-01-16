@@ -248,7 +248,7 @@ const main = async () => {
   });
 
   const stravaWebhookModule = createStravaWebhookModule({
-    webhookCallbackUrl: `${localtunnel.url}/api/v1/strava/webhook/callback`,
+    webhookCallbackUrl: `/api/v1/strava/webhook/callback`,
   });
 
   const spotifyModule = createSpotifyModule({

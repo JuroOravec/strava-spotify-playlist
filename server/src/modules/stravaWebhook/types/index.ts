@@ -4,6 +4,7 @@ import type { OAuthStravaModule } from '../../oauthStrava';
 import type { StravaModule } from '../../strava';
 import type { StoreTokenModule } from '../../storeToken';
 import type { StravaSpotifyModule } from '../../stravaSpotify';
+import type { HostModule } from '../../host';
 
 export * as webhookEvents from './webhookEvents';
 
@@ -15,8 +16,8 @@ export interface StravaPushSub {
   created_at: string;
   updated_at: string;
 }
-
 export interface StravaWebhookDeps extends ServerModules {
+  [ServerModuleName.HOST]: HostModule;
   [ServerModuleName.OAUTH_STRAVA]: OAuthStravaModule;
   [ServerModuleName.STRAVA]: StravaModule;
   [ServerModuleName.STORE_TOKEN]: StoreTokenModule;
