@@ -22,10 +22,10 @@ hooks:
     - location: server/deploy/start.sh
       timeout: 60
       runas: ec2-user
-  # ApplicationStop:
-  #   - location: backend/app/deploy/stop.sh
-  #   timeout: 10
-  #   runas: ec2-user
+  ApplicationStop:
+    - location: server/deploy/stop.sh
+      timeout: 60
+      runas: ec2-user
   # ValidateService:
   # - location: backend/app/deploy/validate.sh
   # timeout: 60
