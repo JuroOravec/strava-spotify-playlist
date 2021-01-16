@@ -2,19 +2,20 @@ import passport from 'passport';
 import NodeCache from 'node-cache';
 
 import logger from '../../lib/logger';
-import type {
+import {
   ServerModule,
   ModuleContext,
   Installer,
   Services,
   Handlers,
+  assertContext,
 } from '../../lib/ServerModule';
 import type { OAuthData } from './data';
 import type { OAuthInput } from './types';
 import { resolveProviderCallbackUrl } from './utils/providerUrl';
 
 const createOAuthInstaller = (): Installer => {
-  const install: Installer = function install(
+  const install: Installer = async function install(
     this: ServerModule<Services, Handlers, OAuthData>,
     ctx: ModuleContext
   ) {
@@ -42,9 +43,13 @@ const createOAuthInstaller = (): Installer => {
     );
     logger.info(`Creating OAuth providers: "${providerNames.join('", "')}"`);
 
+    assertContext(this.context);
+    const { resolveUrl } = this.context?.modules.host.services;
+    const callbackUrlRoot = await resolveUrl(this.data.callbackUrlRoot);
+
     this.data.resolvedProviders.forEach(({ providerId, oauth }) => {
       const callbackUrl = resolveProviderCallbackUrl(
-        this.data.callbackUrlRoot,
+        callbackUrlRoot,
         providerId
       );
 

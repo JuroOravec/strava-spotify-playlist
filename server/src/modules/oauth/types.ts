@@ -6,6 +6,7 @@ import type {
   ModuleContext,
 } from '../../lib/ServerModule';
 import type { ServerModuleName } from '../../types';
+import type { HostModule } from '../host';
 import type { StoreTokenModule } from '../storeToken';
 import type { AuthToken } from '../storeToken/types';
 import type { StoreUserModule } from '../storeUser';
@@ -28,6 +29,7 @@ export type OAuthInputFn<TModules extends ServerModules = ServerModules> = (
 ) => OAuthInput;
 
 export interface OAuthDeps extends ServerModules {
+  [ServerModuleName.HOST]: HostModule;
   [ServerModuleName.STORE_USER]: StoreUserModule;
   [ServerModuleName.STORE_TOKEN]: StoreTokenModule;
 }

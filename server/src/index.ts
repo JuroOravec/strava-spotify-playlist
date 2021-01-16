@@ -145,9 +145,9 @@ const main = async () => {
   });
 
   const oauthModule = createOAuthModule({
-    // TODO: Getting invalid redirect_uri when using localtunnel here
-    // authCallbackUrl: `${localtunnel.url}/api/v1/strava/auth/callback`,
-    callbackUrlRoot: `http://localhost:${port}/api/v1/auth`,
+    // NOTE: When in dev, use 'http://localhost:${port}/...' instead of localtunnel.
+    // Getting invalid redirect_uri when using localtunnel here
+    callbackUrlRoot: `/api/v1/auth`,
     providers: (({ modules }) => [
       {
         providerId: 'spotify',

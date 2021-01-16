@@ -196,8 +196,9 @@ const createOAuthHandlers = (
             providerId,
           });
 
+          const { resolveUrl } = this.context.modules.host.services;
           const providerLoginUrl = resolveProviderLoginUrl(
-            callbackUrlRoot,
+            await resolveUrl(callbackUrlRoot),
             user.loginProvider
           );
 
