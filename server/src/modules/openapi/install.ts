@@ -9,13 +9,15 @@ import type {
   ServerModule,
   ModuleContext,
   Installer,
+  Services,
+  Handlers,
 } from '../../lib/ServerModule';
 import mergeSpecs from './utils/mergeSpecs';
 import type { OpenApiData } from './data';
 
 const createOpenApiInstaller = (): Installer => {
   const install: Installer = async function install(
-    this: ServerModule<any, any, OpenApiData>,
+    this: ServerModule<Services, Handlers, OpenApiData>,
     ctx: ModuleContext
   ) {
     const { app } = ctx;
