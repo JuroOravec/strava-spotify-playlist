@@ -18,14 +18,12 @@ const createBaseInstaller = (): Installer => {
       if (isNil(this.data.port)) {
         throw Error('Host option "port" is required to enable localtunnel');
       }
-      logger.info('Setting up base server config');
+      logger.info('Using localtunnel for host URL');
       this.data.localtunnel = await createLocaltunnel({
         ...this.data.localtunnelOptions,
         port: this.data.port,
       });
     }
-
-    logger.info('Done setting up base server config');
   };
 
   return install;

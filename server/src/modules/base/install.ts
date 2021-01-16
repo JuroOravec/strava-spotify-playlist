@@ -15,7 +15,6 @@ const createBaseInstaller = (): Installer => {
     this: ServerModule<any, any, BaseData>,
     { app }: ModuleContext
   ) {
-    logger.info('Setting up base server config');
     app.set('appPath', `${this.data.root}client`);
     app.use(
       bodyParser.urlencoded({
@@ -27,7 +26,6 @@ const createBaseInstaller = (): Installer => {
     app.use(bodyParser.text({ limit: process.env.REQUEST_LIMIT || '100kb' }));
     app.use(cookieParser(process.env.SESSION_SECRET));
     app.use(express.static(`${this.data.root}/public`));
-    logger.info('Done setting up base server config');
   };
 
   return install;
