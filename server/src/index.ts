@@ -10,6 +10,7 @@ import { Pool } from 'pg';
 import './lib/env';
 import createServerContextManager from './lib/manageServerContext';
 import isMainProcess from './utils/isMainProcess';
+import isProduction from './utils/isProduction';
 import createBaseModule, { BaseModule } from './modules/base';
 import createOpenApiModule, { OpenApiModule } from './modules/openapi';
 import createRouterModule, { RouterModule } from './modules/router';
