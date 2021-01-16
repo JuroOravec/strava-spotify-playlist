@@ -22,6 +22,29 @@ Prefer to format postgres queries using `pg-format` before passing them to postg
 
 ---
 
+## AWS Deployment - Basic concepts
+
+Abbreviations:
+
+- EC2 - Server
+- RDS - Relational database service
+
+To allow services (EC2, RDS) to communicate with other services or the world (outbound)
+or receive requests (inbound), you need to set up correct
+[Security Group](https://eu-central-1.console.aws.amazon.com/ec2/v2/home?region=eu-central-1#SecurityGroups)
+-- [example](https://eu-central-1.console.aws.amazon.com/ec2/v2/home?region=eu-central-1#SecurityGroup:group-id=sg-0cd600ca0cbbc907f).
+
+To allow certain services / tools to interact with AWS API,
+you need to grant them the right Roles (user group). Each Role has certain Policies (permissions)
+associated with it. E.g. to allow EC2 to get files from S3, we need to create (or use existing) Role
+that has read S3 Policy ([example](https://console.aws.amazon.com/iam/home?region=eu-central-1#/roles/EC2S3Role)).
+
+To integrate deployment with source control manager, we can use CodeDeploy.
+
+To have a service to sit behind a domain, we use Route 53.
+
+---
+
 ## AWS Deployment - EC2
 
 ### Connecting
