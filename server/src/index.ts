@@ -1,6 +1,6 @@
 // TODO: nice to have - Revert the playlist order so latest is last
 //                    - Don't know why that happened
-// TODO: nice to have - split data to private (seen by module only) and public data (seen by other modules too)
+// TODO: nice to have - make data module prop private to that module
 //                    - and move the store implementations and caches to private data
 // TODO: nice to have - add dependencies check when tring to install, so it's possible to track which module depends on which.
 //                    - use that as the ModuleDeps type, but defined maybe like Vue does it with props (e.g. Object as () => XYZ)
@@ -10,6 +10,7 @@ import { Pool } from 'pg';
 import './lib/env';
 import createServerContextManager from './lib/manageServerContext';
 import createLocaltunnel from './lib/localtunnel';
+import isMainProcess from './utils/isMainProcess';
 import createBaseModule, { BaseModule } from './modules/base';
 import createOpenApiModule, { OpenApiModule } from './modules/openapi';
 import createRouterModule, { RouterModule } from './modules/router';
@@ -273,7 +274,8 @@ const main = async () => {
       storeTrackModule,
       storePlaylistModule,
       spotifyModule,
-      spotifyHistory,
+      // Manage spotify history only on main process
+      ...(isMainProcess() ? [spotifyHistory] : []),
       stravaModule,
       stravaWebhookModule,
       stravaSpotifyModule,
