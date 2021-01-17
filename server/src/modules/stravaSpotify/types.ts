@@ -5,6 +5,7 @@ import type { SpotifyModule } from '../spotify';
 import type { SpotifyHistoryModule } from '../spotifyHistory';
 import type { StoreConfigModule } from '../storeConfig';
 import type { StorePlaylistModule } from '../storePlaylist';
+import type { StoreUserModule } from '../storeUser';
 import type { StoreTokenModule } from '../storeToken';
 import type { UserTrackModel } from '../storeTrack/types';
 import type { DetailedActivity } from '../strava/types';
@@ -12,6 +13,7 @@ import type { DetailedActivity } from '../strava/types';
 export interface StravaSpotifyDeps extends ServerModules {
   [ServerModuleName.STORE_CONFIG]: StoreConfigModule;
   [ServerModuleName.STORE_TOKEN]: StoreTokenModule;
+  [ServerModuleName.STORE_USER]: StoreUserModule;
   [ServerModuleName.STORE_PLAYLIST]: StorePlaylistModule;
   [ServerModuleName.STRAVA]: StravaModule;
   [ServerModuleName.SPOTIFY]: SpotifyModule;
