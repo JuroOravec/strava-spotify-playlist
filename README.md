@@ -96,7 +96,61 @@ pm2 log
 
 ---
 
+## AWS Deployment - CodePipeline
+
+CodePipeline is the pipeline that's triggered periodically or on sourc code change, similar to
+Jenkins or Travis.
+
+The pipeline can be triggered on source code change (e.g. S3 or GitHub)
+on schedule, or manually.
+
+The pipeline can test, build and deploy the app. To deploy an app onto EC2, CodePipeline can delegate to CodeDeploy.
+
+Currently, CodePipeline is used for auto-deployment on source code change by triggering CodeDeploy.
+
+Following guides cover the setup process:
+
+- [Deploying code from GitHub to AWS EC2 with CodePipeline](https://dev.to/nhadiq97/deploying-code-from-github-to-aws-ec2-with-codepipeline-22h6)
+
+To trigger a pipeline manually, navigate to <https://eu-central-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/StravaSpotifyPlaylist> and click on "Release Change"
+
+---
+
 ## AWS Deployment - CodeDeploy
+
+CodeDeploy "deploys" the app, meaning that:
+
+Given source files to your app, CodeDeploy can carry out necessary steps with the source
+and the instance environment so that an app can start running based on the source files
+
+Following guides cover the setup process:
+
+- [Continuous deployment from Github to AWS EC2 using AWS CodeDeploy](https://www.fastfwd.com/continuous-deployment-github-aws-ec2-using-aws-codedeploy/)
+- [Continuous Deployment with AWS CodeDeploy & Github](https://hackernoon.com/continuous-deployment-with-aws-codedeploy-github-d1eb97550b82)
+- [Tutorial: Use CodeDeploy to deploy an application from GitHub](https://docs.aws.amazon.com/codedeploy/latest/userguide/tutorials-github.html)
+- [Create an Amazon EC2 instance for CodeDeploy (AWS CLI or Amazon EC2 console)](https://docs.aws.amazon.com/codedeploy/latest/userguide/instances-ec2-create.html)
+- [Getting started with CodeDeploy](https://docs.aws.amazon.com/codedeploy/latest/userguide/getting-started-codedeploy.html)
+
+> NOTE: The guides above are outdated and the auto-deployment steps are invalid.
+>
+>To auto-deploy an app after pushing changes to GitHub repo, use AWS CodePipeline. See following guide:
+>
+> - [Deploying code from GitHub to AWS EC2 with CodePipeline](https://dev.to/nhadiq97/deploying-code-from-github-to-aws-ec2-with-codepipeline-22h6)
+
+To trigger a deploy of a specific commit manually:
+
+1. navigate to <https://eu-central-1.console.aws.amazon.com/codesuite/codedeploy/applications/>
+2. Select the right application (StravaSpotifyPlaylist)
+3. Open Deployments tab
+4. Click on the last deployment and click on Clone Deployment
+  
+    OR
+
+    Click on Create Deployment and fill in details.
+5. Copy-paste into the Commit ID field the ID of the latest (or desired) commit that should be deployed.
+6. In "Additional deployment behavior settings" > "Content options - optional", select "Overwrite the content".
+7. Confirm with "Create Deployment".
+8. If there are any deployment errors, then to see them, navigate in current Deployment to "Deployment lifecycle events", and click on "View events" of the entry that failed.
 
 ### Setting up `appspec.yml`
 
