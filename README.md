@@ -119,7 +119,7 @@ Important hooks:
 
 ---
 
-## AWS Deployment - Routing
+## AWS Deployment - EC2 Routing
 
 When you run a server on EC2, it will be publicly available through a url like ec2-18-197-19-192.eu-central-1.compute.amazonaws.com:3000
 

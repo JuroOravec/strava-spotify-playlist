@@ -4,6 +4,7 @@
 //                    - and move the store implementations and caches to private data
 // TODO: nice to have - add dependencies check when tring to install, so it's possible to track which module depends on which.
 //                    - use that as the ModuleDeps type, but defined maybe like Vue does it with props (e.g. Object as () => XYZ)
+// TODO: nice to have - Add support for delete request webhook for oauth providers (FB, google, ...)
 
 import { Pool } from 'pg';
 
