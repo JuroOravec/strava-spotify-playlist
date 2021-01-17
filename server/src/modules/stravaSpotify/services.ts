@@ -347,6 +347,16 @@ const createStravaSpotifyServices = (): StravaSpotifyServices => {
       stravaUserId: maybeStravaUserId,
     } = options;
 
+    logger.debug({
+      msg: 'Setting up playlist for activity',
+      spotifyUserId: maybeSpotifyUserId,
+      stravaUserId: maybeStravaUserId,
+      activityId: activity.activityId,
+      activityType: activity.activityType,
+      activityStartTime: activity.startTime,
+      activityEndTime: activity.endTime,
+    });
+
     assertContext(this.context);
     const { resolveTokens } = this.context.modules.storeToken.services;
     const [stravaToken, spotifyToken] = await resolveTokens({
