@@ -123,8 +123,7 @@ class PGStore<TQueries extends PGQueries = PGQueries> {
 
     const client = this.getClient();
     logger.debug(`Running query "${query}"`);
-    // TODO REMOVE
-    logger.debug({ queryText });
+    logger.trace({ queryText });
     const result = await client.query<TQueries[TQuery][1], TQueries[TQuery][0]>(
       queryText
     );
