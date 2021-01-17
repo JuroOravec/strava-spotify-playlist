@@ -1,4 +1,4 @@
-# strava-spotify-playlist
+# moovin-groovin-server
 
 Server for integrating Strava API with Spotify API
 

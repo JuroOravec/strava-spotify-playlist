@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: strava-spotify-playlist (strava webhook)
+  title: moovin-groovin (strava webhook)
   description: Server for integrating Strava API with Spotify API (Strava Webhook endpoints)
   version: 1.0.0
 paths:

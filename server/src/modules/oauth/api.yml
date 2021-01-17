@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: strava-spotify-playlist (auth)
+  title: moovin-groovin (auth)
   description: Server for integrating Strava API with Spotify API (Auth endpoints)
   version: 1.0.0
 paths:

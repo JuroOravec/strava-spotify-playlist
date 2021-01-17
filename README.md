@@ -1,4 +1,4 @@
-# strava-spotify-playlist
+# moovin-groovin
 
 ## Strava
 
@@ -79,13 +79,13 @@ Start node app with `pm2`
 
 ```sh
 # Run on all available cores
-pm2 start dist/index.js -i 0 --name="strava-spotify-playlist"
+pm2 start dist/index.js -i 0 --name="moovin-groovin"
 ```
 
 Stop node app with `pm2`:
 
 ```sh
-pm2 del strava-spotify-playlist
+pm2 del moovin-groovin
 ```
 
 Stream logs of running processes:

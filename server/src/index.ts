@@ -94,7 +94,7 @@ const main = async () => {
     origin: isProduction() ? 'https://api.moovingroovin.com' : null,
     localtunnelEnabled: !isProduction(),
     localtunnelOptions: {
-      subdomain: 'strava-spotify-playlist',
+      subdomain: 'moovin-groovin',
     },
   });
 
@@ -217,7 +217,7 @@ const main = async () => {
     password: process.env.PG_DB_PASSWORD,
     database: process.env.PG_DB_DATABASE,
     parseInputDatesAsUTC: true,
-    application_name: 'strava-spotify-playlist-server',
+    application_name: 'moovin-groovin-server',
   });
 
   const storeTokenModule = createStoreTokenModule({
@@ -263,7 +263,7 @@ const main = async () => {
   });
 
   const stravaSpotifyModule = createStravaSpotifyModule({
-    appNamePublic: 'StravaSpotifyPlaylist',
+    appNamePublic: 'MoovinGroovin',
   });
 
   // ///////////////////////////
@@ -273,7 +273,7 @@ const main = async () => {
   const { createServerContext } = createServerContextManager();
 
   const serverContext = createServerContext({
-    name: 'StravaSpotifyPlaylist',
+    name: 'MoovinGroovin',
     // Note: The order of modules determines their install order
     modules: [
       baseModule,
