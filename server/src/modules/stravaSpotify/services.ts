@@ -361,11 +361,8 @@ const createStravaSpotifyServices = (): StravaSpotifyServices => {
 
     assertContext(this.context);
 
-    const { getUserByToken } = this.context.modules.storeUser.services;
-    const user = await getUserByToken({
-      providerId: 'spotify',
-      providerUserId: spotifyUserId,
-    });
+    const { getUser } = this.context.modules.storeUser.services;
+    const user = await getUser(spotifyToken.internalUserId);
 
     if (!user) {
       // TODO: REMOVE
