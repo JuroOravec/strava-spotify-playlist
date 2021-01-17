@@ -1,0 +1,32 @@
+.DS_Store
+node_modules
+dist
+
+# local env files
+# TODO: MOVE ENVS TO ENCRYPTED AWS S3 OR AWS System Manager
+# .env
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Type declaration generation
+*.tsbuildinfo
+
+# Schema generation
+schemas
+
+# Cypress
+cypress/videos/*
+cypress/screenshots/*
+cypress.env.json

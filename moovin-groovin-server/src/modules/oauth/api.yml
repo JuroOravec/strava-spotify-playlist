@@ -1,0 +1,97 @@
+openapi: 3.0.1
+info:
+  title: moovin-groovin (auth)
+  description: Server for integrating Strava API with Spotify API (Auth endpoints)
+  version: 1.0.0
+paths:
+  /login:
+    get:
+      description: Auth user against third party OAuth
+      parameters:
+        - $ref: '#/components/parameters/RedirectUrlParam'
+        - $ref: '#/components/parameters/UserIdParam'
+        - $ref: '#/components/parameters/SSPVerifyTokenParam'
+      responses:
+        302:
+          description: Redirects to auth URL
+  /callback:
+    get:
+      description: Handle user auth
+      parameters:
+        - name: state
+          in: query
+          allowEmptyValue: true
+          required: false
+          schema:
+            type: string
+        - name: error
+          in: query
+          allowEmptyValue: false
+          required: false
+          schema:
+            type: string
+        - name: code
+          in: query
+          required: false
+          schema:
+            type: string
+        - $ref: '#/components/parameters/RedirectUrlParam'
+        - $ref: '#/components/parameters/UserIdParam'
+        - $ref: '#/components/parameters/SSPVerifyTokenParam'
+        - $ref: '#/components/parameters/ScopeParam'
+        - $ref: '#/components/parameters/AuthUserParam'
+        - $ref: '#/components/parameters/PromptParam'
+      responses:
+        200:
+          description: Error or success message
+        302:
+          description: Redirects to 'redirect_uri' if it provided and valid
+components:
+  parameters:
+    ScopeParam:
+      name: scope
+      in: query
+      required: false
+      allowReserved: true
+      schema:
+        type: string
+    RedirectUrlParam:
+      name: redirect_url
+      in: query
+      allowReserved: false
+      allowEmptyValue: true
+      required: false
+      schema:
+        type: string
+    UserIdParam:
+      name: user_id
+      in: query
+      allowReserved: false
+      allowEmptyValue: false
+      required: false
+      schema:
+        type: string
+    AuthUserParam:
+      name: authuser
+      in: query
+      allowReserved: false
+      allowEmptyValue: false
+      required: false
+      schema:
+        type: string
+    PromptParam:
+      name: prompt
+      in: query
+      allowReserved: false
+      allowEmptyValue: false
+      required: false
+      schema:
+        type: string
+    SSPVerifyTokenParam:
+      name: ssp.verify_token
+      in: query
+      allowReserved: false
+      allowEmptyValue: false
+      required: false
+      schema:
+        type: string
