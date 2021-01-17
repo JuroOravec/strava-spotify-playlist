@@ -50,7 +50,7 @@ const createStravaWebhookSubscriptionServices = (): StravaWebhookSubscriptionSer
 
     const sub = await getSubsciption();
 
-    if (sub && !override) {
+    if (sub && (!override || (override && sub.callback_url === callbackUrl))) {
       logger.info(`Using existing Strava push subscription (ID: ${sub.id})`);
       return sub;
     }
