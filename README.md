@@ -190,3 +190,16 @@ Thus, the server can be accessed via ec2-18-197-19-192.eu-central-1.compute.amaz
 2. Follow this guide to [Routing traffic to an Amazon EC2 instance](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-ec2-instance.html).
 
 Thus, the server can be accessed via e.g. api.yourfavedomain.com
+
+## AWS Deployment - Static website with S3, CloudFront and Route 53
+
+Since the website communicates with the server, all we need is to get the static
+files out into the world (ideally behind HTTPS, and cached).
+
+Following articles sum it up perfectly:
+
+- [Setting up an HTTPS static site using AWS S3 and Cloudfront (and also Jekyll and s3_website)](https://www.alexejgossmann.com/AWS_S3_and_CloudFront/)
+
+For next time, it might be useful to give this one a go:
+
+- [Reddit: I built a GitHub Action that deploys static sites to Cloudfront](https://www.reddit.com/r/aws/comments/ja1k9g/i_built_a_github_action_that_deploys_static_sites/)
