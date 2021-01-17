@@ -71,8 +71,8 @@ const createPlaylistTemplateContext = (
 
   const activity: TemplateContextActivity = {
     type: (activityType ? lowerCase(activityType) : 'activity') || missingValue,
-    title: title || missingValue,
-    description: description || missingValue,
+    title: title || '',
+    description: description || '',
     date: unixTimestampToDate(startTime).toDateString() || missingValue,
     duration: formatDuration((endTime - startTime) * 1000) || missingValue,
     url: getActivityUrl(activityId) || missingValue,
