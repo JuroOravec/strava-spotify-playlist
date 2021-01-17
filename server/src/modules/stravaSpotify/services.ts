@@ -99,8 +99,7 @@ const createStravaSpotifyServices = (): StravaSpotifyServices => {
     const { getPlayedTracks } = this.context.modules.spotifyHistory.services;
     const tracks = await getPlayedTracks(spotifyUserId, {
       after: startTime,
-      // TODO UNCOMMENT
-      // before: endTime,
+      before: endTime,
       inclusive: true,
     });
 
