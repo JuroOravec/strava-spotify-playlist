@@ -90,7 +90,7 @@ const main = async () => {
 
   const hostModule = createHostModule({
     port,
-    origin: isProduction() ? 'api.moovingroovin.com' : null,
+    origin: isProduction() ? 'https://api.moovingroovin.com' : null,
     localtunnelEnabled: !isProduction(),
     localtunnelOptions: {
       subdomain: 'strava-spotify-playlist',
