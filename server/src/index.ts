@@ -7,6 +7,8 @@
 // TODO: nice to have - Add support for delete request webhook for oauth providers (FB, google, ...)
 
 import { Pool } from 'pg';
+import { v5 as uuidV5 } from 'uuid';
+import isNil from 'lodash/isNil';
 
 import './lib/env';
 import createServerContextManager from './lib/manageServerContext';
@@ -251,6 +253,17 @@ const main = async () => {
 
   const stravaWebhookModule = createStravaWebhookModule({
     webhookCallbackUrl: `/api/v1/strava/webhook/callback`,
+    // Only single process should handle the subscription
+    subscription: isMainProcess(),
+    // Always override on prod so sub callback url always points to prod
+    overrideSubscription: isProduction(),
+    // Allow the verify token to change between runs but still consistent across pm2 processes.
+    verifyToken: !isNil(process.env.STRAVA_VERIFY_TOKEN_SEED)
+      ? uuidV5(
+          process.env.STRAVA_VERIFY_TOKEN_SEED,
+          'c8d36004-8e1f-4488-b575-98d151a4f504'
+        )
+      : undefined,
   });
 
   const spotifyModule = createSpotifyModule({

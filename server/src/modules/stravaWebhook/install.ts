@@ -22,10 +22,13 @@ const createStravaWebhookInstaller = (): Installer => {
     app.on('listen', async () => {
       assertContext(this.context);
       const { resolveUrl } = this.context.modules.host.services;
-      this.data.sub = await this.services.subscribeWebhook({
-        callbackUrl: await resolveUrl(this.data.webhookCallbackUrl),
-        verifyToken: this.data.verifyToken,
-      });
+      if (this.data.subscription) {
+        this.data.sub = await this.services.subscribeWebhook({
+          callbackUrl: await resolveUrl(this.data.webhookCallbackUrl),
+          verifyToken: this.data.verifyToken,
+          override: this.data.overrideSubscription,
+        });
+      }
     });
   };
 

@@ -5,7 +5,7 @@
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com> (https://github.com/jurooravec)",
   "main": "index.ts",
   "scripts": {
-    "start": "NODE_ENV=production node dist/index.js",
+    "start": "NODE_ENV=production STRAVA_VERIFY_TOKEN_SEED=$(date +%s) node dist/index.js",
     "build": "ts-node build/beforeBuild.ts && tsc && ts-node build/afterBuild.ts",
     "dev": "NODE_ENV=development nodemon src/index.ts | pino-pretty",
     "dev:debug": "NODE_ENV=development nodemon --exec \"node -r ts-node/register --inspect-brk\" src/index.ts | pino-pretty",

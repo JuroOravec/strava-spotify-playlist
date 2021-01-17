@@ -23,7 +23,12 @@ type StravaWebhookModule = ServerModule<
 const createStravaWebhookModule = (
   options: StravaWebhookModuleOptions
 ): StravaWebhookModule => {
-  const { verifyToken = genUuid(), activitiesPerPage = 50 } = options;
+  const {
+    verifyToken = genUuid(),
+    activitiesPerPage = 50,
+    subscription = true,
+    overrideSubscription = false,
+  } = options;
 
   return new ServerModule({
     name: ServerModuleName.STRAVA_WEBHOOK,
@@ -34,8 +39,10 @@ const createStravaWebhookModule = (
     data: {
       ...options,
       verifyToken,
-      sub: null,
       activitiesPerPage,
+      subscription,
+      overrideSubscription,
+      sub: null,
     },
     openapi: path.join(__dirname, './api.yml'),
   });

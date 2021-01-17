@@ -30,7 +30,7 @@ const createStravaWebhookSubscriptionServices = (): StravaWebhookSubscriptionSer
     logger.info(`Fetched existing Strava push subscriptions`);
 
     // NOTE: Currently, Strava permits only one push sub per application,
-    // so a sub exists, we know its ours. If this does not hold true, raise error.
+    // so if a sub exists, we know its ours. If this does not hold true, raise error.
     if (subs.length > 1) {
       const ids = subs.map((sub) => sub.id).join(', ');
       throw Error(
@@ -57,7 +57,7 @@ const createStravaWebhookSubscriptionServices = (): StravaWebhookSubscriptionSer
 
     if (sub && override && sub.callback_url !== callbackUrl) {
       logger.info(`Deleting existing Strava push subscription (ID: ${sub.id})`);
-      strava.pushSubscriptions.delete(sub.id);
+      strava.pushSubscriptions.delete({ id: sub.id });
     }
 
     logger.info(`Creating new Strava push subscription`);
