@@ -368,6 +368,14 @@ const createStravaSpotifyServices = (): StravaSpotifyServices => {
     });
 
     if (!user) {
+      // TODO: REMOVE
+      logger.error({
+        stravaToken,
+        spotifyToken,
+        maybeStravaUserId,
+        maybeSpotifyUserId,
+        user,
+      });
       throw Error(
         `No user exists for Strava or Spotify user id (STRAVA ID: "${maybeStravaUserId}", SPOTIFY ID: "${maybeSpotifyUserId}"`
       );
