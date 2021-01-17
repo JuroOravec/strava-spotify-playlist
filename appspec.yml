@@ -11,19 +11,19 @@ permissions:
     group: ec2-user
 hooks:
   BeforeInstall:
-    - location: server/deploy/before_install.sh
+    - location: moovin-groovin-server/deploy/before_install.sh
       timeout: 1200
       runas: ec2-user
   AfterInstall:
-    - location: server/deploy/after_install.sh
+    - location: moovin-groovin-server/deploy/after_install.sh
       timeout: 300
       runas: ec2-user
   ApplicationStart:
-    - location: server/deploy/start.sh
+    - location: moovin-groovin-server/deploy/start.sh
       timeout: 60
       runas: ec2-user
   ApplicationStop:
-    - location: server/deploy/stop.sh
+    - location: moovin-groovin-server/deploy/stop.sh
       timeout: 60
       runas: ec2-user
   # ValidateService:
