@@ -368,7 +368,9 @@ const createStravaSpotifyServices = (): StravaSpotifyServices => {
     });
 
     if (!user) {
-      throw Error('No user exists for given strava os spotify user id');
+      throw Error(
+        `No user exists for Strava or Spotify user id (STRAVA ID: "${maybeStravaUserId}", SPOTIFY ID: "${maybeSpotifyUserId}"`
+      );
     }
 
     const {
