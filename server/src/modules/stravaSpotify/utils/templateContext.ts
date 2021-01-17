@@ -1,5 +1,6 @@
 import lowerCase from 'lodash/lowerCase';
 
+import logger from '../../../lib/logger';
 import getActivityUrl from '../../strava/utils/getActivityUrl';
 import type {
   ActivityInput,

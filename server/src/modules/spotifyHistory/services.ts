@@ -11,6 +11,7 @@ import ServerModule, {
   Handlers,
   Services,
 } from '../../lib/ServerModule';
+import logger from '../../lib/logger';
 import type { UserTrackInput, UserTrackModel } from '../storeTrack/types';
 import type { UserTokenModel } from '../storeToken/types';
 import type { SpotifyHistoryData } from './data';
@@ -182,12 +183,17 @@ const createSpotifyHistoryServices = (): SpotifyHistoryServices => {
     // Prevent user setting negative values since we use 0 as default
     const effectiveAfter = max([inclusiveAfterInSec, 0]) ?? 0;
 
+    const orderTracks = (unordTracks: UserTrackModel[]) =>
+      orderBy(unordTracks, [(t) => t.startTime], ['asc']);
+
     if (
       !isNil(oldestTrackPlayedTimestamp) &&
       effectiveAfter >= oldestTrackPlayedTimestamp
     ) {
       // All requested tracks are within the recentlyPlayedTracks
-      return tracks.filter((track) => track.startTime > effectiveAfter);
+      return orderTracks(
+        tracks.filter((track) => track.startTime > effectiveAfter)
+      );
     }
 
     const { getUserTracksByRange } = this.context.modules.storeTrack.services;
@@ -206,9 +212,8 @@ const createSpotifyHistoryServices = (): SpotifyHistoryServices => {
         trackA.spotifyTrackId === trackB.spotifyTrackId &&
         trackA.startTime === trackB.startTime
     );
-    const orderedTracks = orderBy(dedupedTracks, [(t) => t.startTime], ['asc']);
 
-    return orderedTracks;
+    return orderTracks(dedupedTracks);
   }
 
   return {
