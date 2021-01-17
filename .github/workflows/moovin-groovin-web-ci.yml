@@ -1,0 +1,74 @@
+# This is a basic workflow to help you get started with Actions
+
+name: moovin-groovin-web CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+   test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./moovin-groovin-web
+
+      - name: Run developer tests
+        run: npm test
+        working-directory: ./moovin-groovin-web
+
+   build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./moovin-groovin-web
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: ./moovin-groovin-web
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: moovin-groovin-web-artifact
+          path: moovin-groovin-web/build
+
+   deploy:
+    needs: [test, build]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: moovin-groovin-web-artifact
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Deploy to S3 Bucket
+        run: aws s3 sync ./ s3://moovingroovin.com
+
+      - name: Invalidate Cloudfront CDN
+        run: aws cloudfront create-invalidation --distribution-id=$CLOUDFRONT_DISTRIBUTION_ID --paths '/*'
+        env:
+          CLOUDFRONT_DISTRIBUTION_ID: E36OZZ9WTFU0V1
