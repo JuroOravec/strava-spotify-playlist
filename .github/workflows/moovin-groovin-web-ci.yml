@@ -46,7 +46,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: moovin-groovin-web-artifact
-          path: moovin-groovin-web/build
+          path: moovin-groovin-web/dist
 
    deploy:
     needs: [test, build]
