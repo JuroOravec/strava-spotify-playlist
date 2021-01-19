@@ -28,7 +28,6 @@ const createSessionInstaller = (): Installer => {
         );
       }
 
-      app.set('trust proxy', 1); // trust first proxy
       app.use(
         session({
           name: 'moovin-groovin.sid',
@@ -36,6 +35,7 @@ const createSessionInstaller = (): Installer => {
           store: storeSession.data.expressSessionStore,
           resave: false,
         saveUninitialized: false,
+        proxy: true,
           cookie: {
             // secure: true,
             maxAge: 30 * 24 * 60 * 60 * 1000,

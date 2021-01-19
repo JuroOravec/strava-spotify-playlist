@@ -16,6 +16,7 @@ const createBaseInstaller = (): Installer => {
     this: ServerModule<Services, Handlers, BaseData>,
     { app }: ModuleContext
   ) {
+    app.set('trust proxy', true);
     app.set('appPath', `${this.data.root}client`);
     app.use(
       bodyParser.urlencoded({
