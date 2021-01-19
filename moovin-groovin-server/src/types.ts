@@ -15,6 +15,7 @@ export enum ServerModuleName {
   OAUTH_STRAVA = 'oauthStrava',
   OPENAPI = 'openapi',
   ROUTER = 'router',
+  SESSION = 'session',
   SPOTIFY = 'spotify',
   SPOTIFY_HISTORY = 'spotifyHistory',
   STORE_CONFIG = 'storeConfig',

@@ -17,6 +17,7 @@
   "dependencies": {
     "@types/better-queue": "^3.8.2",
     "@types/connect-pg-simple": "^4.2.2",
+    "@types/express-session": "^1.17.3",
     "@types/localtunnel": "^2.0.0",
     "@types/lodash": "^4.14.165",
     "@types/passport": "^1.0.5",
@@ -37,6 +38,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-openapi-validator": "^4.9.2",
+    "express-session": "^1.17.1",
     "express-slash": "^2.0.1",
     "handlebars": "^4.7.6",
     "install": "^0.13.0",

@@ -15,6 +15,7 @@ import createServerContextManager from './lib/manageServerContext';
 import isMainProcess from './utils/isMainProcess';
 import isProduction from './utils/isProduction';
 import createBaseModule, { BaseModule } from './modules/base';
+import createSessionModule, { SessionModule } from './modules/session';
 import createOpenApiModule, { OpenApiModule } from './modules/openapi';
 import createRouterModule, { RouterModule } from './modules/router';
 import createStoreConfigModule, {
@@ -73,6 +74,7 @@ type ServerModules = {
   [ServerModuleName.OAUTH_STRAVA]: OAuthStravaModule;
   [ServerModuleName.OPENAPI]: OpenApiModule;
   [ServerModuleName.ROUTER]: RouterModule;
+  [ServerModuleName.SESSION]: SessionModule;
   [ServerModuleName.SPOTIFY]: SpotifyModule;
   [ServerModuleName.SPOTIFY_HISTORY]: SpotifyHistoryModule;
   [ServerModuleName.STORE_PLAYLIST]: StorePlaylistModule;
@@ -103,6 +105,8 @@ const main = async () => {
       subdomain: 'moovin-groovin',
     },
   });
+
+  const sessionModule = createSessionModule();
 
   const errorHandlerModule = createErrorHandlerModule();
 
@@ -299,6 +303,7 @@ const main = async () => {
     modules: [
       baseModule,
       hostModule,
+      sessionModule,
       oauthModule,
       oauthFacebookModule,
       oauthGoogleModule,
