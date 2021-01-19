@@ -1,12 +1,4 @@
-import {
-  Client,
-  Pool,
-  PoolConfig,
-  PoolClient,
-  QueryResultRow,
-  QueryResult,
-} from 'pg';
-import PGPool from 'pg-pool';
+import { Client, Pool, QueryResultRow, QueryResult } from 'pg';
 import pgFormat from 'pg-format';
 import isNil from 'lodash/isNil';
 import identity from 'lodash/identity';
@@ -14,8 +6,9 @@ import identity from 'lodash/identity';
 import type { OptionalReadonly } from '../../types';
 import { safeInvoke } from '../../utils/safeInvoke';
 import logger from '../logger';
+import resolvePgClient, { PGClientOptions } from './resolvePgClient';
 
-type PGStoreOptions = PoolConfig | Pool | Client;
+type PGStoreOptions = PGClientOptions;
 type PGQueryInput = any[];
 type PGQueries = Record<string, [PGQueryInput, QueryResultRow]>;
 type CustomQueryResult<R extends any = any> = Omit<
@@ -25,13 +18,6 @@ type CustomQueryResult<R extends any = any> = Omit<
   rows: R[];
 };
 
-const isClient = (client: unknown): client is PoolClient | Client =>
-  client instanceof Client;
-
-// The class from pg-pool is used because Pool from pg is subclassed on module import
-// so there's a possibility of the Pool classes not being identical
-const isPool = (pool: unknown): pool is Pool => pool instanceof PGPool;
-
 /** Base setup for accessing Postgres database  */
 class PGStore<TQueries extends PGQueries = PGQueries> {
   pool: Pool | null = null;
@@ -40,15 +26,9 @@ class PGStore<TQueries extends PGQueries = PGQueries> {
   doneInstalling: Promise<void> | null = null;
 
   constructor(configOrClient: PGStoreOptions) {
-    if (isClient(configOrClient)) {
-      this.client = configOrClient;
-      this.pool = null;
-    } else if (isPool(configOrClient)) {
-      this.client = null;
-      this.pool = configOrClient;
-    } else {
-      this.pool = new Pool(configOrClient);
-    }
+    const { client, pool } = resolvePgClient(configOrClient);
+    this.client = client;
+    this.pool = pool;
 
     if (this.pool) {
       this.pool.on('error', async (err) => {
