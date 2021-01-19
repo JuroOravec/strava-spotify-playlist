@@ -18,27 +18,16 @@ paths:
     get:
       description: Handle user auth
       parameters:
-        - name: state
-          in: query
-          allowEmptyValue: true
-          required: false
-          schema:
-            type: string
-        - name: error
-          in: query
-          allowEmptyValue: false
-          required: false
-          schema:
-            type: string
-        - name: code
-          in: query
-          required: false
-          schema:
-            type: string
+        - $ref: '#/components/parameters/CodeParam'
+        - $ref: '#/components/parameters/ScopeParam'
+        - $ref: '#/components/parameters/StateParam'
+        - $ref: '#/components/parameters/ErrorParam'
+        - $ref: '#/components/parameters/ErrorCodeParam'
+        - $ref: '#/components/parameters/ErrorDescriptionParam'
+        - $ref: '#/components/parameters/ErrorReasonParam'
         - $ref: '#/components/parameters/RedirectUrlParam'
         - $ref: '#/components/parameters/UserIdParam'
         - $ref: '#/components/parameters/SSPVerifyTokenParam'
-        - $ref: '#/components/parameters/ScopeParam'
         - $ref: '#/components/parameters/AuthUserParam'
         - $ref: '#/components/parameters/PromptParam'
       responses:
@@ -48,6 +37,12 @@ paths:
           description: Redirects to 'redirect_uri' if it provided and valid
 components:
   parameters:
+    CodeParam:
+      name: code
+      in: query
+      required: false
+      schema:
+        type: string
     ScopeParam:
       name: scope
       in: query
@@ -55,6 +50,42 @@ components:
       allowReserved: true
       schema:
         type: string
+    StateParam:
+      name: state
+      in: query
+      allowEmptyValue: true
+      required: false
+      schema:
+        type: string
+    ErrorParam:
+      name: error
+      in: query
+      allowEmptyValue: false
+      required: false
+      schema:
+        type: string    
+    ErrorCodeParam:
+      name: error_code
+      in: query
+      allowEmptyValue: false
+      required: false
+      schema:
+        type: string    
+    ErrorDescriptionParam:
+      name: error_description
+      in: query
+      allowEmptyValue: false
+      required: false
+      allowReserved: true
+      schema:
+        type: string    
+    ErrorReasonParam:
+      name: error_reason
+      in: query
+      allowEmptyValue: false
+      required: false
+      schema:
+        type: string    
     RedirectUrlParam:
       name: redirect_url
       in: query
