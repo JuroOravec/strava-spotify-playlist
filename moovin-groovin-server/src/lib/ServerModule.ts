@@ -112,18 +112,29 @@ const bindObjectProps = <T>(
   }, {} as T);
 };
 
+const isPromise = (val: any): val is Pick<Promise<any>, 'then'> =>
+  typeof val?.then === 'function';
+
 /**
- * Function wrapper. Emits `eventName` *before* the wrapped function is called.
+ * Function wrapper. Emits an event before and after the wrapped function is called.
  * Emitted event includes args passed to the function.
  */
 const wrapInEmit = <T extends (...args: any[]) => any>(
   fn: T,
   emitter: { emit: (...args: any[]) => any },
-  eventName: string
+  events: { before?: string; after?: string }
 ): T => {
   const wrapper = ((...args) => {
-    emitter.emit(eventName, ...args);
-    return fn?.(...args);
+    events.before && emitter.emit(events.before, ...args);
+    const res = fn?.(...args);
+    if (events.after) {
+      if (isPromise(res)) {
+        res.then((...resultArgs) => emitter.emit(events.after, ...resultArgs));
+      } else {
+        emitter.emit(events.after, res);
+      }
+    }
+    return res;
   }) as T;
   return wrapper;
 };
@@ -187,9 +198,12 @@ class ServerModule<
     const installer: Installer<TModules> = wrapInEmit(
       install.bind(this),
       this,
-      'install'
+      { before: `${name}:willInstall`, after: `${name}:didInstall` }
     );
-    const closer = wrapInEmit(close.bind(this), this, 'close');
+    const closer = wrapInEmit(close.bind(this), this, {
+      before: `${name}:willClose`,
+      after: `${name}:didClose`,
+    });
 
     this.install = (ctx) => {
       // Capture the context on install
@@ -208,12 +222,21 @@ class ServerModule<
     this.data = bindObjectProps(initializeValue(data, this), this);
 
     // Extended functionalities
-    this.router = wrapInEmit(router.bind(this), this, 'router');
-    this.oauth = wrapInEmit(oauth.bind(this), this, 'oauth');
+    this.router = wrapInEmit(router.bind(this), this, {
+      before: `${name}:willCreateRouter`,
+      after: `${name}:didCreateRouter`,
+    });
+    this.oauth = wrapInEmit(oauth.bind(this), this, {
+      before: `${name}:willCreateOAuth`,
+      after: `${name}:didCreateOAuth`,
+    });
 
     const openapiCreator =
       typeof openapi === 'function' ? openapi : () => openapi;
-    this.openapi = wrapInEmit(openapiCreator.bind(this), this, 'openapi');
+    this.openapi = wrapInEmit(openapiCreator.bind(this), this, {
+      before: `${name}:willCreateOpenAPI`,
+      after: `${name}:didCreateOpenAPI`,
+    });
   }
 
   emit<T extends TupleToEmitter<TEventEmits>, K extends keyof T>(
