@@ -9,12 +9,13 @@ type SessionModule = ServerModule<Services, Handlers, SessionData>;
 const createSessionModule = (
   options: SessionModuleOptions = {}
 ): SessionModule => {
-  const { clientConfig = {} } = options;
+  const { clientConfig = {}, initializePassport = true } = options;
   return new ServerModule({
     name: ServerModuleName.SESSION,
     install: createInstaller(),
     data: {
       ...options,
+      initializePassport,
       clientConfig,
     },
   });

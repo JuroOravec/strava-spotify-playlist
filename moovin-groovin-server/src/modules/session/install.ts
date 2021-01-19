@@ -1,3 +1,4 @@
+import passport from 'passport';
 import session from 'express-session';
 import { v4 as genUuid } from 'uuid';
 
@@ -34,7 +35,7 @@ const createSessionInstaller = (): Installer => {
           secret: '81e9b121-09d6-44b6-a06f-84cbc73c60fd',
           store: storeSession.data.expressSessionStore,
           resave: false,
-          saveUninitialized: true,
+        saveUninitialized: false,
           cookie: {
             // secure: true,
             maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -42,7 +43,10 @@ const createSessionInstaller = (): Installer => {
           genid: () => genUuid(),
         })
       );
-      app.get('/lol', (req, res) => res.send('lololo'));
+    if (this.data.initializePassport) {
+      app.use(passport.initialize());
+    }
+    app.use(passport.session());
     });
   };
 

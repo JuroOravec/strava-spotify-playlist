@@ -59,7 +59,9 @@ const createOAuthInstaller = (): Installer => {
       passport.use(providerId, strategy);
     });
 
-    app.use(passport.initialize());
+    if (this.data.initializePassport) {
+      app.use(passport.initialize());
+    }
     logger.info(
       `Done creating OAuth providers: "${providerNames.join('", "')}"`
     );

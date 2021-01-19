@@ -106,7 +106,9 @@ const main = async () => {
     },
   });
 
-  const sessionModule = createSessionModule();
+  const sessionModule = createSessionModule({
+    initializePassport: true,
+  });
 
   const errorHandlerModule = createErrorHandlerModule();
 
@@ -160,6 +162,8 @@ const main = async () => {
     // NOTE: When in dev, use 'http://localhost:${port}/...' instead of localtunnel.
     // Getting invalid redirect_uri when using localtunnel here
     callbackUrlRoot: `/api/v1/auth`,
+    // Passport is initialized in session module to work correctly
+    initializePassport: false,
     providers: (({ modules }) => [
       {
         providerId: 'spotify',
