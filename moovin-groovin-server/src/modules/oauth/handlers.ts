@@ -73,13 +73,46 @@ const createOAuthHandlers = (
 ): OAuthHandlers => {
   const { requireUserId, assertScope, ...passportOptions } = options;
 
-  const createPassportHandler = (state: StateParam = {}) =>
-    passport.authenticate(provider, {
+  const createPassportAuthHandler = (state: StateParam = {}) => (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const passportAuthOptions = {
       failWithError: true,
       session: false,
       state: serializeState(state),
+      passReqToCallback: true,
       ...passportOptions,
-    });
+    };
+
+    const passportAuthCallback = (
+      error: Error | null,
+      user: PassportUser | null,
+      info?: unknown
+    ) => {
+      if (error || !user) {
+        // We assume this handler will be followed by the callback handler
+        req.query.error = error?.message ?? 'Failed to find user.';
+        return next();
+      }
+      req.login(user, (loginErr) => {
+        if (loginErr) {
+          req.query.error = loginErr?.message;
+          return next();
+        }
+        return next();
+      });
+    };
+
+    const passportAuthHandler = passport.authenticate(
+      provider,
+      passportAuthOptions,
+      passportAuthCallback
+    );
+
+    return passportAuthHandler(req, res, next);
+  };
 
   /**
    * Handler for logging user via third party OAuth providers
@@ -259,7 +292,10 @@ const createOAuthHandlers = (
       }
 
       // Delegate the rest of handling to passport
-      const authHandler = createPassportHandler({ redirectUrl, userId });
+      const authHandler = createPassportAuthHandler({
+        redirectUrl,
+        userId,
+      });
       return authHandler(req, res, next);
     }).then(({ result, error }) => {
       if (error) next(error);
