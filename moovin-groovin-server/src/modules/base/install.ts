@@ -6,13 +6,14 @@ import type {
   ServerModule,
   ModuleContext,
   Installer,
+  Services,
+  Handlers,
 } from '../../lib/ServerModule';
-import logger from '../../lib/logger';
 import type { BaseData } from './data';
 
 const createBaseInstaller = (): Installer => {
   const install: Installer = function install(
-    this: ServerModule<any, any, BaseData>,
+    this: ServerModule<Services, Handlers, BaseData>,
     { app }: ModuleContext
   ) {
     app.set('appPath', `${this.data.root}client`);

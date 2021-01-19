@@ -1,7 +1,7 @@
-interface OpenApiExternalData {
+interface BaseExternalData {
   root: string;
 }
 
-type BaseData = OpenApiExternalData;
+type BaseData = BaseExternalData;
 
 export { BaseData };
