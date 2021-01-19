@@ -47,14 +47,6 @@ type OpenApiCreator = () => OpenApiSpecInput | void;
 type ListenerStopHandle = () => void;
 /** [EventName, EventPayload] */
 type EventEmits = [string, any[]];
-// type TupleToEmitter<T extends [string, any[]]> = ValuesType<
-//   {
-//     [Key in T[0]]: (
-//       event: Key,
-//       ...payload: Extract<T, [Key, any[]]>[1]
-//     ) => void;
-//   }
-// >;
 type TupleToEmitter<T extends [string, any[]]> = {
   [Key in T[0]]: (event: Key, ...payload: Extract<T, [Key, any[]]>[1]) => void;
 };
