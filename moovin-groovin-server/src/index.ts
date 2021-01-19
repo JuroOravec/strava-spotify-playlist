@@ -100,7 +100,9 @@ const main = async () => {
   const hostModule = createHostModule({
     port,
     origin: isProduction() ? 'https://api.moovingroovin.com' : null,
-    localtunnelEnabled: !isProduction(),
+    localtunnelEnabled: Boolean(
+      !isProduction() && process.env.LOCALTUNNEL_ENABLED
+    ),
     localtunnelOptions: {
       subdomain: 'moovin-groovin',
     },
