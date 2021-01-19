@@ -22,6 +22,9 @@ import createStoreConfigModule, {
 } from './modules/storeConfig';
 import createStoreTokenModule, { StoreTokenModule } from './modules/storeToken';
 import createStoreUserModule, { StoreUserModule } from './modules/storeUser';
+import createStoreSessionModule, {
+  StoreSessionModule,
+} from './modules/storeSession';
 import createStoreTrackModule, { StoreTrackModule } from './modules/storeTrack';
 import createStorePlaylistModule, {
   StorePlaylistModule,
@@ -77,6 +80,7 @@ type ServerModules = {
   [ServerModuleName.STORE_TOKEN]: StoreTokenModule;
   [ServerModuleName.STORE_TRACK]: StoreTrackModule;
   [ServerModuleName.STORE_USER]: StoreUserModule;
+  [ServerModuleName.STORE_SESSION]: StoreSessionModule;
   [ServerModuleName.STRAVA]: StravaModule;
   [ServerModuleName.STRAVA_WEBHOOK]: StravaWebhookModule;
   [ServerModuleName.STRAVA_SPOTIFY]: StravaSpotifyModule;
@@ -230,6 +234,10 @@ const main = async () => {
     clientConfig: pool,
   });
 
+  const storeSessionModule = createStoreSessionModule({
+    clientConfig: pool,
+  });
+
   const storeConfigModule = createStoreConfigModule({
     clientConfig: pool,
   });
@@ -302,6 +310,7 @@ const main = async () => {
       storeConfigModule,
       storeTrackModule,
       storePlaylistModule,
+      storeSessionModule,
       spotifyModule,
       // Manage spotify history only on main process
       ...(isMainProcess() ? [spotifyHistory] : []),

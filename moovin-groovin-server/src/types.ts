@@ -20,6 +20,7 @@ export enum ServerModuleName {
   STORE_CONFIG = 'storeConfig',
   STORE_TOKEN = 'storeToken',
   STORE_USER = 'storeUser',
+  STORE_SESSION = 'storeSession',
   STORE_TRACK = 'storeTrack',
   STORE_PLAYLIST = 'storePlaylist',
   STRAVA = 'strava',
