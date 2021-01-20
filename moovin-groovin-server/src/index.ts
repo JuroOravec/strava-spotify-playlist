@@ -1,3 +1,7 @@
+// TODO: Doument the tutorial on how to do proper authentication on endpoints
+
+// TODO: Add logout endpoint that calls req.logout (see passport.js)
+
 // TODO: nice to have - Revert the playlist order so latest is last
 //                    - Don't know why that happened
 // TODO: nice to have - make data module prop private to that module

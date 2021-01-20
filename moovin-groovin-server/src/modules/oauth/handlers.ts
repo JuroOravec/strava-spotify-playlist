@@ -89,7 +89,7 @@ const createOAuthHandlers = (
     const passportAuthCallback = (
       error: Error | null,
       user: PassportUser | null,
-      info?: unknown
+      info?: any
     ) => {
       if (error || !user) {
         // We assume this handler will be followed by the callback handler

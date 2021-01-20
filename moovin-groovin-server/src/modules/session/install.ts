@@ -42,6 +42,8 @@ const createSessionInstaller = (): Installer => {
         genid: () => genUuid(),
       })
     );
+    // Note: for passport sessions to work correctly, we need to call
+    // passport.initialize() after express-session and before passport.session().
     if (this.data.initializePassport) {
       app.use(passport.initialize());
     }
