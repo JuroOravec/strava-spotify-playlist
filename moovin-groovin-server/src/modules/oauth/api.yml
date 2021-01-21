@@ -9,6 +9,7 @@ paths:
       description: Auth user against third party OAuth
       parameters:
         - $ref: '#/components/parameters/RedirectUrlParam'
+        - $ref: '#/components/parameters/StateParam'
         - $ref: '#/components/parameters/UserIdParam'
         - $ref: '#/components/parameters/SSPVerifyTokenParam'
       responses:
