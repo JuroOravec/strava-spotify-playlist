@@ -22,6 +22,14 @@ Prefer to format postgres queries using `pg-format` before passing them to postg
 
 ---
 
+## Web server cookies (session)
+
+See this _amazing_ guide on what are, why, and how to set up cookies for websites
+
+- [Node.js Server & Authentication Basics: Express, Sessions, Passport, and cURL](https://medium.com/@evangow/server-authentication-basics-express-sessions-passport-and-curl-359b7456003d)
+
+---
+
 ## AWS Deployment - Basic concepts
 
 Abbreviations:
@@ -133,7 +141,7 @@ Following guides cover the setup process:
 
 > NOTE: The guides above are outdated and the auto-deployment steps are invalid.
 >
->To auto-deploy an app after pushing changes to GitHub repo, use AWS CodePipeline. See following guide:
+> To auto-deploy an app after pushing changes to GitHub repo, use AWS CodePipeline. See following guide:
 >
 > - [Deploying code from GitHub to AWS EC2 with CodePipeline](https://dev.to/nhadiq97/deploying-code-from-github-to-aws-ec2-with-codepipeline-22h6)
 
@@ -143,10 +151,11 @@ To trigger a deploy of a specific commit manually:
 2. Select the right application (StravaSpotifyPlaylist)
 3. Open Deployments tab
 4. Click on the last deployment and click on Clone Deployment
-  
-    OR
 
-    Click on Create Deployment and fill in details.
+   OR
+
+   Click on Create Deployment and fill in details.
+
 5. Copy-paste into the Commit ID field the ID of the latest (or desired) commit that should be deployed.
 6. In "Additional deployment behavior settings" > "Content options - optional", select "Overwrite the content".
 7. Confirm with "Create Deployment".
@@ -192,6 +201,30 @@ Thus, the server can be accessed via ec2-18-197-19-192.eu-central-1.compute.amaz
 Thus, the server can be accessed via e.g. api.yourfavedomain.com
 
 ## AWS Deployment - Static website with S3, CloudFront and Route 53
+
+Since the website communicates with the server, all we need is to get the static
+files out into the world (ideally behind HTTPS, and cached).
+
+Following articles sum it up perfectly:
+
+- [Setting up an HTTPS static site using AWS S3 and Cloudfront (and also Jekyll and s3_website)](https://www.alexejgossmann.com/AWS_S3_and_CloudFront/)
+- [UPDATED: Deploying a static site to AWS using GitHub Actions](https://www.timveletta.com/blog/2020-08-14-updated-deploying-a-static-site-to-aws-using-github-actions/)
+
+For next time, it might be useful to give this one a go:
+
+- [Reddit: I built a GitHub Action that deploys static sites to Cloudfront](https://www.reddit.com/r/aws/comments/ja1k9g/i_built_a_github_action_that_deploys_static_sites/)
+
+### Troubleshooting
+
+- Issue: Access Denied
+  - [AWS' troubleshooting page](https://aws.amazon.com/premiumsupport/knowledge-center/s3-website-cloudfront-error-403/)
+  - Check that the item you are trying to access are set to be publicly read
+  - If this happened after syncing files from GitHub (or elsewhere):
+    - Check that you have the correct permissions allowed
+      ([example 1](https://github.com/laurilehmijoki/s3_website/blob/master/additional-docs/setting-up-aws-credentials.md),
+      [example 2](https://github.com/jakejarvis/s3-sync-action/issues/10))
+    - Check that the integration has set the correct ACL (`public-read` is on).
+      [See here the reference of available options to the `aws s3 sync` command.](https://docs.aws.amazon.com/cli/latest/reference/s3/sync.html)
 
 Since the website communicates with the server, all we need is to get the static
 files out into the world (ideally behind HTTPS, and cached).

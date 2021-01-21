@@ -9,6 +9,7 @@
 // TODO: nice to have - add dependencies check when tring to install, so it's possible to track which module depends on which.
 //                    - use that as the ModuleDeps type, but defined maybe like Vue does it with props (e.g. Object as () => XYZ)
 // TODO: nice to have - Add support for delete request webhook for oauth providers (FB, google, ...)
+// TODO: nice to have - Set caching for S3 files (see https://www.gauntface.com/blog/2020/static-site-hosting-on-aws/)
 
 import { Pool } from 'pg';
 import { v5 as uuidV5 } from 'uuid';
