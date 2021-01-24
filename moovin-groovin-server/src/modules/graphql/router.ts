@@ -16,7 +16,9 @@ const createRouter = (): RouterCreator => {
       path: '/graphql',
       // TODO: Allow to pass these options at module init
       cors: {
-        origin: ['https://moovingroovin.com', 'http://localhost:3000'],
+        // TODO: Set these values in config
+        // TODO: When having multiple envs (e.g., prod and dev), do not include localhost on prod
+        origin: ['https://moovingroovin.com', 'http://localhost:8080'],
         credentials: true,
       },
     });
