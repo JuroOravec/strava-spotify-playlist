@@ -10,6 +10,7 @@ import {
 import http from 'http';
 import { Strategy } from 'passport';
 
+import type { OpenApiSpecInputBase } from '../modules/openapi/types';
 import getProps from '../utils/props';
 import type { OpenApiSpecInput } from '../modules/openapi/types';
 import logger from './logger';
@@ -42,7 +43,7 @@ type Data = Record<string, any>;
 
 type RouterCreator = (routerOptions?: RouterOptions) => Router | void;
 type OAuthCreator = (oauthOptions: { callbackUrl: string }) => Strategy | void;
-type OpenApiCreator = () => OpenApiSpecInput | void;
+type OpenApiCreator = () => OptionalArray<OpenApiSpecInputBase> | void;
 
 type ListenerStopHandle = () => void;
 /** [EventName, EventPayload] */
@@ -76,8 +77,7 @@ interface ServerModuleOptions<
   /** Arbitrary data held by this module that are available to other members */
   data?: TData | (() => TData);
   /** Function that receives Express Router options and optionally creates Express Router instance */
-  router?: RouterCreator;
-  openapi?: OpenApiSpecInput | OpenApiCreator;
+  openapi?: OptionalArray<OpenApiSpecInputBase> | OpenApiCreator;
   oauth?: OAuthCreator;
   [key: string]: unknown;
 }

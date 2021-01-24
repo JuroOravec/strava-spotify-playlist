@@ -12,7 +12,7 @@ import type {
   Services,
   Handlers,
 } from '../../lib/ServerModule';
-import mergeSpecs from './utils/mergeSpecs';
+import resolveSpecs from './utils/resolveSpecs';
 import type { OpenApiData } from './data';
 
 const createOpenApiInstaller = (): Installer => {
@@ -34,7 +34,12 @@ const createOpenApiInstaller = (): Installer => {
 
     if (!apiSpecsInput) return;
 
-    const apiSpec = mergeSpecs(apiSpecsInput);
+    const apiSpec = resolveSpecs(apiSpecsInput);
+
+    if (!apiSpec) {
+      logger.info(`No OpenAPI specs found. Skipping OpenAPI configuration.`);
+      return;
+    }
 
     logger.info(`Creating temp file for merged OpenAPI specs`);
     const {
@@ -65,7 +70,7 @@ const createOpenApiInstaller = (): Installer => {
 
     app.use(
       OpenApiValidator.middleware({
-        apiSpec,
+        apiSpec: apiSpec,
         validateResponses,
         ignorePaths: /.*\/spec(\/|$)/,
         ...this.data.validatorOptions,

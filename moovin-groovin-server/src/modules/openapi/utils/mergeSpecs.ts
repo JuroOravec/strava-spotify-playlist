@@ -1,23 +1,19 @@
 import type { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types';
 import merge from 'lodash/merge';
 
-import type { OpenApiSpecInput, OpenApiSpecOptions } from '../types';
+import type { OpenApiSpecInputBase, OpenApiSpecOptions } from '../types';
 import readSpecFile from './readSpecFile';
 
 const isOpenApiDoc = (value: unknown): value is OpenAPIV3.Document =>
   Boolean((value as OpenAPIV3.Document)?.openapi);
 
-const normalizeSpec = (
-  specOrPath: Exclude<OpenApiSpecInput, any[]>
-): OpenApiSpecOptions =>
+const normalizeSpec = (specOrPath: OpenApiSpecInputBase): OpenApiSpecOptions =>
   typeof specOrPath === 'string' || isOpenApiDoc(specOrPath)
     ? ({ spec: specOrPath } as OpenApiSpecOptions)
     : specOrPath;
 
-const mergeSpecs = (apiSpecs: OpenApiSpecInput): OpenAPIV3.Document => {
-  const theApiSpecs = Array.isArray(apiSpecs) ? apiSpecs : [apiSpecs];
-
-  const apiSpec = theApiSpecs.reduce((aggSpec, specOrPath) => {
+const mergeSpecs = (apiSpecs: OpenApiSpecInputBase[]): OpenAPIV3.Document => {
+  const apiSpec = apiSpecs.reduce((aggSpec, specOrPath) => {
     const { spec, pathPrefix } = normalizeSpec(specOrPath);
 
     const newSpec: OpenAPIV3.Document = {
