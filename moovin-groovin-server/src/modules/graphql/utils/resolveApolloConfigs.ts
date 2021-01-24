@@ -7,7 +7,13 @@ import ServerModule, { AnyServerModule } from '../../../lib/ServerModule';
 import type {
   GraphqlApolloConfigInput,
   GraphqlApolloConfigInputBase,
+  GraphqlApolloConfigInputSimple,
 } from '../types';
+
+const getModuleConfig = (
+  mod: AnyServerModule
+): OptionalArray<GraphqlApolloConfigInputBase> | null =>
+  mod.graphql?.() || null;
 
 const mergeApolloConfigs = (
   configs: ApolloServerExpressConfig[]
@@ -37,11 +43,19 @@ const resolveApolloConfigs = (
 ): ApolloServerExpressConfig => {
   const normConfigValues = ([] as unknown[])
     .concat(...configValues)
-    .filter(Boolean) as GraphqlApolloConfigInputBase[];
+    .filter(Boolean) as GraphqlApolloConfigInputSimple[];
 
   const configs = normConfigValues.reduce<GraphqlApolloConfigInputBase[]>(
-    (aggConfigs, configOrModule) =>
-      isNil(configOrModule) ? aggConfigs : aggConfigs.concat(configOrModule),
+    (aggConfigs, configOrModule) => {
+      if (!isNil(configOrModule) && !(configOrModule instanceof ServerModule)) {
+        return aggConfigs.concat(configOrModule);
+      }
+
+      const moduleConfigs = ([] as GraphqlApolloConfigInputBase[])
+        .concat(getModuleConfig(configOrModule) || [])
+        .filter(Boolean);
+      return aggConfigs.concat(moduleConfigs);
+    },
     []
   );
 

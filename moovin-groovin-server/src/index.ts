@@ -66,10 +66,9 @@ import createErrorHandlerModule, {
 } from './modules/errorHandler';
 import createHostModule, { HostModule } from './modules/host';
 import type { RouterInputFn } from './modules/router/types';
-import type { OpenApiSpecInputFn } from './modules/openapi/types';
 import type { OAuthInputFn } from './modules/oauth/types';
-import type { GraphqlApolloConfigInputFn } from './modules/graphql/types';
 import type { ServerModuleName } from './types';
+import type { ModuleContext } from './lib/ServerModule';
 
 type AppServerModules = {
   [ServerModuleName.BASE]: BaseModule;
@@ -124,10 +123,10 @@ const main = async () => {
   const errorHandlerModule = createErrorHandlerModule();
 
   const graphqlModule = createGraphqlModule({
-    apolloConfig: ((ctx) => [
+    apolloConfig: (ctx: ModuleContext<AppServerModules>) => [
       ctx.modules.storeUser,
       { debug: !isProduction() },
-    ]) as GraphqlApolloConfigInputFn<AppServerModules>,
+    ],
     schemaConfig: {
       inheritResolversFromInterfaces: true,
       allowUndefinedInResolve: false,

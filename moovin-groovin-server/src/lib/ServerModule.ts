@@ -45,10 +45,14 @@ type Data = Record<string, any>;
 
 type RouterCreator = (
   routerOptions?: RouterOptions
-) => OptionalArray<RouterInputBase> | void;
-type OAuthCreator = (oauthOptions: { callbackUrl: string }) => Strategy | void;
-type GraphqlCreator = () => OptionalArray<GraphqlApolloConfigInputBase> | void;
-type OpenApiCreator = () => OptionalArray<OpenApiSpecInputBase> | void;
+) => OptionalArray<RouterInputBase> | undefined;
+type OAuthCreator = (oauthOptions: {
+  callbackUrl: string;
+}) => Strategy | undefined;
+type GraphqlCreator = () =>
+  | OptionalArray<GraphqlApolloConfigInputBase>
+  | undefined;
+type OpenApiCreator = () => OptionalArray<OpenApiSpecInputBase> | undefined;
 
 type ListenerStopHandle = () => void;
 /** [EventName, EventPayload] */
@@ -187,10 +191,10 @@ class ServerModule<
       services = {} as TServices,
       handlers = {} as THandlers,
       data = {} as TData,
-      router = () => {},
-      oauth = () => {},
-      graphql = () => {},
-      openapi = () => {},
+      router = (() => {}) as RouterCreator,
+      oauth = (() => {}) as OAuthCreator,
+      graphql = (() => {}) as GraphqlCreator,
+      openapi = (() => {}) as OpenApiCreator,
     } = options;
 
     this.name = name;
