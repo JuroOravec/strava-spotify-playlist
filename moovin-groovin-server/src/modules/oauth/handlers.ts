@@ -1,5 +1,11 @@
 import crypto from 'crypto';
-import type { NextFunction, Request, Response, RequestHandler } from 'express';
+import type {
+  NextFunction,
+  Request,
+  Response,
+  RequestHandler,
+  Handler,
+} from 'express';
 import { BadRequest } from 'express-openapi-validator/dist/framework/types';
 import passport, { AuthenticateOptions } from 'passport';
 import NodeCache from 'node-cache';
@@ -77,7 +83,7 @@ const createOAuthHandlers = (
     req: Request,
     res: Response,
     next: NextFunction
-  ) => {
+  ): Handler => {
     const passportAuthOptions = {
       failWithError: true,
       session: false,
@@ -160,7 +166,7 @@ const createOAuthHandlers = (
       });
     }
 
-    asyncSafeInvoke<void>(async () => {
+    asyncSafeInvoke<unknown>(async () => {
       // If this provider needs user ID, we will verify user of that ID against the provider
       // that initially authorized the user. Once that is confirmed, we can continue with
       // auth against current provider.
@@ -248,22 +254,13 @@ const createOAuthHandlers = (
             verifiedUrlHelper.toString()
           );
 
-          const redirectUrl = providerUrlHelper.toString();
-          res.redirect(redirectUrl);
+          res.redirect(providerUrlHelper.toString());
           return next();
         }
 
-        if (isNil(verifyToken)) {
-          throw new BadRequest({
-            path: req.path,
-            message:
-              'Invalid or expired verification token. Return to homepage and try to log in again',
-          });
-        }
-
-        // Here, the user has logged in via the provider and has provided us with the
-        // verification token. We check if its correct and not expired, and if so,
-        // we let the user continue.
+        // At this point, the user has logged in via the provider and has provided
+        // us with the verification token. We check if its correct and not expired,
+        // and if so, we let the user continue.
 
         const {
           userId: verifiedUserId,
