@@ -9,8 +9,8 @@ interface OpenApiExternalData {
 }
 
 interface OpenApiInternalData {
-  removeTempFile?: () => void;
-  apiSpecFile?: string;
+  removeTempFile: (() => void) | null;
+  apiSpecFile?: string | null;
 }
 
 type OpenApiData = OpenApiInternalData & OpenApiExternalData;

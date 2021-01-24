@@ -27,6 +27,8 @@ const createOpenApiModule = (
       apiSpecs,
       specEndpoint,
       validatorOptions,
+      removeTempFile: null,
+      apiSpecFile: null,
     },
     openapi: path.join(__dirname, './api.yml'),
   });
