@@ -2,8 +2,14 @@
 
 import { register } from 'register-service-worker';
 
-const registerServiceWorker = (input: { baseUrl: string }): void => {
+// Note: This is not a Vue plugin, but it is a pluggable feature
+const registerServiceWorker = (input: { baseUrl?: string }): void => {
   const { baseUrl } = input;
+
+  if (!baseUrl) {
+    console.warn('Skipping setting up service workers. No base URL defined.');
+    return;
+  }
 
   const normBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
 
