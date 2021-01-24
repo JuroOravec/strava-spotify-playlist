@@ -12,7 +12,8 @@
     "lint": "eslint -c .eslintrc.js \"{src, test}/**/*.{js,ts,tsx}\" --quiet",
     "lint:fix": "eslint -c .eslintrc.js \"{src, test}/**/*.{js,ts,tsx}\" --quiet --fix",
     "test": "mocha -r ts-node/register test/**/*.ts --exit",
-    "test:debug": "mocha -r ts-node/register --inspect-brk test/**/*.ts --exit"
+    "test:debug": "mocha -r ts-node/register --inspect-brk test/**/*.ts --exit",
+    "typegen": "graphql-codegen -- --config codegen.yml"
   },
   "dependencies": {
     "@types/better-queue": "^3.8.2",
@@ -64,6 +65,10 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@graphql-codegen/add": "^2.0.2",
+    "@graphql-codegen/cli": "^1.20.0",
+    "@graphql-codegen/time": "^2.0.2",
+    "@graphql-codegen/typescript": "^1.20.0",
     "@types/chai": "^4.2.14",
     "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.9",
