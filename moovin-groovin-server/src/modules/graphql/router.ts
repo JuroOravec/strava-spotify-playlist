@@ -18,7 +18,11 @@ const createRouter = (): RouterCreator => {
       cors: {
         // TODO: Set these values in config
         // TODO: When having multiple envs (e.g., prod and dev), do not include localhost on prod
-        origin: ['https://moovingroovin.com', 'http://localhost:8080'],
+        origin: [
+          'https://moovingroovin.com',
+          'https://www.moovingroovin.com',
+          /^http\:\/\/localhost\:\d+/,
+        ],
         credentials: true,
       },
     });

@@ -21,7 +21,11 @@ const createBaseInstaller = (): Installer => {
     app.set('appPath', `${this.data.root}client`);
     app.use(
       cors({
-        origin: ['https://moovingroovin.com', 'http://localhost:8080'],
+        origin: [
+          'https://moovingroovin.com',
+          'https://www.moovingroovin.com',
+          /^http\:\/\/localhost\:\d+/,
+        ],
         credentials: true,
       })
     );
