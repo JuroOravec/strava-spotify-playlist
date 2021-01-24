@@ -1,5 +1,6 @@
 <template>
   <v-row>
+    user: {{ user }}
     <v-col>
       <ProfileIntegration
         v-for="provider in integrationProviders"
@@ -16,6 +17,7 @@ import { defineComponent } from '@vue/composition-api';
 
 import { AuthProviders } from '@/modules/auth/composables/useOpenAuthWindow';
 import ProfileIntegration from './ProfileIntegration.vue';
+import useGetCurrentUser from '../composables/useGetCurrentUser';
 
 const integrationProviders = [
   {
@@ -34,8 +36,10 @@ const ProfileIntegrations = defineComponent({
     ProfileIntegration,
   },
   setup() {
+    const { user } = useGetCurrentUser();
     return {
       integrationProviders,
+      user,
     };
   },
 });
