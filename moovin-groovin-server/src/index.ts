@@ -11,6 +11,7 @@
 // TODO: nice to have - Add support for delete request webhook for oauth providers (FB, google, ...)
 // TODO: nice to have - Set caching for S3 files (see https://www.gauntface.com/blog/2020/static-site-hosting-on-aws/)
 // TODO: nice to have - Set CORS policies for the routes
+// TODO: nice to have - Allow to pass modules to OAuthModuleConfig.providers
 
 import { Pool } from 'pg';
 import { v5 as uuidV5 } from 'uuid';
@@ -138,18 +139,18 @@ const main = async () => {
   // ///////////////////////////
 
   const openApiModule = createOpenApiModule({
-    apiSpecs: (({ modules }) => [
+    apiSpecs: ({ modules }: ModuleContext<AppServerModules>) => [
       {
-        spec: modules.oauth.openapi(),
+        spec: modules.oauth,
         pathPrefix: '/auth',
       },
       {
-        spec: modules.stravaWebhook.openapi(),
+        spec: modules.stravaWebhook,
         pathPrefix: '/strava/webhook',
       },
       modules.graphql,
       modules.openapi,
-    ]) as OpenApiSpecInputFn<AppServerModules>,
+    ],
   });
 
   // ///////////////////////////

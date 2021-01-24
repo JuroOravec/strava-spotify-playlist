@@ -7,12 +7,16 @@ import type {
   OpenApiSpecInput,
   OpenApiSpecInputSimple,
   OpenApiSpecInputBase,
+  OpenApiSpecOptions,
 } from '../types';
 import mergeSpecs from './mergeSpecs';
 
 const getModuleSpec = (
   mod: AnyServerModule
 ): OptionalArray<OpenApiSpecInputBase> | null => mod.openapi?.() || null;
+
+const isSpecOptions = (val: any): val is OpenApiSpecOptions<any> =>
+  Boolean(val.spec);
 
 const resolveSpecs = (
   ...specValues: OpenApiSpecInput[]
@@ -23,14 +27,34 @@ const resolveSpecs = (
 
   const specs = normSpecValues.reduce<OpenApiSpecInputBase[]>(
     (aggSpecs, specOrModule) => {
-      if (!isNil(specOrModule) && !(specOrModule instanceof ServerModule)) {
-        return aggSpecs.concat(specOrModule);
+      if (isNil(specOrModule)) return aggSpecs;
+
+      // Get spec, which can be either value itself or "spec" field
+      let specOptions: OpenApiSpecOptions<any> | null = null;
+      if (isSpecOptions(specOrModule)) {
+        specOptions = specOrModule;
+      }
+      const spec = specOptions ? specOptions.spec : specOrModule;
+
+      // No further action required, add what we've received
+      if (!(spec instanceof ServerModule)) {
+        return aggSpecs.concat(specOptions ?? spec);
       }
 
       const moduleSpecs = ([] as OpenApiSpecInputBase[])
-        .concat(getModuleSpec(specOrModule) || [])
+        .concat(getModuleSpec(spec) || [])
         .filter(Boolean);
-      return aggSpecs.concat(moduleSpecs);
+
+      const moduleSpecsWithOptions = specOptions
+        ? moduleSpecs.map(
+            (currSpec): OpenApiSpecOptions => ({
+              ...specOptions,
+              ...(isSpecOptions(currSpec) ? currSpec : { spec: currSpec }),
+            })
+          )
+        : moduleSpecs;
+
+      return aggSpecs.concat(moduleSpecsWithOptions);
     },
     []
   );
