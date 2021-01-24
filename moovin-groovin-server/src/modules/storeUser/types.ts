@@ -1,3 +1,6 @@
+import type { ServerModules } from '../../lib/ServerModule';
+import type { ServerModuleName } from '../../types';
+import type { StoreTokenModule } from '../storeToken';
 import type {
   UserTokenModel,
   UserTokenProviderInput,
@@ -35,4 +38,8 @@ export interface UserStore {
     data: UserProviderAndEmailInput[]
   ) => Promise<(UserModel | null)[]>;
   insert: (userData: UserInput[]) => Promise<(UserMeta | null)[]>;
+}
+
+export interface StoreUserDeps extends ServerModules {
+  [ServerModuleName.STORE_TOKEN]: StoreTokenModule;
 }
