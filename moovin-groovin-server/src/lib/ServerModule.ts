@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 import {
   Application,
-  Router,
   NextFunction,
   Request,
   Response,
@@ -10,6 +9,8 @@ import {
 import http from 'http';
 import { Strategy } from 'passport';
 
+import isRouter from '../modules/router/utils/isRouter';
+import type { RouterInputBase } from '../modules/router/types';
 import type { OpenApiSpecInputBase } from '../modules/openapi/types';
 import getProps from '../utils/props';
 import type { OpenApiSpecInput } from '../modules/openapi/types';
@@ -41,7 +42,9 @@ type Handlers = Record<
 >;
 type Data = Record<string, any>;
 
-type RouterCreator = (routerOptions?: RouterOptions) => Router | void;
+type RouterCreator = (
+  routerOptions?: RouterOptions
+) => OptionalArray<RouterInputBase> | void;
 type OAuthCreator = (oauthOptions: { callbackUrl: string }) => Strategy | void;
 type OpenApiCreator = () => OptionalArray<OpenApiSpecInputBase> | void;
 
@@ -77,6 +80,7 @@ interface ServerModuleOptions<
   /** Arbitrary data held by this module that are available to other members */
   data?: TData | (() => TData);
   /** Function that receives Express Router options and optionally creates Express Router instance */
+  router?: OptionalArray<RouterInputBase> | RouterCreator;
   openapi?: OptionalArray<OpenApiSpecInputBase> | OpenApiCreator;
   oauth?: OAuthCreator;
   [key: string]: unknown;
@@ -214,10 +218,17 @@ class ServerModule<
     this.data = bindObjectProps(initializeValue(data, this), this);
 
     // Extended functionalities
-    this.router = wrapInEmit(router.bind(this), this, {
+    const routerCreator =
+      typeof router === 'function'
+        ? isRouter(router)
+          ? () => router
+          : router
+        : () => router;
+    this.router = wrapInEmit(routerCreator.bind(this), this, {
       before: `${name}:willCreateRouter`,
       after: `${name}:didCreateRouter`,
     });
+
     this.oauth = wrapInEmit(oauth.bind(this), this, {
       before: `${name}:willCreateOAuth`,
       after: `${name}:didCreateOAuth`,

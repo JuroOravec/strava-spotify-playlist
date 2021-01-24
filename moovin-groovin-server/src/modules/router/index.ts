@@ -1,16 +1,18 @@
 import ServerModule, { Handlers, Services } from '../../lib/ServerModule';
 import { ServerModuleName } from '../../types';
-import defaultRouterMerger from './utils/defaultRouterMerger';
 import createInstaller from './install';
-import { RouterData, RouterExternalData } from './data';
+import type { RouterData, RouterExternalData } from './data';
+import type { RouterInputFn } from './types';
 
 type RouterModuleOptions = Partial<RouterExternalData>;
 type RouterModule = ServerModule<Services, Handlers, RouterData>;
 
+const defaultRouters: RouterInputFn<any> = ({ modules }) => modules;
+
 const createRouterModule = (
   options: RouterModuleOptions = {}
 ): RouterModule => {
-  const { routers = defaultRouterMerger, rootPath = '/' } = options;
+  const { routers = defaultRouters, rootPath = '/' } = options;
   return new ServerModule({
     name: ServerModuleName.ROUTER,
     install: createInstaller(),

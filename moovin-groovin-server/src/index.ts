@@ -64,7 +64,7 @@ import createErrorHandlerModule, {
   ErrorHandlerModule,
 } from './modules/errorHandler';
 import createHostModule, { HostModule } from './modules/host';
-import type { RoutersFn } from './modules/router/types';
+import type { RouterInputFn } from './modules/router/types';
 import type { OpenApiSpecInputFn } from './modules/openapi/types';
 import type { OAuthInputFn } from './modules/oauth/types';
 import type { ApolloConfigFn } from './modules/graphql/types';
@@ -228,14 +228,15 @@ const main = async () => {
       // If router instance, uses it.
       // TODO: specify args in a separate field
       {
-        router: modules.oauth.router?.({ mergeParams: true }),
+        router: modules.oauth.router({ mergeParams: true }),
         pathPrefix: '/auth',
       },
       {
-        router: modules.stravaWebhook.router?.({ mergeParams: true }),
+        router: modules.stravaWebhook.router({ mergeParams: true }),
         pathPrefix: '/strava/webhook',
       },
     ]) as RoutersFn<ServerModules>,
+    ]) as RouterInputFn<AppServerModules>,
   });
 
   // ///////////////////////////

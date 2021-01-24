@@ -1,7 +1,7 @@
-import type { RouterInput, RoutersFn } from './types';
+import type { RouterInput, RouterInputFn } from './types';
 
 interface RouterExternalData {
-  routers: RouterInput | RoutersFn<any>;
+  routers: RouterInput | RouterInputFn<any>;
   rootPath: string;
 }
 

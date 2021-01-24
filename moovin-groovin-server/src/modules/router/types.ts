@@ -1,6 +1,7 @@
 import type { Router } from 'express';
 
-import {
+import type { OptionalArray } from '../../types';
+import type {
   AnyServerModule,
   ModuleContext,
   ServerModules,
@@ -8,11 +9,9 @@ import {
 
 export type RouterWithOptions = { router: Router; pathPrefix?: string };
 
-export type RouterInput =
-  | AnyServerModule
-  | RouterWithOptions
-  | (Router | AnyServerModule | RouterWithOptions)[];
-
-export type RoutersFn<TModules extends ServerModules = ServerModules> = (
+export type RouterInputBase = Router | RouterWithOptions;
+export type RouterInputSimple = RouterInputBase | AnyServerModule;
+export type RouterInput = OptionalArray<RouterInputSimple>;
+export type RouterInputFn<TModules extends ServerModules = ServerModules> = (
   ctx: ModuleContext<TModules>
 ) => RouterInput | Router;
