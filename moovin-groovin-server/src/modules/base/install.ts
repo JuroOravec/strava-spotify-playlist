@@ -19,7 +19,12 @@ const createBaseInstaller = (): Installer => {
   ) {
     app.set('trust proxy', true);
     app.set('appPath', `${this.data.root}client`);
-    app.use(cors());
+    app.use(
+      cors({
+        origin: ['https://moovingroovin.com', 'http://localhost:8080'],
+        credentials: true,
+      })
+    );
     app.use(
       bodyParser.urlencoded({
         extended: true,

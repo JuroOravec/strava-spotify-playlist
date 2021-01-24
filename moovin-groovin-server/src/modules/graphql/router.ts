@@ -14,6 +14,7 @@ const createRouter = (): RouterCreator => {
     assertApolloServer(this.data.apolloServer);
     const router = this.data.apolloServer.getMiddleware({
       path: '/graphql',
+      cors: false,
     });
     return router;
   };
