@@ -2,8 +2,6 @@
 
 // TODO: Add logout endpoint that calls req.logout (see passport.js)
 
-// TODO: nice to have - Revert the playlist order so latest is last
-//                    - Don't know why that happened
 // TODO: nice to have - make data module prop private to that module
 //                    - and move the store implementations and caches to private data
 // TODO: nice to have - add dependencies check when tring to install, so it's possible to track which module depends on which.
@@ -66,7 +64,6 @@ import createErrorHandlerModule, {
   ErrorHandlerModule,
 } from './modules/errorHandler';
 import createHostModule, { HostModule } from './modules/host';
-import type { RouterInputFn } from './modules/router/types';
 import type { OAuthInputFn } from './modules/oauth/types';
 import type { ServerModuleName } from './types';
 import type { ModuleContext } from './lib/ServerModule';
@@ -223,22 +220,19 @@ const main = async () => {
 
   const routerModule = createRouterModule({
     rootPath: '/api/v1',
-    routers: (({ modules }) => [
-      // TODO: allow module or router creator fn to be passed to `router`.
-      // If module passed, tries to call .router().
-      // If routerCreator, calls it.
-      // If router instance, uses it.
-      // TODO: specify args in a separate field
+    routers: ({ modules }: ModuleContext<AppServerModules>) => [
       {
-        router: modules.oauth.router({ mergeParams: true }),
+        router: modules.oauth,
+        routerOptions: { mergeParams: true },
         pathPrefix: '/auth',
       },
       {
-        router: modules.stravaWebhook.router({ mergeParams: true }),
+        router: modules.stravaWebhook,
+        routerOptions: { mergeParams: true },
         pathPrefix: '/strava/webhook',
       },
-      modules.graphql.router(),
-    ]) as RouterInputFn<AppServerModules>,
+      modules.graphql,
+    ],
   });
 
   // ///////////////////////////

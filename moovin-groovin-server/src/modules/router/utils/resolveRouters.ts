@@ -12,8 +12,9 @@ import type {
 import isRouter from './isRouter';
 
 const getModuleRouter = (
-  mod: AnyServerModule
-): OptionalArray<RouterInputBase> | null => mod.router?.() || null;
+  mod: AnyServerModule,
+  routerOptions?: RouterWithOptions['routerOptions']
+): OptionalArray<RouterInputBase> | null => mod.router?.(routerOptions) || null;
 
 const normalizeRouter = (router: RouterInputBase): RouterWithOptions =>
   isRouter(router) ? { router } : router;
@@ -27,6 +28,9 @@ const mergeRouters = (routers: RouterInputBase[]): Router => {
   return mergedRouter;
 };
 
+const isRouterOptions = (val: any): val is RouterWithOptions<any> =>
+  Boolean(val.router && !(val instanceof ServerModule));
+
 const resolveRouters = (...routerValues: RouterInput[]): Router | undefined => {
   const normRouterValues = ([] as unknown[])
     .concat(...routerValues)
@@ -34,18 +38,40 @@ const resolveRouters = (...routerValues: RouterInput[]): Router | undefined => {
 
   const routers = normRouterValues.reduce<RouterInputBase[]>(
     (aggRouters, routerOrModule) => {
-      if (!isNil(routerOrModule) && !(routerOrModule instanceof ServerModule)) {
-        return aggRouters.concat(routerOrModule);
+      if (isNil(routerOrModule)) return aggRouters;
+
+      // Get router, which can be either value itself or "router" field
+      const routerOptions = isRouterOptions(routerOrModule)
+        ? routerOrModule
+        : null;
+      const router = routerOptions ? routerOptions.router : routerOrModule;
+
+      // No further action required, add what we've received
+      if (!(router instanceof ServerModule)) {
+        return aggRouters.concat(
+          (routerOptions as RouterWithOptions) ?? router
+        );
       }
 
       const moduleRouters = ([] as RouterInputBase[])
-        .concat(getModuleRouter(routerOrModule) || [])
+        .concat(getModuleRouter(router, routerOptions?.routerOptions) || [])
         .filter(Boolean);
-      return aggRouters.concat(moduleRouters);
+
+      const moduleRoutersWithOptions = routerOptions
+        ? moduleRouters.map(
+            (currRouter): RouterWithOptions => ({
+              ...routerOptions,
+              ...(isRouterOptions(currRouter)
+                ? currRouter
+                : { router: currRouter }),
+            })
+          )
+        : moduleRouters;
+
+      return aggRouters.concat(moduleRoutersWithOptions);
     },
     []
   );
-
   const resolvedRouter = mergeRouters(routers);
   return resolvedRouter;
 };
