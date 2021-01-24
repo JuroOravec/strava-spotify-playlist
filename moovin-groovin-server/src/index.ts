@@ -23,6 +23,7 @@ import createBaseModule, { BaseModule } from './modules/base';
 import createSessionModule, { SessionModule } from './modules/session';
 import createOpenApiModule, { OpenApiModule } from './modules/openapi';
 import createRouterModule, { RouterModule } from './modules/router';
+import createGraphqlModule, { GraphqlModule } from './modules/graphql';
 import createStoreConfigModule, {
   StoreConfigModule,
 } from './modules/storeConfig';
@@ -66,12 +67,14 @@ import createHostModule, { HostModule } from './modules/host';
 import type { RoutersFn } from './modules/router/types';
 import type { OpenApiSpecInputFn } from './modules/openapi/types';
 import type { OAuthInputFn } from './modules/oauth/types';
+import type { ApolloConfigFn } from './modules/graphql/types';
 import type { ServerModuleName } from './types';
 
-type ServerModules = {
+type AppServerModules = {
   [ServerModuleName.BASE]: BaseModule;
   [ServerModuleName.ERR_HANDLER]: ErrorHandlerModule;
   [ServerModuleName.HOST]: HostModule;
+  [ServerModuleName.GRAPHQL]: GraphqlModule;
   [ServerModuleName.OAUTH]: OAuthModule;
   [ServerModuleName.OAUTH_GOOGLE]: OAuthGoogleModule;
   [ServerModuleName.OAUTH_FACEBOOK]: OAuthFacebookModule;
@@ -118,6 +121,17 @@ const main = async () => {
   });
 
   const errorHandlerModule = createErrorHandlerModule();
+
+  const graphqlModule = createGraphqlModule({
+    apolloConfig: ((ctx) => [
+      ctx.modules.storeUser,
+      { debug: !isProduction() },
+    ]) as ApolloConfigFn<AppServerModules>,
+    schemaConfig: {
+      inheritResolversFromInterfaces: true,
+      allowUndefinedInResolve: false,
+    },
+  });
 
   // ///////////////////////////
   // OPENAPI

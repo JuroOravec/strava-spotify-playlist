@@ -1,0 +1,25 @@
+openapi: 3.0.1
+info:
+  title: moovin-groovin (graphql)
+  description: Server for integrating Strava API with Spotify API (Graphql endpoints)
+  version: 1.0.0
+paths:
+  /graphql:
+    get:
+      description: Apollo Server endpoint
+      responses:
+        200:
+          description: Successful response from Apollo Server
+    post:
+      description: Apollo Server endpoint
+      responses:
+        200:
+          description: Successful response from Apollo Server
+          content: {}
+  # See https://github.com/apollographql/apollo-server/blob/main/packages/apollo-server-express/src/ApolloServer.ts#L146
+  /.well-known/apollo/server-health:
+    get:
+      description: Apollo Server health check endpoint
+      responses:
+        200:
+          description: Successful response with status on health of ApolloServer
