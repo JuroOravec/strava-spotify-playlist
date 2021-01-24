@@ -1,4 +1,4 @@
-// TODO: Doument the tutorial on how to do proper authentication on endpoints
+// TODO: Document the tutorial on how to do proper authentication on endpoints
 
 // TODO: Add logout endpoint that calls req.logout (see passport.js)
 
@@ -67,7 +67,7 @@ import createHostModule, { HostModule } from './modules/host';
 import type { RouterInputFn } from './modules/router/types';
 import type { OpenApiSpecInputFn } from './modules/openapi/types';
 import type { OAuthInputFn } from './modules/oauth/types';
-import type { ApolloConfigFn } from './modules/graphql/types';
+import type { GraphqlApolloConfigInputFn } from './modules/graphql/types';
 import type { ServerModuleName } from './types';
 
 type AppServerModules = {
@@ -126,7 +126,7 @@ const main = async () => {
     apolloConfig: ((ctx) => [
       ctx.modules.storeUser,
       { debug: !isProduction() },
-    ]) as ApolloConfigFn<AppServerModules>,
+    ]) as GraphqlApolloConfigInputFn<AppServerModules>,
     schemaConfig: {
       inheritResolversFromInterfaces: true,
       allowUndefinedInResolve: false,
@@ -147,8 +147,9 @@ const main = async () => {
         spec: modules.stravaWebhook.openapi(),
         pathPrefix: '/strava/webhook',
       },
-      modules.openapi.openapi(),
-    ]) as OpenApiSpecInputFn<ServerModules>,
+      modules.graphql,
+      modules.openapi,
+    ]) as OpenApiSpecInputFn<AppServerModules>,
   });
 
   // ///////////////////////////
@@ -212,7 +213,7 @@ const main = async () => {
         loginHandler: modules.oauthGoogle.handlers.authLogin,
         callbackHandler: modules.oauthGoogle.handlers.authCallback,
       },
-    ]) as OAuthInputFn<ServerModules>,
+    ]) as OAuthInputFn<AppServerModules>,
   });
 
   // ///////////////////////////
@@ -235,7 +236,7 @@ const main = async () => {
         router: modules.stravaWebhook.router({ mergeParams: true }),
         pathPrefix: '/strava/webhook',
       },
-    ]) as RoutersFn<ServerModules>,
+      modules.graphql.router(),
     ]) as RouterInputFn<AppServerModules>,
   });
 
@@ -348,6 +349,7 @@ const main = async () => {
       stravaModule,
       stravaWebhookModule,
       stravaSpotifyModule,
+      graphqlModule,
       routerModule,
       errorHandlerModule,
     ],

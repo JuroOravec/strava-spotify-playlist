@@ -12,8 +12,9 @@ import { Strategy } from 'passport';
 import isRouter from '../modules/router/utils/isRouter';
 import type { RouterInputBase } from '../modules/router/types';
 import type { OpenApiSpecInputBase } from '../modules/openapi/types';
+import type { GraphqlApolloConfigInputBase } from '../modules/graphql/types';
+import type { OptionalArray } from '../types';
 import getProps from '../utils/props';
-import type { OpenApiSpecInput } from '../modules/openapi/types';
 import logger from './logger';
 
 type AnyServerModule = ServerModule<any, any, any, any>;
@@ -46,6 +47,7 @@ type RouterCreator = (
   routerOptions?: RouterOptions
 ) => OptionalArray<RouterInputBase> | void;
 type OAuthCreator = (oauthOptions: { callbackUrl: string }) => Strategy | void;
+type GraphqlCreator = () => OptionalArray<GraphqlApolloConfigInputBase> | void;
 type OpenApiCreator = () => OptionalArray<OpenApiSpecInputBase> | void;
 
 type ListenerStopHandle = () => void;
@@ -83,6 +85,7 @@ interface ServerModuleOptions<
   router?: OptionalArray<RouterInputBase> | RouterCreator;
   openapi?: OptionalArray<OpenApiSpecInputBase> | OpenApiCreator;
   oauth?: OAuthCreator;
+  graphql?: OptionalArray<GraphqlApolloConfigInputBase> | GraphqlCreator;
   [key: string]: unknown;
 }
 
@@ -172,6 +175,7 @@ class ServerModule<
   router: RouterCreator;
   openapi: OpenApiCreator;
   oauth: OAuthCreator;
+  graphql: GraphqlCreator;
 
   private emitter: EventEmitter = new EventEmitter();
 
@@ -185,6 +189,7 @@ class ServerModule<
       data = {} as TData,
       router = () => {},
       oauth = () => {},
+      graphql = () => {},
       openapi = () => {},
     } = options;
 
@@ -232,6 +237,13 @@ class ServerModule<
     this.oauth = wrapInEmit(oauth.bind(this), this, {
       before: `${name}:willCreateOAuth`,
       after: `${name}:didCreateOAuth`,
+    });
+
+    const graphqlCreator =
+      typeof graphql === 'function' ? graphql : () => graphql;
+    this.graphql = wrapInEmit(graphqlCreator.bind(this), this, {
+      before: `${name}:willCreateGraphql`,
+      after: `${name}:didCreateGraphql`,
     });
 
     const openapiCreator =
@@ -305,4 +317,5 @@ export {
   RouterCreator,
   OAuthCreator,
   OpenApiCreator,
+  GraphqlCreator,
 };
