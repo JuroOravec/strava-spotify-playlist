@@ -12,7 +12,10 @@ const createRouter = (): RouterCreator => {
     this: ServerModule<Services, Handlers, GraphqlData>
   ) {
     assertApolloServer(this.data.apolloServer);
-    const router = this.data.apolloServer.getMiddleware({ path: '/graphql' });
+    const router = this.data.apolloServer.getMiddleware({
+      path: '/graphql',
+      cors: false,
+    });
     return router;
   };
 
