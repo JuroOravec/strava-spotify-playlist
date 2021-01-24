@@ -21,6 +21,8 @@ const createBaseInstaller = (): Installer => {
     app.set('appPath', `${this.data.root}client`);
     app.use(
       cors({
+        // TODO: Set these values in config
+        // TODO: When having multiple envs (e.g., prod and dev), do not include localhost on prod
         origin: [
           'https://moovingroovin.com',
           'https://www.moovingroovin.com',
