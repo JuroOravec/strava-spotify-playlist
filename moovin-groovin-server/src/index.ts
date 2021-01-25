@@ -10,6 +10,8 @@
 // TODO: nice to have - Set caching for S3 files (see https://www.gauntface.com/blog/2020/static-site-hosting-on-aws/)
 // TODO: nice to have - Set CORS policies for the routes
 // TODO: nice to have - Allow to pass modules to OAuthModuleConfig.providers
+// TODO: nice to have - Update the types of ServerModule similarly to ResolverContext so individual modules can
+//                      extend the common interface
 
 import { Pool } from 'pg';
 import { v5 as uuidV5 } from 'uuid';
