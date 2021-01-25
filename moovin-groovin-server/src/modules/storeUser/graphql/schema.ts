@@ -15,6 +15,7 @@ function createStoreUserGraphqlSchema(
     }
 
     type User {
+      userId: String!
       email: String
       nameFamily: String
       nameGiven: String
