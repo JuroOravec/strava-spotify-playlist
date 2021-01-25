@@ -19,6 +19,7 @@ export type RouterInputSimple =
   | AnyServerModule
   | RouterWithOptions<AnyServerModule>;
 export type RouterInput = OptionalArray<RouterInputSimple>;
-export type RouterInputFn<TModules extends ServerModules = ServerModules> = (
-  ctx: ModuleContext<TModules>
-) => RouterInput;
+export type RouterInputFn<
+  TModules extends ServerModules = ServerModules,
+  TInput extends RouterInput = RouterInput
+> = (ctx: ModuleContext<TModules>) => TInput;
