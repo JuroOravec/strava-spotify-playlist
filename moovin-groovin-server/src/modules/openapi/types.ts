@@ -19,5 +19,6 @@ export type OpenApiSpecInputSimple =
   | OpenApiSpecOptions<AnyServerModule>;
 export type OpenApiSpecInput = OptionalArray<OpenApiSpecInputSimple>;
 export type OpenApiSpecInputFn<
-  TModules extends ServerModules = ServerModules
-> = (ctx: ModuleContext<TModules>) => OpenApiSpecInput;
+  TModules extends ServerModules = ServerModules,
+  TInput extends OpenApiSpecInput = OpenApiSpecInput
+> = (ctx: ModuleContext<TModules>) => TInput;
