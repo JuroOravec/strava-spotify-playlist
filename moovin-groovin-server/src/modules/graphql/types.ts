@@ -18,8 +18,9 @@ export type GraphqlApolloConfigInputSimple =
   | AnyServerModule;
 export type GraphqlApolloConfigInput = OptionalArray<GraphqlApolloConfigInputSimple>;
 export type GraphqlApolloConfigInputFn<
-  TModules extends ServerModules = ServerModules
-> = (ctx: ModuleContext<TModules>) => GraphqlApolloConfigInput;
+  TModules extends ServerModules = ServerModules,
+  TInput extends GraphqlApolloConfigInput = GraphqlApolloConfigInput
+> = (ctx: ModuleContext<TModules>) => TInput;
 
 export type GraphqlSchemaConfig = Omit<
   IExecutableSchemaDefinition,
@@ -28,10 +29,19 @@ export type GraphqlSchemaConfig = Omit<
 export type GraphqlSchemaConfigInputBase = GraphqlSchemaConfig;
 export type GraphqlSchemaConfigInput = OptionalArray<GraphqlSchemaConfigInputBase>;
 export type GraphqlSchemaConfigInputFn<
-  TModules extends ServerModules = ServerModules
-> = (ctx: ModuleContext<TModules>) => GraphqlSchemaConfigInput;
+  TModules extends ServerModules = ServerModules,
+  TInput extends GraphqlSchemaConfigInput = GraphqlSchemaConfigInput
+> = (ctx: ModuleContext<TModules>) => TInput;
 
-export interface ResolverContext<TModules extends ServerModules = ServerModules>
-  extends ExpressContext {
+export interface GraphqlResolverContextExtension<
+  TModules extends ServerModules = ServerModules
+> extends ExpressContext {
   appContext: ModuleContext<TModules>;
+}
+
+/** Extend the context with user data loader */
+declare module '../../types/graphql' {
+  /* eslint-disable-next-line @typescript-eslint/no-empty-interface */
+  interface ResolverContext<TModules extends ServerModules = ServerModules>
+    extends GraphqlResolverContextExtension {}
 }

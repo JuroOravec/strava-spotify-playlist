@@ -9,7 +9,7 @@ import type {
 import resolveApolloConfigs from './utils/resolveApolloConfigs';
 import resolveSchemaConfigs from './utils/resolveSchemaConfigs';
 import type { GraphqlData } from './data';
-import type { ResolverContext } from './types';
+import type { GraphqlResolverContextExtension } from './types';
 
 const createGraphqlInstaller = (): Installer => {
   const install: Installer = function install(
@@ -45,7 +45,7 @@ const createGraphqlInstaller = (): Installer => {
 
     this.data.apolloServer = new ApolloServer({
       ...apolloOptions,
-      context: (contextArgs): ResolverContext => {
+      context: (contextArgs): GraphqlResolverContextExtension => {
         const userDefinedContext =
           (typeof apolloOptions.context === 'function'
             ? apolloOptions.context(contextArgs)
