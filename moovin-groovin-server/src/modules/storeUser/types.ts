@@ -1,3 +1,5 @@
+import Dataloader from 'dataloader';
+
 import type { ServerModules } from '../../lib/ServerModule';
 import type { ServerModuleName } from '../../types';
 import type { StoreTokenModule } from '../storeToken';
@@ -42,4 +44,15 @@ export interface UserStore {
 
 export interface StoreUserDeps extends ServerModules {
   [ServerModuleName.STORE_TOKEN]: StoreTokenModule;
+}
+
+export interface StoreUserResolverContextExtension {
+  userLoader: Dataloader<string, UserModel | null>;
+}
+
+/** Extend the context with user data loader */
+declare module '../../types/graphql' {
+  /* eslint-disable-next-line @typescript-eslint/no-empty-interface */
+  interface ResolverContext<TModules extends ServerModules = ServerModules>
+    extends StoreUserResolverContextExtension {}
 }

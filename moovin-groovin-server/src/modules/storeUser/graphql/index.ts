@@ -1,3 +1,6 @@
+import DataLoader from 'dataloader';
+import type { IResolvers } from 'apollo-server-express';
+
 import {
   ServerModule,
   GraphqlCreator,
@@ -5,7 +8,10 @@ import {
 } from '../../../lib/ServerModule';
 import type { StoreUserData } from '../data';
 import type { StoreUserServices } from '../services';
-import type { StoreUserDeps } from '../types';
+import type {
+  StoreUserResolverContextExtension,
+  StoreUserDeps,
+} from '../types';
 import createResolvers from './resolvers';
 import createSchema from './schema';
 
@@ -20,7 +26,12 @@ const createStoreUserGraphql = (): GraphqlCreator => {
   ) {
     return {
       typeDefs: createSchema.apply(this),
-      resolvers: createResolvers.apply(this),
+      resolvers: createResolvers.apply(this) as IResolvers,
+      context: (): StoreUserResolverContextExtension => ({
+        userLoader: new DataLoader((userIds) =>
+          this.services.getUsers(userIds as string[])
+        ),
+      }),
     };
   };
 
