@@ -17,6 +17,7 @@ import isNil from 'lodash/isNil';
 
 import './lib/env';
 import createServerContextManager from './lib/manageServerContext';
+import type { ModuleContext } from './lib/ServerModule';
 import isMainProcess from './utils/isMainProcess';
 import isProduction from './utils/isProduction';
 import createBaseModule, { BaseModule } from './modules/base';
@@ -66,7 +67,6 @@ import createErrorHandlerModule, {
 import createHostModule, { HostModule } from './modules/host';
 import type { OAuthInputFn } from './modules/oauth/types';
 import type { ServerModuleName } from './types';
-import type { ModuleContext } from './lib/ServerModule';
 
 type AppServerModules = {
   [ServerModuleName.BASE]: BaseModule;
