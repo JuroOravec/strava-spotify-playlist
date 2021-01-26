@@ -1,0 +1,15 @@
+openapi: 3.0.1
+info:
+  title: moovin-groovin (session)
+  description: Server for integrating Strava API with Spotify API (Session endpoints)
+  version: 1.0.0
+paths:
+  /logout:
+    get:
+      description: Sign user out from a session
+      parameters:
+        # Defined in oauth/api.yml
+        - $ref: '#/components/parameters/RedirectUrlParam'
+      responses:
+        302:
+          description: Redirects to redirect URL

@@ -4,13 +4,13 @@ import type {
   ServerModule,
   RouterCreator,
   Services,
-  Handlers,
 } from '../../lib/ServerModule';
 import type { OAuthData } from './data';
+import type { OAuthHandlers } from './handlers';
 
 const createRouter = (): RouterCreator => {
   const router: RouterCreator = function router(
-    this: ServerModule<Services, Handlers, OAuthData>,
+    this: ServerModule<Services, OAuthHandlers, OAuthData>,
     routerOptions
   ) {
     const router = Router(routerOptions);

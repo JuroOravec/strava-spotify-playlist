@@ -1,7 +1,5 @@
 // TODO: Document the tutorial on how to do proper authentication on endpoints
 
-// TODO: Add logout endpoint that calls req.logout (see passport.js)
-
 // TODO: nice to have - make data module prop private to that module
 //                    - and move the store implementations and caches to private data
 // TODO: nice to have - add dependencies check when tring to install, so it's possible to track which module depends on which.
@@ -9,6 +7,7 @@
 // TODO: nice to have - Add support for delete request webhook for oauth providers (FB, google, ...)
 // TODO: nice to have - Set caching for S3 files (see https://www.gauntface.com/blog/2020/static-site-hosting-on-aws/)
 // TODO: nice to have - Set CORS policies for the routes
+// TODO: nice to have - Allow to pass arrays to options object versions of routers and openapi input
 // TODO: nice to have - Allow to pass modules to OAuthModuleConfig.providers
 // TODO: nice to have - Update the types of ServerModule similarly to ResolverContext so individual modules can
 //                      extend the common interface
@@ -144,6 +143,10 @@ const main = async () => {
         pathPrefix: '/auth',
       },
       {
+        spec: modules.session,
+        pathPrefix: '/auth',
+      },
+      {
         spec: modules.stravaWebhook,
         pathPrefix: '/strava/webhook',
       },
@@ -225,6 +228,11 @@ const main = async () => {
     routers: ({ modules }: ModuleContext<AppServerModules>) => [
       {
         router: modules.oauth,
+        routerOptions: { mergeParams: true },
+        pathPrefix: '/auth',
+      },
+      {
+        router: modules.session,
         routerOptions: { mergeParams: true },
         pathPrefix: '/auth',
       },

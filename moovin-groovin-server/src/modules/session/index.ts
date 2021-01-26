@@ -1,10 +1,14 @@
-import ServerModule, { Services, Handlers } from '../../lib/ServerModule';
+import path from 'path';
+
+import ServerModule, { Services } from '../../lib/ServerModule';
 import { ServerModuleName } from '../../types';
 import type { SessionData } from './data';
 import createInstaller from './install';
+import createHandlers, { SessionHandlers } from './handlers';
+import createRouter from './router';
 
 type SessionModuleOptions = Partial<SessionData>;
-type SessionModule = ServerModule<Services, Handlers, SessionData>;
+type SessionModule = ServerModule<Services, SessionHandlers, SessionData>;
 
 const createSessionModule = (
   options: SessionModuleOptions = {}
@@ -13,11 +17,14 @@ const createSessionModule = (
   return new ServerModule({
     name: ServerModuleName.SESSION,
     install: createInstaller(),
+    handlers: createHandlers(),
+    router: createRouter(),
     data: {
       ...options,
       initializePassport,
       clientConfig,
     },
+    openapi: path.join(__dirname, './api.yml'),
   });
 };
 
