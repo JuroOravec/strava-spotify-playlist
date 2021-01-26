@@ -34,7 +34,7 @@ npm install
 Runs the application is development mode. Should not be used in production
 
 ```shell
-npm run dev
+npm run start
 ```
 
 or debug it
@@ -49,7 +49,7 @@ Compiles the application and starts it in production production mode.
 
 ```shell
 npm run compile
-npm start
+npm start:prd
 ```
 
 ## Test It
