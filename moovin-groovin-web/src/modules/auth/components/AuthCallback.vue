@@ -1,20 +1,10 @@
 <template>
   <div v-if="errorData" class="AuthCallback">
-    <h2 class="title">
-      Failed to authenticate
-    </h2>
-    <p class="body-1">
-      Error: {{ errorData.error }}
-    </p>
-    <p class="body-1">
-      Error Code: {{ errorData.code }}
-    </p>
-    <p class="body-1">
-      Description: {{ errorData.description }}
-    </p>
-    <p class="body-1">
-      Reason: {{ errorData.reason }}
-    </p>
+    <h2 class="title">Failed to authenticate</h2>
+    <p class="body-1">Error: {{ errorData.error }}</p>
+    <p class="body-1">Error Code: {{ errorData.code }}</p>
+    <p class="body-1">Description: {{ errorData.description }}</p>
+    <p class="body-1">Reason: {{ errorData.reason }}</p>
   </div>
 </template>
 
@@ -28,12 +18,8 @@ const AuthCallback = defineComponent({
     const instance = getCurrentInstance();
 
     const errorData = computed(() => {
-      const {
-        error,
-        error_code: code,
-        error_description: description,
-        error_reason: reason,
-      } = instance?.proxy.$route.query ?? {};
+      const { error, error_code: code, error_description: description, error_reason: reason } =
+        instance?.proxy.$route.query ?? {};
 
       if (!error && !code && !description && !reason) {
         return null;
@@ -46,12 +32,15 @@ const AuthCallback = defineComponent({
         reason: 'UNKNOWN',
       };
 
-      return defaults({
-        error: error,
-        code,
-        description,
-        reason,
-      }, defaultValues);
+      return defaults(
+        {
+          error: error,
+          code,
+          description,
+          reason,
+        },
+        defaultValues
+      );
     });
 
     // Try to close this window (if it was opened via window.open) if there's no error.
