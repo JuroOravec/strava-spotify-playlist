@@ -27,6 +27,7 @@ export type GqlMutation = {
 
 export type GqlUser = {
   __typename?: 'User';
+  userId: Scalars['String'];
   email: Maybe<Scalars['String']>;
   nameFamily: Maybe<Scalars['String']>;
   nameGiven: Maybe<Scalars['String']>;
@@ -47,7 +48,11 @@ export type GqlgetCurrentUserQuery = (
   { __typename?: 'Query' }
   & { getCurrentUser: (
     { __typename?: 'User' }
-    & Pick<GqlUser, 'email'>
+    & Pick<GqlUser, 'userId' | 'email' | 'nameFamily' | 'nameGiven' | 'nameDisplay' | 'photo'>
+    & { providers: Array<(
+      { __typename?: 'UserProvider' }
+      & Pick<GqlUserProvider, 'providerId'>
+    )> }
   ) }
 );
 
@@ -60,8 +65,9 @@ export type MutationKeySpecifier = ('hello' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {
 	hello?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type UserKeySpecifier = ('email' | 'nameFamily' | 'nameGiven' | 'nameDisplay' | 'photo' | 'providers' | UserKeySpecifier)[];
+export type UserKeySpecifier = ('userId' | 'email' | 'nameFamily' | 'nameGiven' | 'nameDisplay' | 'photo' | 'providers' | UserKeySpecifier)[];
 export type UserFieldPolicy = {
+	userId?: FieldPolicy<any> | FieldReadFunction<any>,
 	email?: FieldPolicy<any> | FieldReadFunction<any>,
 	nameFamily?: FieldPolicy<any> | FieldReadFunction<any>,
 	nameGiven?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -91,4 +97,4 @@ export type TypedTypePolicies = TypePolicies & {
 		fields?: UserProviderFieldPolicy,
 	}
 };
-// Generated on 2021-01-24T16:49:41+00:00
+// Generated on 2021-01-25T23:02:00+00:00

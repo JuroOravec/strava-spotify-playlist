@@ -5,4 +5,4 @@ export const namedOperations = {
     getCurrentUser: 'getCurrentUser'
   }
 }
-// Generated on 2021-01-24T16:49:41+00:00
+// Generated on 2021-01-25T23:02:00+00:00

@@ -27,6 +27,7 @@ type Mutation = {
 
 type User = {
   __typename?: 'User';
+  userId: Scalars['String'];
   email: Maybe<Scalars['String']>;
   nameFamily: Maybe<Scalars['String']>;
   nameGiven: Maybe<Scalars['String']>;
@@ -47,7 +48,11 @@ type getCurrentUserQuery = (
   { __typename?: 'Query' }
   & { getCurrentUser: (
     { __typename?: 'User' }
-    & Pick<User, 'email'>
+    & Pick<User, 'userId' | 'email' | 'nameFamily' | 'nameGiven' | 'nameDisplay' | 'photo'>
+    & { providers: Array<(
+      { __typename?: 'UserProvider' }
+      & Pick<UserProvider, 'providerId'>
+    )> }
   ) }
 );
 
@@ -55,12 +60,21 @@ type getCurrentUserQuery = (
  const getCurrentUserDocument = gql`
     query getCurrentUser {
   getCurrentUser {
+    userId
     email
+    nameFamily
+    nameGiven
+    nameDisplay
+    photo
+    providers {
+      providerId
+    }
   }
 }
     `;
 export interface UserOptions {
   __typename?: 'User';
+  userId?: User['userId'];
   email?: User['email'];
   nameFamily?: User['nameFamily'];
   nameGiven?: User['nameGiven'];
@@ -72,6 +86,7 @@ export interface UserOptions {
 export function newUser(options: UserOptions = {}, cache: Record<string, any> = {}): User {
   const o = (cache['User'] = {} as User);
   o.__typename = 'User';
+  o.userId = options.userId ?? 'userId';
   o.email = options.email ?? null;
   o.nameFamily = options.nameFamily ?? null;
   o.nameGiven = options.nameGiven ?? null;

@@ -30,6 +30,7 @@ type Mutation = {
 
 type User = {
   __typename?: 'User';
+  userId: Scalars['String'];
   email: Maybe<Scalars['String']>;
   nameFamily: Maybe<Scalars['String']>;
   nameGiven: Maybe<Scalars['String']>;
@@ -50,7 +51,11 @@ type getCurrentUserQuery = (
   { __typename?: 'Query' }
   & { getCurrentUser: (
     { __typename?: 'User' }
-    & Pick<User, 'email'>
+    & Pick<User, 'userId' | 'email' | 'nameFamily' | 'nameGiven' | 'nameDisplay' | 'photo'>
+    & { providers: Array<(
+      { __typename?: 'UserProvider' }
+      & Pick<UserProvider, 'providerId'>
+    )> }
   ) }
 );
 
@@ -58,7 +63,15 @@ type getCurrentUserQuery = (
  const getCurrentUserDocument = gql`
     query getCurrentUser {
   getCurrentUser {
+    userId
     email
+    nameFamily
+    nameGiven
+    nameDisplay
+    photo
+    providers {
+      providerId
+    }
   }
 }
     `;
@@ -79,4 +92,4 @@ export function usegetCurrentUserQuery(options: VueApolloComposable.UseQueryOpti
   return VueApolloComposable.useQuery<getCurrentUserQuery, getCurrentUserQueryVariables>(getCurrentUserDocument, {}, options);
 }
 export type getCurrentUserQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<getCurrentUserQuery, getCurrentUserQueryVariables>;
-// Generated on 2021-01-24T16:49:41+00:00
+// Generated on 2021-01-25T23:02:00+00:00
