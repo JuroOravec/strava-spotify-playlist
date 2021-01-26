@@ -1,0 +1,12 @@
+# Note: This has to be run separately from the rest of the codegen
+# so the rest can use schema.json
+overwrite: true
+generates:
+  # Generate schema.json from the server schema
+  src/plugins/apollo/schema.json:
+    schema:
+      - '../moovin-groovin-server/src/modules/**/graphql/schema.ts'
+    plugins:
+      - introspection
+    config:
+      minify: false

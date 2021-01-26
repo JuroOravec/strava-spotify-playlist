@@ -9,7 +9,9 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "lint:fix": "npm run lint -- --fix",
-    "typegen": "graphql-codegen --config codegen.yml"
+    "typegen": "npm run typegen:schema && npm run typegen:ts",
+    "typegen:schema": "graphql-codegen --config schema.codegen.yml",
+    "typegen:ts": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@apollo/client": "^3.3.7",
