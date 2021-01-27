@@ -1,4 +1,3 @@
-import isNil from 'lodash/isNil';
 import { v4 as genUuid } from 'uuid';
 
 import logger from '../../../lib/logger';
@@ -9,20 +8,21 @@ import ServerModule, {
   Services,
 } from '../../../lib/ServerModule';
 import type { UserModel } from '../../storeUser/types';
-import type { AuthToken } from '../../storeToken/types';
-import type { OAuthDeps, PassportUser } from '../types';
+import type { AuthToken, UserTokenMeta } from '../../storeToken/types';
+import type { OAuthDeps } from '../types';
 
 type UserInfo = Omit<UserModel, 'internalUserId' | 'loginProvider'>;
 
 interface OAuthPassportServices extends Services {
-  processLoginProviderPassportToken: (
+  processLoginProviderToken: (
     token: AuthToken,
     userInfo?: UserInfo
-  ) => Promise<PassportUser>;
-  validatePassportUser: (
-    internalUserId: string,
-    passportUser: PassportUser
-  ) => Promise<void>;
+  ) => Promise<UserModel>;
+  processIntegrationProviderToken: (
+    token: AuthToken,
+    internalUserId?: string,
+    isAuthenticated?: boolean
+  ) => Promise<UserTokenMeta | null>;
 }
 
 type ThisModule = ServerModule<
@@ -33,11 +33,11 @@ type ThisModule = ServerModule<
 >;
 
 const createOAuthPassportServices = (): OAuthPassportServices => {
-  async function processLoginProviderPassportToken(
+  async function processLoginProviderToken(
     this: ThisModule,
     token: AuthToken,
     userInfo: UserInfo = {}
-  ): Promise<PassportUser> {
+  ): Promise<UserModel> {
     assertContext(this.context);
     const {
       getUserByToken,
@@ -65,44 +65,34 @@ const createOAuthPassportServices = (): OAuthPassportServices => {
       await createUser({ ...user, tokens: [token] });
     }
 
-    return {
-      user,
-      token,
-    };
+    return user;
   }
 
-  async function validatePassportUser(
+  async function processIntegrationProviderToken(
     this: ThisModule,
-    internalUserId: string,
-    passportUser: PassportUser
-  ): Promise<void> {
-    if (isNil(internalUserId)) {
-      throw Error('No user ID found. Cannot authenticate unknown user.');
+    token: AuthToken,
+    internalUserId?: string,
+    isAuthenticated?: boolean
+  ): Promise<UserTokenMeta | null> {
+    assertContext(this.context);
+
+    if (!isAuthenticated || !internalUserId) {
+      throw new Error(
+        'Not authenticated. Cannot add integration to unknown user.'
+      );
     }
 
     assertContext(this.context);
-
-    // Check if userID refers to existing user.
-    const { getUser } = this.context.modules.storeUser.services;
-    const user = await getUser(internalUserId);
-
-    if (!user) {
-      throw Error('Invalid user ID.');
-    }
-
-    const { user: verifiedUser } = passportUser;
-    if (
-      !isNil(verifiedUser.internalUserId) &&
-      verifiedUser.internalUserId !== user.internalUserId
-    ) {
-      // Some user has logged in, but different one than we expected by the userId.
-      throw Error('Invalid user ID.');
-    }
+    const { upsertToken } = this.context.modules.storeToken.services;
+    return upsertToken({
+      ...token,
+      internalUserId,
+    });
   }
 
   return {
-    processLoginProviderPassportToken,
-    validatePassportUser,
+    processLoginProviderToken,
+    processIntegrationProviderToken,
   };
 };
 
