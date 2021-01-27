@@ -1,6 +1,9 @@
 import cluster from 'cluster';
 import isNil from 'lodash/isNil';
 
+const isProduction = (): boolean => process.env.NODE_ENV === 'production';
+const isDevelopment = (): boolean => process.env.NODE_ENV === 'development';
+
 /**
  * Determine whether the process the node script is running in
  * is the main process.
@@ -15,4 +18,4 @@ const isMainProcess = (): boolean =>
     ? cluster.isMaster
     : process.env.NODE_APP_INSTANCE === '0';
 
-export default isMainProcess;
+export { isProduction, isDevelopment, isMainProcess };

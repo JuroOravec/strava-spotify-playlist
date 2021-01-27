@@ -3,6 +3,7 @@ import type { HttpError } from 'express-openapi-validator/dist/framework/types';
 
 import type { ModuleContext, Installer } from '../../lib/ServerModule';
 import logger from '../../lib/logger';
+import { isDevelopment } from '../../utils/env';
 
 const createErrorHandlerInstaller = (): Installer => {
   const install: Installer = function install({ app }: ModuleContext) {
@@ -13,7 +14,16 @@ const createErrorHandlerInstaller = (): Installer => {
         res: Response,
         next: NextFunction
       ): void => {
-        const errors = err.errors || [{ message: err.message }];
+        // TODO: Move the isProd out
+        const errors = err.errors ?? [
+          !isDevelopment()
+            ? { message: err.message }
+            : {
+                message: err.stack,
+                user: req.user,
+                session: req.session,
+              },
+        ];
         res.status(err.status || 500).json({ ok: false, errors });
       }
     );
