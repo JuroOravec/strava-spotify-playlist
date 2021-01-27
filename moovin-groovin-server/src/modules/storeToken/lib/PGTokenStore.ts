@@ -10,6 +10,7 @@ import type {
   UserTokenModel,
   UserTokenMeta,
   UserTokenProviderInput,
+  UserTokenProviderAndUserInput,
 } from '../types';
 import {
   UserTokenMetaResponse,
@@ -67,6 +68,27 @@ class PGTokenStore extends PGStore<TokenStoreSQLQueries> implements TokenStore {
 
     const serializeKey = (d: UserTokenProviderInput) =>
       `${d.providerUserId}__${d.providerId}`;
+
+    return alignResultWithInput({
+      input: { value: tokenData, alignBy: serializeKey },
+      result: { value: ids, alignBy: serializeKey },
+      missing: null,
+    });
+  }
+
+  async deleteByUsersAndProviders(
+    tokenData: UserTokenProviderAndUserInput[]
+  ): Promise<(UserTokenMeta | null)[]> {
+    const { rows: ids } = await this.query(
+      'deleteTokensByUsersAndProviders',
+      tokenData.map(
+        (token) => [token.internalUserId, token.providerId] as const
+      ),
+      transformAuthTokenMetaResponse
+    );
+
+    const serializeKey = (d: UserTokenProviderAndUserInput) =>
+      `${d.internalUserId}__${d.providerId}`;
 
     return alignResultWithInput({
       input: { value: tokenData, alignBy: serializeKey },

@@ -29,6 +29,12 @@ interface TokenStoreSQLQueries extends PGQueries {
     >[],
     UserTokenMetaResponse
   ];
+  deleteTokensByUsersAndProviders: [
+    OptionalReadonly<
+      [UserTokenResponse['internal_user_id'], UserTokenResponse['provider_id']]
+    >[],
+    UserTokenMetaResponse
+  ];
   getTokens: [
     OptionalReadonly<
       [UserTokenResponse['provider_user_id'], UserTokenResponse['provider_id']]

@@ -11,6 +11,7 @@ import {
   UserTokenMeta,
   UserTokenProviderInput,
   StoreTokenEmits,
+  UserTokenProviderAndUserInput,
 } from './types';
 import assertTokenStore from './utils/assertTokenStore';
 
@@ -24,6 +25,12 @@ interface StoreTokenServices extends Services {
   deleteToken: (data: UserTokenProviderInput) => Promise<UserTokenMeta | null>;
   deleteTokens: (
     data: UserTokenProviderInput[]
+  ) => Promise<(UserTokenMeta | null)[]>;
+  deleteTokenByUserAndProvider: (
+    data: UserTokenProviderAndUserInput
+  ) => Promise<UserTokenMeta | null>;
+  deleteTokensByUsersAndProviders: (
+    data: UserTokenProviderAndUserInput[]
   ) => Promise<(UserTokenMeta | null)[]>;
   getToken: (data: UserTokenProviderInput) => Promise<UserTokenModel | null>;
   getTokens: (
@@ -77,6 +84,31 @@ const createTokenStoreServices = (): StoreTokenServices => {
     if (!data.length) return [];
     assertTokenStore(this.data.tokenStore);
     const response = await this.data.tokenStore.delete(data);
+
+    response.forEach((maybeTokenMeta) => {
+      if (!maybeTokenMeta) return;
+      this.emit('storeToken:didDeleteToken', maybeTokenMeta);
+    });
+
+    return response;
+  }
+
+  async function deleteTokenByUserAndProvider(
+    this: ThisModule,
+    data: UserTokenProviderAndUserInput
+  ): Promise<UserTokenMeta | null> {
+    const [
+      result = null,
+    ] = await this.services.deleteTokensByUsersAndProviders([data]);
+    return result;
+  }
+  async function deleteTokensByUsersAndProviders(
+    this: ThisModule,
+    data: UserTokenProviderAndUserInput[]
+  ): Promise<(UserTokenMeta | null)[]> {
+    if (!data.length) return [];
+    assertTokenStore(this.data.tokenStore);
+    const response = await this.data.tokenStore.deleteByUsersAndProviders(data);
 
     response.forEach((maybeTokenMeta) => {
       if (!maybeTokenMeta) return;
@@ -226,6 +258,8 @@ const createTokenStoreServices = (): StoreTokenServices => {
   return {
     deleteToken,
     deleteTokens,
+    deleteTokenByUserAndProvider,
+    deleteTokensByUsersAndProviders,
     getToken,
     getTokens,
     getTokensByProvider,

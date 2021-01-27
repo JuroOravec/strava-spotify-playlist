@@ -30,10 +30,18 @@ export type UserTokenProviderInput = Pick<
   'providerUserId' | 'providerId'
 >;
 
+export type UserTokenProviderAndUserInput = Pick<
+  UserTokenModel,
+  'internalUserId' | 'providerId'
+>;
+
 export interface TokenStore {
   install: () => Promise<void>;
   close: () => Promise<void>;
   delete: (data: UserTokenProviderInput[]) => Promise<(UserTokenMeta | null)[]>;
+  deleteByUsersAndProviders: (
+    data: UserTokenProviderAndUserInput[]
+  ) => Promise<(UserTokenMeta | null)[]>;
   get: (data: UserTokenProviderInput[]) => Promise<(UserTokenModel | null)[]>;
   getByProviders: (
     providerIds: string[]
