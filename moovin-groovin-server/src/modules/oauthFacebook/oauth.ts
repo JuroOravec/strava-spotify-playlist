@@ -1,6 +1,7 @@
+import type { Request } from 'express';
 import {
   Strategy as FacebookStrategy,
-  VerifyFunction,
+  VerifyFunctionWithRequest,
 } from 'passport-facebook';
 
 import ServerModule, {
@@ -11,8 +12,9 @@ import ServerModule, {
 } from '../../lib/ServerModule';
 import { asyncSafeInvoke } from '../../utils/safeInvoke';
 import type { OAuthModule } from '../oauth';
-import type { OAuthDeps, PassportUser } from '../oauth/types';
+import type { OAuthDeps } from '../oauth/types';
 import type { AuthToken } from '../storeToken/types';
+import type { UserModel } from '../storeUser/types';
 import type { OAuthFacebookData } from './data';
 
 type ThisModule = ServerModule<
@@ -22,14 +24,15 @@ type ThisModule = ServerModule<
   OAuthDeps & { oauth: OAuthModule }
 >;
 
-const passportVerifier: VerifyFunction = async function verifier(
+const passportVerifier: VerifyFunctionWithRequest = async function verifier(
   this: ThisModule,
+  req: Request<any, any, any, Partial<Record<'scope', string>>>,
   accessToken,
   refreshToken,
   profile,
   done
 ) {
-  const { result, error } = await asyncSafeInvoke<PassportUser>(async () => {
+  const { result, error } = await asyncSafeInvoke<UserModel>(async () => {
     assertContext(this.context);
 
     const token: AuthToken = {
@@ -38,12 +41,11 @@ const passportVerifier: VerifyFunction = async function verifier(
       providerId: profile.provider,
       providerUserId: profile.id,
       expiresAt: 0,
+      scope: req.query.scope ?? null,
     };
 
-    const {
-      processLoginProviderPassportToken,
-    } = this.context.modules.oauth.services;
-    return processLoginProviderPassportToken(token, {
+    const { processLoginProviderToken } = this.context.modules.oauth.services;
+    return processLoginProviderToken(token, {
       nameDisplay: profile.displayName,
       nameFamily: profile.name?.familyName,
       nameGiven: profile.name?.givenName,
@@ -68,6 +70,7 @@ const createOAuth = (): OAuthCreator => {
         clientSecret: this.data.clientSecret,
         callbackURL: callbackUrl,
         profileFields: ['id', 'emails', 'name', 'displayName'],
+        passReqToCallback: true,
       },
       verifier as any
     );

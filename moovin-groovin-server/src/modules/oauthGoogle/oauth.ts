@@ -1,3 +1,4 @@
+import type { Request } from 'express';
 import {
   OAuth2Strategy as GoogleStrategy,
   Profile,
@@ -10,26 +11,29 @@ import ServerModule, {
   Services,
 } from '../../lib/ServerModule';
 import { asyncSafeInvoke } from '../../utils/safeInvoke';
+import type { OAuthModule } from '../oauth';
 import type { OAuthHandlers } from '../oauth/handlers';
-import type { OAuthDeps, PassportUser } from '../oauth/types';
+import type { OAuthDeps } from '../oauth/types';
 import type { AuthToken } from '../storeToken/types';
+import type { UserModel } from '../storeUser/types';
 import type { OAuthGoogleData } from './data';
 
 type ThisModule = ServerModule<
   Services,
   OAuthHandlers,
   OAuthGoogleData,
-  OAuthDeps
+  OAuthDeps & { oauth: OAuthModule }
 >;
 
 const passportVerifier = async function verifier(
   this: ThisModule,
+  req: Request<any, any, any, Partial<Record<'scope', string>>>,
   accessToken: string,
   refreshToken: string,
   profile: Profile,
   done: VerifyFunction
 ) {
-  const { result, error } = await asyncSafeInvoke<PassportUser>(async () => {
+  const { result, error } = await asyncSafeInvoke<UserModel>(async () => {
     assertContext(this.context);
     const token: AuthToken = {
       accessToken,
@@ -37,12 +41,11 @@ const passportVerifier = async function verifier(
       providerId: profile.provider,
       providerUserId: profile.id,
       expiresAt: 0,
+      scope: req.query.scope ?? null,
     };
 
-    const {
-      processLoginProviderPassportToken,
-    } = this.context.modules.oauth.services;
-    return processLoginProviderPassportToken(token, {
+    const { processLoginProviderToken } = this.context.modules.oauth.services;
+    return processLoginProviderToken(token, {
       nameDisplay: profile.displayName,
       nameFamily: profile.name?.familyName,
       nameGiven: profile.name?.givenName,
@@ -66,6 +69,7 @@ const createOAuth = (): OAuthCreator => {
         clientID: this.data.clientId,
         clientSecret: this.data.clientSecret,
         callbackURL: callbackUrl,
+        passReqToCallback: true,
       },
       verifier as any
     );
