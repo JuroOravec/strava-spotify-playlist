@@ -14,6 +14,10 @@ function createStoreUserGraphqlSchema(
       getCurrentUser: User!
     }
 
+    extend type Mutation {
+      deleteCurrentUser: User!
+    }
+
     type User {
       userId: String!
       email: String
