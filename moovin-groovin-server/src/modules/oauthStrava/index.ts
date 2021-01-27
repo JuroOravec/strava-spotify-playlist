@@ -8,7 +8,6 @@ import createOAuthServices, {
 } from '../oauth/services/accessToken';
 import createOAuth from './oauth';
 import type { OAuthStravaData, OAuthStravaExternalData } from './data';
-import { getScopesInfo } from './utils/scope';
 
 type OAuthStravaModuleOptions = SetRequiredFields<
   OAuthStravaExternalData,
@@ -20,18 +19,6 @@ type OAuthStravaModule = ServerModule<
   OAuthHandlers,
   OAuthStravaData
 >;
-
-const assertScope = (scope?: string): void => {
-  if (!scope) throw Error('"scope" query param missing');
-
-  const { canReadPrivateActivities, canReadPublicActivities } = getScopesInfo(
-    scope
-  );
-
-  if (!canReadPublicActivities && !canReadPrivateActivities) {
-    throw Error(`Required permissions have not been granted`);
-  }
-};
 
 const doRefreshAccessToken = async function doRefreshAccessToken(
   this: OAuthStravaModule,
@@ -53,10 +40,7 @@ const createOAuthStravaModule = (
 
   return new ServerModule({
     name: ServerModuleName.OAUTH_STRAVA,
-    handlers: createOAuthHandlers('strava', {
-      requireUserId: true,
-      assertScope,
-    }),
+    handlers: createOAuthHandlers('strava'),
     services: createOAuthServices('strava', { doRefreshAccessToken }),
     oauth: createOAuth(),
     data: {

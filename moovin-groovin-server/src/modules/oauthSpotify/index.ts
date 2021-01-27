@@ -44,7 +44,7 @@ const createOAuthSpotifyModule = (
 
   return new ServerModule({
     name: ServerModuleName.OAUTH_SPOTIFY,
-    handlers: createOAuthHandlers('spotify', { requireUserId: true }),
+    handlers: createOAuthHandlers('spotify'),
     services: createOAuthAccessTokenServices('spotify', {
       doRefreshAccessToken,
     }),
