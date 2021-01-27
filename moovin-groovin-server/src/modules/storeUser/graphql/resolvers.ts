@@ -53,6 +53,30 @@ function createStoreUserGraphqlResolvers(
         context.req.logout();
         return transformUserToGqlUser(user);
       },
+
+      deleteCurrentUserProviders: async (parent, { providerIds }, context) => {
+        const user = getCurrentAuthenticatedUser(context.req);
+
+        assertContext(this.context);
+        const {
+          deleteTokensByUsersAndProviders,
+          getTokensByUser,
+        } = this.context.modules.storeToken.services;
+        const removedTokens = await deleteTokensByUsersAndProviders(
+          providerIds.map((providerId) => ({
+            internalUserId: user.internalUserId,
+            providerId,
+          }))
+        );
+        // Log user out if there are no more tokens
+        // TODO: Search only for the login providers
+        const remainingTokens = await getTokensByUser(user.internalUserId);
+        if (!remainingTokens?.length) {
+          context.req.logout();
+        }
+
+        return removedTokens;
+      },
     },
 
     User: {
