@@ -1,7 +1,12 @@
 import zip from 'lodash/zip';
 
 import logger from '../../lib/logger';
-import { assertContext, ServerModule, Services } from '../../lib/ServerModule';
+import {
+  assertContext,
+  Handlers,
+  ServerModule,
+  Services,
+} from '../../lib/ServerModule';
 import type { StoreTokenModule } from '../storeToken';
 import type { AuthToken, UserTokenProviderInput } from '../storeToken/types';
 import type {
@@ -36,7 +41,7 @@ interface StoreUserServices extends Services {
 
 type ThisModule = ServerModule<
   StoreUserServices,
-  any,
+  Handlers,
   StoreUserData,
   { storeToken: StoreTokenModule }
 >;
@@ -144,7 +149,6 @@ const createStoreUserServices = (): StoreUserServices => {
           await this.context.modules.storeToken.services.upsertTokens(
             user.tokens.map((token) => ({
               ...token,
-              scope: null,
               internalUserId,
             }))
           );

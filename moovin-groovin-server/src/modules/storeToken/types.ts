@@ -10,14 +10,14 @@ export interface AuthToken {
   accessToken: string;
   /** OAuth refresh token for a particular user at particular service */
   refreshToken: string;
+  /** Permission scope for a particular user at particular service */
+  scope: string | null;
 }
 
 /** OAuth token for a third party service (provider) associated with a particular user */
 export interface UserTokenModel extends AuthToken {
   /** ID we assigned to the user */
   internalUserId: string;
-  /** Permission scope for a particular user at particular service */
-  scope: string | null;
 }
 
 export type UserTokenMeta = Pick<
