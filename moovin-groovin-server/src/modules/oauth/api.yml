@@ -10,8 +10,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/RedirectUrlParam'
         - $ref: '#/components/parameters/StateParam'
-        - $ref: '#/components/parameters/UserIdParam'
-        - $ref: '#/components/parameters/SSPVerifyTokenParam'
       responses:
         302:
           description: Redirects to auth URL
@@ -27,8 +25,6 @@ paths:
         - $ref: '#/components/parameters/ErrorDescriptionParam'
         - $ref: '#/components/parameters/ErrorReasonParam'
         - $ref: '#/components/parameters/RedirectUrlParam'
-        - $ref: '#/components/parameters/UserIdParam'
-        - $ref: '#/components/parameters/SSPVerifyTokenParam'
         - $ref: '#/components/parameters/AuthUserParam'
         - $ref: '#/components/parameters/PromptParam'
       responses:
@@ -95,14 +91,6 @@ components:
       required: false
       schema:
         type: string
-    UserIdParam:
-      name: user_id
-      in: query
-      allowReserved: false
-      allowEmptyValue: false
-      required: false
-      schema:
-        type: string
     AuthUserParam:
       name: authuser
       in: query
@@ -113,14 +101,6 @@ components:
         type: string
     PromptParam:
       name: prompt
-      in: query
-      allowReserved: false
-      allowEmptyValue: false
-      required: false
-      schema:
-        type: string
-    SSPVerifyTokenParam:
-      name: ssp.verify_token
       in: query
       allowReserved: false
       allowEmptyValue: false

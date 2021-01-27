@@ -1,5 +1,4 @@
 import passport from 'passport';
-import NodeCache from 'node-cache';
 
 import logger from '../../lib/logger';
 import {
@@ -20,13 +19,6 @@ const createOAuthInstaller = (): Installer => {
     ctx: ModuleContext
   ) {
     const { app } = ctx;
-
-    this.data.cache = new NodeCache({
-      stdTTL: 600,
-      deleteOnExpire: true,
-      useClones: false,
-      checkperiod: 60,
-    });
 
     const providersInput: OAuthInput =
       typeof this.data.providers === 'function'

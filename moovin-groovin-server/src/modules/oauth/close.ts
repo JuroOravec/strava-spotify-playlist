@@ -13,8 +13,6 @@ const createOAuthCloser = (): Closer => {
   const close: Closer = async function close(
     this: ServerModule<Services, Handlers, OAuthData>
   ) {
-    this.data.cache?.close();
-
     if (!this.data.resolvedProviders) return;
 
     const providerNames = this.data.resolvedProviders.map(

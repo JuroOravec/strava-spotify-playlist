@@ -1,5 +1,3 @@
-import type NodeCache from 'node-cache';
-
 import type { OAuthInput, OAuthInputFn, OAuthOptions } from './types';
 
 interface OAuthExternalData {
@@ -10,7 +8,6 @@ interface OAuthExternalData {
 
 interface OAuthInternalData {
   resolvedProviders: OAuthOptions[] | null;
-  cache: NodeCache | null;
 }
 
 type OAuthData = OAuthExternalData & OAuthInternalData;

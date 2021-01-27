@@ -1,7 +1,6 @@
-import type { Services } from '../../../lib/ServerModule';
 import createPassportServices, { OAuthPassportServices } from './passport';
 
-type OAuthServices = Services & OAuthPassportServices;
+type OAuthServices = OAuthPassportServices;
 
 const createOAuthServices = (): OAuthServices => ({
   ...createPassportServices(),
