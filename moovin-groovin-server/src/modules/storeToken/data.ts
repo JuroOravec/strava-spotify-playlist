@@ -1,13 +1,13 @@
 import type { PGStoreOptions } from '../../lib/PGStore';
 import type { TokenStore } from './types';
 
-interface TokenStoreExternalData {
+interface StoreTokenExternalData {
   clientConfig: PGStoreOptions;
 }
-interface TokenStoreInternalData {
+interface StoreTokenInternalData {
   tokenStore: TokenStore | null;
 }
 
-type TokenStoreData = TokenStoreExternalData & TokenStoreInternalData;
+type StoreTokenData = StoreTokenExternalData & StoreTokenInternalData;
 
-export { TokenStoreData, TokenStoreExternalData };
+export { StoreTokenData, StoreTokenExternalData };

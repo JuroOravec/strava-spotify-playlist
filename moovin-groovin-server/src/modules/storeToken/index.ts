@@ -3,15 +3,15 @@ import { ServerModuleName } from '../../types';
 import createCloser from './close';
 import createInstaller from './install';
 import createServices, { StoreTokenServices } from './services';
-import type { TokenStoreData, TokenStoreExternalData } from './data';
+import type { StoreTokenData, StoreTokenExternalData } from './data';
 import type { StoreTokenEmits } from './types';
 
-type StoreTokenModuleOptions = Partial<TokenStoreExternalData>;
+type StoreTokenModuleOptions = Partial<StoreTokenExternalData>;
 
 type StoreTokenModule = ServerModule<
   StoreTokenServices,
   Handlers,
-  TokenStoreData,
+  StoreTokenData,
   ServerModules,
   StoreTokenEmits
 >;

@@ -5,7 +5,7 @@ import {
   ServerModules,
   Services,
 } from '../../lib/ServerModule';
-import type { TokenStoreData } from './data';
+import type { StoreTokenData } from './data';
 import {
   UserTokenModel,
   UserTokenMeta,
@@ -64,7 +64,7 @@ interface StoreTokenServices extends Services {
 type ThisModule = ServerModule<
   StoreTokenServices,
   any,
-  TokenStoreData,
+  StoreTokenData,
   ServerModules,
   StoreTokenEmits
 >;

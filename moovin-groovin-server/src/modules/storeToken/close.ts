@@ -4,11 +4,11 @@ import type {
   Handlers,
   Services,
 } from '../../lib/ServerModule';
-import type { TokenStoreData } from './data';
+import type { StoreTokenData } from './data';
 
 const createTokenStoreCloser = (): Closer => {
   const close: Closer = async function close(
-    this: ServerModule<Services, Handlers, TokenStoreData>
+    this: ServerModule<Services, Handlers, StoreTokenData>
   ): Promise<void> {
     await this.data.tokenStore?.close();
     this.data.tokenStore = null;
