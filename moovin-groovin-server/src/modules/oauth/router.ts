@@ -21,6 +21,12 @@ const createRouter = (): RouterCreator => {
 
     providers.forEach(({ providerId, callbackHandler, loginHandler }) => {
       router
+        // Passport strategy handler actually handles both cases
+        // (send use out to 3rd party and process code received from 3rd party)
+        // so we have to include it in both login and callback.
+        //
+        // In fact, that means that we could do without the /login endpoint and just
+        // use the callback.
         .get(`/${providerId}/login`, loginHandler)
         .get(`/${providerId}/callback`, loginHandler, callbackHandler);
     });
