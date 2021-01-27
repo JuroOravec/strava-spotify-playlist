@@ -14,7 +14,6 @@ import logger from '../../lib/logger';
 import { asyncSafeInvoke } from '../../utils/safeInvoke';
 import type { SessionData } from './data';
 import type { SessionDeps } from './types';
-import type { PassportUser } from '../oauth/types';
 
 const createSessionInstaller = (): Installer => {
   const install: Installer = function install(
@@ -36,6 +35,7 @@ const createSessionInstaller = (): Installer => {
         saveUninitialized: false,
         proxy: true,
         cookie: {
+          // TODO: Uncomment this?
           // secure: true,
           maxAge: 30 * 24 * 60 * 60 * 1000,
         },
@@ -49,10 +49,9 @@ const createSessionInstaller = (): Installer => {
     }
     app.use(passport.session());
 
-    passport.serializeUser(async (userData, done) => {
+    passport.serializeUser(async (user, done) => {
       const { result, error } = await asyncSafeInvoke(async () => {
-        const { user } = (userData ?? {}) as PassportUser;
-        if (!user) {
+        if (!user?.internalUserId) {
           throw Error('User not found');
         }
         return user.internalUserId;
