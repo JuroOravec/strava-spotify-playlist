@@ -37,7 +37,7 @@ import { computed, defineComponent, unref } from '@vue/composition-api';
 
 import useCurrentUser from '../composables/useCurrentUser';
 
-export default defineComponent({
+const LoginAvatar = defineComponent({
   name: 'LoginAvatar',
   inheritAttrs: false,
   setup() {
@@ -57,6 +57,8 @@ export default defineComponent({
     };
   },
 });
+
+export default LoginAvatar;
 </script>
 
 <style lang="scss">

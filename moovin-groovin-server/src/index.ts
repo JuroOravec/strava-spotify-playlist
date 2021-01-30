@@ -107,6 +107,8 @@ const main = async () => {
   const hostModule = createHostModule({
     port,
     origin: isProduction() ? 'https://api.moovingroovin.com' : null,
+    // NOTE: When in dev, use 'http://localhost:${port}/...' instead of localtunnel.
+    // Getting invalid redirect_uri when using localtunnel
     localtunnelEnabled: Boolean(
       !isProduction() && process.env.LOCALTUNNEL_ENABLED
     ),
@@ -184,8 +186,6 @@ const main = async () => {
   });
 
   const oauthModule = createOAuthModule({
-    // NOTE: When in dev, use 'http://localhost:${port}/...' instead of localtunnel.
-    // Getting invalid redirect_uri when using localtunnel here
     callbackUrlRoot: `/api/v1/auth`,
     // Passport is initialized in session module to work correctly
     initializePassport: false,
