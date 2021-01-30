@@ -3,6 +3,7 @@ import type {
   UserTokenMeta,
   TokenStore,
   UserTokenProviderInput,
+  UserTokenProviderAndUserInput,
 } from '../types';
 
 type ProviderStore = Map<string, UserTokenModel>;
@@ -32,6 +33,38 @@ class LocalTokenStore implements TokenStore {
       if (!removedToken) return null;
 
       const { internalUserId } = removedToken;
+
+      providerStore.delete(providerUserId);
+      const userTokens = this.storeByUserId.get(internalUserId) || [];
+      const indexToRemove = userTokens.findIndex(
+        (token) =>
+          token.providerId === providerId &&
+          token.providerUserId === providerUserId
+      );
+      if (indexToRemove !== -1) userTokens.splice(indexToRemove, 1);
+      if (!userTokens.length) this.storeByUserId.delete(internalUserId);
+
+      return {
+        internalUserId,
+        providerId,
+        providerUserId,
+      };
+    });
+  }
+
+  async deleteByUsersAndProviders(
+    tokenData: UserTokenProviderAndUserInput[]
+  ): Promise<(UserTokenMeta | null)[]> {
+    return tokenData.map(({ providerId, internalUserId }) => {
+      const providerStore = this.getProviderStore(providerId);
+      const removedToken = Array.from(providerStore.values()).find(
+        (token) =>
+          token.providerId === providerId &&
+          token.internalUserId === internalUserId
+      );
+      if (!removedToken) return null;
+
+      const { providerUserId } = removedToken;
 
       providerStore.delete(providerUserId);
       const userTokens = this.storeByUserId.get(internalUserId) || [];
