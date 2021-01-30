@@ -3,7 +3,9 @@
     <router-view name="appbar" />
     <v-main>
       <v-container>
-        <router-view name="default" />
+        <AuthGuard>
+          <router-view name="default" />
+        </AuthGuard>
       </v-container>
     </v-main>
   </v-app>
@@ -12,12 +14,12 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
 
-import Navbar from '@/modules/base/components/Navbar.vue';
+import AuthGuard from '@/modules/auth/components/AuthGuard.vue';
 
 const App = defineComponent({
   name: 'App',
   components: {
-    Navbar,
+    AuthGuard,
   },
 });
 
@@ -25,7 +27,9 @@ export default App;
 </script>
 
 <style lang="scss">
+@import '~@/plugins/vuetify/vuetify.scss';
+@import '~../styles/main.scss';
+
 .App {
 }
 </style>
->
