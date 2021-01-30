@@ -1,23 +1,24 @@
 <template>
   <v-row>
-    user: {{ user }}
     <v-col>
       <ProfileIntegration
-        v-for="provider in integrationProviders"
-        :key="provider.id"
-        :provider-id="provider.id"
-        :provider-name="provider.name"
+        v-for="integration in integrations"
+        :key="integration.id"
+        class="ProfileIntegrations__item"
+        :provider-id="integration.id"
+        :provider-name="integration.name"
+        :integrated="integration.integrated"
       />
     </v-col>
   </v-row>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { computed, defineComponent, unref } from '@vue/composition-api';
 
 import { AuthProviders } from '@/modules/auth/composables/useOpenAuthWindow';
+import useCurrentUser from '@/modules/auth/composables/useCurrentUser';
 import ProfileIntegration from './ProfileIntegration.vue';
-import useGetCurrentUser from '../composables/useGetCurrentUser';
 
 const integrationProviders = [
   {
@@ -36,13 +37,31 @@ const ProfileIntegrations = defineComponent({
     ProfileIntegration,
   },
   setup() {
-    const { user } = useGetCurrentUser();
+    const { user } = useCurrentUser();
+
+    const integrations = computed(() => {
+      return integrationProviders.map((provider) => ({
+        ...provider,
+        integrated: unref(user)?.providers.includes(provider.id) ?? false,
+      }));
+    });
+
     return {
-      integrationProviders,
-      user,
+      integrations,
     };
   },
 });
 
 export default ProfileIntegrations;
 </script>
+
+<style lang="scss">
+@import '@/plugins/vuetify/vuetify';
+.ProfileIntegrations {
+  &__item {
+    & + & {
+      @extend .mt-8;
+    }
+  }
+}
+</style>
