@@ -17,14 +17,14 @@ if (process.env.NODE_ENV === 'production') {
 }
 installBase(Vue);
 installCompositionAPI(Vue);
-const config = installConfig(Vue);
+const { currentConfig } = installConfig(Vue);
 const vuetify = installVuetify(Vue);
 const router = installRouter(Vue, {
   mode: 'history',
   base: process.env.BASE_URL,
   routes: createRoutes(),
 });
-const { provider: apolloProvider } = installApollo(Vue);
+const { provider: apolloProvider } = installApollo(Vue, currentConfig);
 
 new Vue({
   name: 'VueApp',

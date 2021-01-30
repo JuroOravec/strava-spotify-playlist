@@ -1,4 +1,9 @@
+import { inject } from '@vue/composition-api';
+
+import { ConfigKey } from '@/plugins/config';
 import openWindow, { WindowFeatures } from '@/modules/auth/utils/openWindow';
+import useCurrentUser from './useCurrentUser';
+import { EnvironmentConfig } from '@/plugins/config/config';
 
 interface UseOpenAuthWindow {
   openWindow: typeof openWindow;
@@ -12,8 +17,6 @@ enum AuthProviders {
   SPOTIFY = 'spotify',
 }
 
-const CALLBACK_URL = 'http://localhost:8080/auth/callback';
-
 const defaultWindowFeats: Partial<WindowFeatures> = {
   width: 300,
   height: 400,
@@ -25,21 +28,30 @@ const defaultWindowFeats: Partial<WindowFeatures> = {
   status: false,
 };
 
-const getAuthUrl = (provider: AuthProviders) =>
-  `https://api.moovingroovin.com/api/v1/auth/${provider}/login`;
+const getAuthUrl = (urlTemplate: string, provider: AuthProviders) => urlTemplate.replace(/$\{provider\}/gi, provider);
 
 const useOpenAuthWindow = (): UseOpenAuthWindow => {
-  const openAuthWindow = (provider: AuthProviders): void => {
-    const authUrl = getAuthUrl(provider);
+  const config = inject<EnvironmentConfig>(ConfigKey);
+
+  const { refetch: refetchUser } = useCurrentUser();
+
+  const openAuthWindow = (
+    provider: AuthProviders,
+    options: { params?: Record<string, string> } = {}
+  ): void => {
+    const { params = {} } = options;
+
+    const authUrl = getAuthUrl(config?.LOGIN_URL ?? '', provider);
 
     const urlHelper = new URL(authUrl);
-    urlHelper.searchParams.set('redirect_url', CALLBACK_URL);
+    Object.entries(params).forEach(([key, val]) => urlHelper.searchParams.set(key, val));
+
+    urlHelper.searchParams.set('redirect_url', config?.AUTH_CALLBACK_URL ?? '');
 
     openWindow(urlHelper.toString(), {
       name: `moovin-groovin-login-${provider}`,
       windowFeatures: defaultWindowFeats,
-      // TODO: Replace this with a fetch for user data
-      onDidCloseWindow: () => location.reload(),
+      onDidCloseWindow: refetchUser,
     });
   };
 
@@ -49,4 +61,5 @@ const useOpenAuthWindow = (): UseOpenAuthWindow => {
   };
 };
 
-export { useOpenAuthWindow as default, AuthProviders };
+export default useOpenAuthWindow;
+export { AuthProviders };

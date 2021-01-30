@@ -4,6 +4,7 @@ import { ApolloClients } from '@vue/apollo-composable';
 import VueApollo from 'vue-apollo';
 import type { ApolloClient } from 'apollo-client';
 
+import type { EnvironmentConfig } from '../config/config';
 import createApolloClients, { VueApolloClients } from './clients';
 
 interface ApolloPlugin {
@@ -11,16 +12,13 @@ interface ApolloPlugin {
   provider: VueApollo;
 }
 
-const installApollo = (vueClass: VueConstructor): ApolloPlugin => {
+const installApollo = (vueClass: VueConstructor, config: EnvironmentConfig): ApolloPlugin => {
   vueClass.use(VueApollo);
 
   // Note: VueApollo is using types from 'apollo-client' while we use '@apollo/client/core'
   // so we have to cast them.
-  const apolloClients = createApolloClients();
-  const castedApolloClients = (createApolloClients() as unknown) as Record<
-    string,
-    ApolloClient<any>
-  >;
+  const apolloClients = createApolloClients(config);
+  const castedApolloClients = (apolloClients as unknown) as Record<string, ApolloClient<any>>;
 
   const apolloProvider = new VueApollo({
     clients: castedApolloClients,
