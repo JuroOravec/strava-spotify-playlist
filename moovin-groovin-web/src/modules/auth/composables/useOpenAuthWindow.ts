@@ -28,7 +28,8 @@ const defaultWindowFeats: Partial<WindowFeatures> = {
   status: false,
 };
 
-const getAuthUrl = (urlTemplate: string, provider: AuthProviders) => urlTemplate.replace(/$\{provider\}/gi, provider);
+const getAuthUrl = (urlTemplate: string, provider: AuthProviders) =>
+  urlTemplate.replace(/\$\{provider\}/gi, provider);
 
 const useOpenAuthWindow = (): UseOpenAuthWindow => {
   const config = inject<EnvironmentConfig>(ConfigKey);

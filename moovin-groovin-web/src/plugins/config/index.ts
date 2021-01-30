@@ -11,7 +11,10 @@ const installConfig = (
   // TODO: Add Vue instance props with the config data?
 
   const configs = createConfig();
-  const currentConfig = configs.development;
+
+  // TODO: Set the env at webpack processing?
+  const currEnv = (process.env.NODE_ENV || 'production') as keyof ApplicationConfig;
+  const currentConfig = configs[currEnv];
 
   vueClass.mixin({
     name: 'ConfigMixin',

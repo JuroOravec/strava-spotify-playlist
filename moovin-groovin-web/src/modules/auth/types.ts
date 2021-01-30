@@ -1,5 +1,5 @@
 export enum AuthRoute {
   CALLBACK = 'auth:callback',
-  UNKNOWN = 'auth:root',
+  UNKNOWN = 'auth:unknown',
   ROOT = 'auth:root',
 }
