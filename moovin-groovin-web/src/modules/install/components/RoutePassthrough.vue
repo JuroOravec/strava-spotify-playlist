@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, getCurrentInstance } from '@vue/composition-api';
+import { defineComponent } from '@vue/composition-api';
 
 /**
  * Empty component rendered at namespace route.

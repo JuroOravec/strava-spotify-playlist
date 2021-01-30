@@ -72,4 +72,5 @@ const openWindow = (url: string, options: OpenWindowOptions = {}): void => {
   newWindow.location.href = url;
 };
 
-export { openWindow as default, WindowFeatures };
+export default openWindow;
+export type { WindowFeatures };

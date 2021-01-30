@@ -11,6 +11,7 @@
 // TODO: nice to have - Allow to pass modules to OAuthModuleConfig.providers
 // TODO: nice to have - Update the types of ServerModule similarly to ResolverContext so individual modules can
 //                      extend the common interface
+// TODO: nice to have - Type SQL queries (see https://github.com/adelsz/pgtyped)
 
 import { Pool } from 'pg';
 import { v5 as uuidV5 } from 'uuid';
