@@ -34,8 +34,5 @@ const createStoreTokenModule = (
   });
 };
 
-export {
-  createStoreTokenModule as default,
-  StoreTokenModule,
-  StoreTokenModuleOptions,
-};
+export default createStoreTokenModule;
+export type { StoreTokenModule, StoreTokenModuleOptions };

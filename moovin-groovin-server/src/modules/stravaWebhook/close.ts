@@ -16,4 +16,4 @@ const createStravaWebhookCloser = (): Closer => {
   return close;
 };
 
-export { createStravaWebhookCloser as default };
+export default createStravaWebhookCloser;

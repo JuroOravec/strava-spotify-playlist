@@ -32,4 +32,4 @@ const createOAuthCloser = (): Closer => {
   return close;
 };
 
-export { createOAuthCloser as default };
+export default createOAuthCloser;

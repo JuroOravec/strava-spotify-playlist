@@ -17,4 +17,4 @@ const createRootGraphql = (): GraphqlCreator => {
   return createGraphql;
 };
 
-export { createRootGraphql as default };
+export default createRootGraphql;

@@ -17,4 +17,4 @@ const createTokenStoreCloser = (): Closer => {
   return close;
 };
 
-export { createTokenStoreCloser as default };
+export default createTokenStoreCloser;

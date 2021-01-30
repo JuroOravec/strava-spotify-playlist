@@ -13,4 +13,4 @@ const createStorePlaylistInstaller = (): Installer => {
   return install;
 };
 
-export { createStorePlaylistInstaller as default };
+export default createStorePlaylistInstaller;

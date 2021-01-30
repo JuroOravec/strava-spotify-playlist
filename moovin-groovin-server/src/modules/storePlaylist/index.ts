@@ -31,8 +31,5 @@ const createStorePlaylistModule = (
   });
 };
 
-export {
-  createStorePlaylistModule as default,
-  StorePlaylistModule,
-  StorePlaylistModuleOptions,
-};
+export default createStorePlaylistModule;
+export type { StorePlaylistModule, StorePlaylistModuleOptions };

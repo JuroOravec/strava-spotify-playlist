@@ -122,4 +122,5 @@ const createStoreConfigServices = (): StoreConfigServices => {
   };
 };
 
-export { createStoreConfigServices as default, StoreConfigServices };
+export default createStoreConfigServices;
+export type { StoreConfigServices };

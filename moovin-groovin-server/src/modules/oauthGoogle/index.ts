@@ -29,8 +29,5 @@ const createOAuthGoogleModule = (
   });
 };
 
-export {
-  createOAuthGoogleModule as default,
-  OAuthGoogleModule,
-  OAuthGoogleModuleOptions,
-};
+export default createOAuthGoogleModule;
+export type { OAuthGoogleModule, OAuthGoogleModuleOptions };

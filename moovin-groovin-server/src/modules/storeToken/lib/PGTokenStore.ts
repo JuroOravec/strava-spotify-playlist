@@ -207,4 +207,5 @@ class PGTokenStore extends PGStore<TokenStoreSQLQueries> implements TokenStore {
   }
 }
 
-export { PGTokenStore as default, transformAuthTokenResponse };
+export default PGTokenStore;
+export { transformAuthTokenResponse };

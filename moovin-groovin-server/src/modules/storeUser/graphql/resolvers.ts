@@ -99,4 +99,4 @@ function createStoreUserGraphqlResolvers(
   };
 }
 
-export { createStoreUserGraphqlResolvers as default };
+export default createStoreUserGraphqlResolvers;

@@ -13,4 +13,4 @@ const createTokenStoreInstaller = (): Installer => {
   return install;
 };
 
-export { createTokenStoreInstaller as default };
+export default createTokenStoreInstaller;

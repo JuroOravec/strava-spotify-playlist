@@ -190,4 +190,5 @@ const createSpotifyServices = (): SpotifyServices => {
   };
 };
 
-export { createSpotifyServices as default, SpotifyServices };
+export default createSpotifyServices;
+export type { SpotifyServices };

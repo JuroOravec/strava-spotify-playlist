@@ -37,4 +37,4 @@ const createSpotifyHistoryInstaller = (): Installer => {
   return install;
 };
 
-export { createSpotifyHistoryInstaller as default };
+export default createSpotifyHistoryInstaller;

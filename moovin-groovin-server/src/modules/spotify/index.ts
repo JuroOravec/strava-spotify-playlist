@@ -29,4 +29,5 @@ const createSpotifyModule = (options: SpotifyModuleOptions): SpotifyModule =>
     },
   });
 
-export { createSpotifyModule as default, SpotifyModule, SpotifyModuleOptions };
+export default createSpotifyModule;
+export type { SpotifyModule, SpotifyModuleOptions };

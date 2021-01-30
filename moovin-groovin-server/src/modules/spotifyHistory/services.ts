@@ -223,4 +223,5 @@ const createSpotifyHistoryServices = (): SpotifyHistoryServices => {
   };
 };
 
-export { createSpotifyHistoryServices as default, SpotifyHistoryServices };
+export default createSpotifyHistoryServices;
+export type { SpotifyHistoryServices };

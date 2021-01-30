@@ -16,4 +16,4 @@ const createGraphqlCloser = (): Closer => {
   return close;
 };
 
-export { createGraphqlCloser as default };
+export default createGraphqlCloser;

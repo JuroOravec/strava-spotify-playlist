@@ -27,4 +27,4 @@ const createOpenApiSpec = (): (() => OpenApiSpec) => {
   return openApiSpec;
 };
 
-export { createOpenApiSpec as default };
+export default createOpenApiSpec;

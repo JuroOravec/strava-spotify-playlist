@@ -173,4 +173,5 @@ const createStoreUserServices = (): StoreUserServices => {
   };
 };
 
-export { createStoreUserServices as default, StoreUserServices };
+export default createStoreUserServices;
+export type { StoreUserServices };

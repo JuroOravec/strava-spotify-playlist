@@ -16,4 +16,4 @@ function createRootGraphqlResolvers(this: ServerModule): IResolvers {
   return resolvers;
 }
 
-export { createRootGraphqlResolvers as default };
+export default createRootGraphqlResolvers;

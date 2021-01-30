@@ -28,4 +28,5 @@ const createSessionModule = (
   });
 };
 
-export { createSessionModule as default, SessionModule, SessionModuleOptions };
+export default createSessionModule;
+export type { SessionModule, SessionModuleOptions };

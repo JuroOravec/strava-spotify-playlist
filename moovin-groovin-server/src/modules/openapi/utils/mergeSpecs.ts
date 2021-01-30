@@ -35,4 +35,4 @@ const mergeSpecs = (apiSpecs: OpenApiSpecInputBase[]): OpenAPIV3.Document => {
   return apiSpec;
 };
 
-export { mergeSpecs as default };
+export default mergeSpecs;

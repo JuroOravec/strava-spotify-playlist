@@ -40,4 +40,4 @@ const manageServerContext = (): ManageServerContext => {
   };
 };
 
-export { manageServerContext as default };
+export default manageServerContext;

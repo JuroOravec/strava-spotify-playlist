@@ -13,4 +13,4 @@ const createStoreTrackInstaller = (): Installer => {
   return install;
 };
 
-export { createStoreTrackInstaller as default };
+export default createStoreTrackInstaller;

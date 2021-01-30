@@ -486,4 +486,5 @@ const createStravaSpotifyServices = (): StravaSpotifyServices => {
   };
 };
 
-export { createStravaSpotifyServices as default, StravaSpotifyServices };
+export default createStravaSpotifyServices;
+export type { StravaSpotifyServices };

@@ -50,8 +50,5 @@ const createOAuthStravaModule = (
   });
 };
 
-export {
-  createOAuthStravaModule as default,
-  OAuthStravaModule,
-  OAuthStravaModuleOptions,
-};
+export default createOAuthStravaModule;
+export type { OAuthStravaModule, OAuthStravaModuleOptions };

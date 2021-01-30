@@ -30,4 +30,4 @@ const createRouterInstaller = (): Installer => {
   return install;
 };
 
-export { createRouterInstaller as default };
+export default createRouterInstaller;

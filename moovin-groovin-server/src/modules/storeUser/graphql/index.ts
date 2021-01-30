@@ -38,4 +38,4 @@ const createStoreUserGraphql = (): GraphqlCreator => {
   return createGraphql;
 };
 
-export { createStoreUserGraphql as default };
+export default createStoreUserGraphql;

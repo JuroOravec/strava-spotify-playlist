@@ -16,4 +16,4 @@ const createSpotifyHistoryCloser = (): Closer => {
   return close;
 };
 
-export { createSpotifyHistoryCloser as default };
+export default createSpotifyHistoryCloser;

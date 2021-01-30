@@ -23,4 +23,5 @@ const createRouterModule = (
     },
   });
 };
-export { createRouterModule as default, RouterModule, RouterModuleOptions };
+export default createRouterModule;
+export type { RouterModule, RouterModuleOptions };

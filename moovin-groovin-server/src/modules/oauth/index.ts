@@ -34,4 +34,5 @@ const createOAuthModule = (options: OAuthModuleOptions): OAuthModule => {
   });
 };
 
-export { createOAuthModule as default, OAuthModule, OAuthModuleOptions };
+export default createOAuthModule;
+export type { OAuthModule, OAuthModuleOptions };

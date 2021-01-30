@@ -62,4 +62,4 @@ const createOAuthInstaller = (): Installer => {
   return install;
 };
 
-export { createOAuthInstaller as default };
+export default createOAuthInstaller;

@@ -29,4 +29,4 @@ const createBaseInstaller = (): Installer => {
   return install;
 };
 
-export { createBaseInstaller as default };
+export default createBaseInstaller;

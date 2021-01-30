@@ -11,4 +11,5 @@ const createErrorHandlerModule = (): ErrorHandlerModule =>
     install: createInstaller(),
   });
 
-export { createErrorHandlerModule as default, ErrorHandlerModule };
+export default createErrorHandlerModule;
+export type { ErrorHandlerModule };

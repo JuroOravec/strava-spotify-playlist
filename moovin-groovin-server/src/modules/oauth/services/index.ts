@@ -6,4 +6,5 @@ const createOAuthServices = (): OAuthServices => ({
   ...createPassportServices(),
 });
 
-export { createOAuthServices as default, OAuthServices };
+export default createOAuthServices;
+export type { OAuthServices };

@@ -17,4 +17,4 @@ const createStorePlaylistCloser = (): Closer => {
   return close;
 };
 
-export { createStorePlaylistCloser as default };
+export default createStorePlaylistCloser;

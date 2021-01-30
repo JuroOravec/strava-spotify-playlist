@@ -30,8 +30,5 @@ const createOAuthFacebookModule = (
   });
 };
 
-export {
-  createOAuthFacebookModule as default,
-  OAuthFacebookModule,
-  OAuthFacebookModuleOptions,
-};
+export default createOAuthFacebookModule;
+export type { OAuthFacebookModule, OAuthFacebookModuleOptions };

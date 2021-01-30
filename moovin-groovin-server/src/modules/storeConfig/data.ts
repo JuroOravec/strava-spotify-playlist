@@ -52,8 +52,5 @@ const createStoreConfigData = (
   };
 };
 
-export {
-  createStoreConfigData as default,
-  StoreConfigData,
-  StoreConfigExternalData,
-};
+export default createStoreConfigData;
+export type { StoreConfigData, StoreConfigExternalData };

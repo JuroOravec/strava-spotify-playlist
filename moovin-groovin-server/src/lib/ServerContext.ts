@@ -206,4 +206,5 @@ class ServerContext {
   }
 }
 
-export { ServerContext as default, ServerContext, ServerContextOptions };
+export default ServerContext;
+export type { ServerContext, ServerContextOptions };

@@ -23,4 +23,5 @@ const createHostModule = (options: HostModuleOptions = {}): HostModule => {
   });
 };
 
-export { createHostModule as default, HostModule, HostModuleOptions };
+export default createHostModule;
+export type { HostModule, HostModuleOptions };

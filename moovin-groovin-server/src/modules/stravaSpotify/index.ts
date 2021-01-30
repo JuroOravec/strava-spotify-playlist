@@ -31,8 +31,5 @@ const createStravaWebhookModule = (
   });
 };
 
-export {
-  createStravaWebhookModule as default,
-  StravaSpotifyModule,
-  StravaSpotifyModuleOptions,
-};
+export default createStravaWebhookModule;
+export type { StravaSpotifyModule, StravaSpotifyModuleOptions };

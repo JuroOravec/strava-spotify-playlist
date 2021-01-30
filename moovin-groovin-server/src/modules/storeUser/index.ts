@@ -35,8 +35,5 @@ const createStoreUserModule = (
   });
 };
 
-export {
-  createStoreUserModule as default,
-  StoreUserModule,
-  StoreUserModuleOptions,
-};
+export default createStoreUserModule;
+export type { StoreUserModule, StoreUserModuleOptions };

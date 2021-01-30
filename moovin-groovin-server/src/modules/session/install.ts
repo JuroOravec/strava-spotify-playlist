@@ -82,4 +82,4 @@ const createSessionInstaller = (): Installer => {
   return install;
 };
 
-export { createSessionInstaller as default };
+export default createSessionInstaller;

@@ -16,4 +16,4 @@ const createSpotifyCloser = (): Closer => {
   return close;
 };
 
-export { createSpotifyCloser as default };
+export default createSpotifyCloser;

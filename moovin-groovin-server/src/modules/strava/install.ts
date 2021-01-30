@@ -14,4 +14,4 @@ const createStravaInstaller = (): Installer => {
   return install;
 };
 
-export { createStravaInstaller as default };
+export default createStravaInstaller;

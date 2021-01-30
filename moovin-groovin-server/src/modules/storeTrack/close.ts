@@ -17,4 +17,4 @@ const createStoreTrackCloser = (): Closer => {
   return close;
 };
 
-export { createStoreTrackCloser as default };
+export default createStoreTrackCloser;

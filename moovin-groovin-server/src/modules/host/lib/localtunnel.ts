@@ -17,4 +17,5 @@ const createLocaltunnel = async (
   return tunnel;
 };
 
-export { createLocaltunnel as default, LocaltunnelConfig };
+export default createLocaltunnel;
+export type { LocaltunnelConfig };

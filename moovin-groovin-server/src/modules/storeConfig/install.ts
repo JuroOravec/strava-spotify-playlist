@@ -18,4 +18,4 @@ const createStoreConfigInstaller = (): Installer => {
   return install;
 };
 
-export { createStoreConfigInstaller as default };
+export default createStoreConfigInstaller;

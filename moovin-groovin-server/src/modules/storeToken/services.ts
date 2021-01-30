@@ -274,4 +274,5 @@ const createTokenStoreServices = (): StoreTokenServices => {
   };
 };
 
-export { createTokenStoreServices as default, StoreTokenServices };
+export default createTokenStoreServices;
+export type { StoreTokenServices };

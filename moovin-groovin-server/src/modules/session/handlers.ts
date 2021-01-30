@@ -44,4 +44,5 @@ const createSessionHandlers = (): SessionHandlers => {
   };
 };
 
-export { createSessionHandlers as default, SessionHandlers };
+export default createSessionHandlers;
+export type { SessionHandlers };

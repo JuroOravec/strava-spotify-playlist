@@ -42,4 +42,5 @@ const createSpotifyHistoryServices = (): HostServices => {
   };
 };
 
-export { createSpotifyHistoryServices as default, HostServices };
+export default createSpotifyHistoryServices;
+export type { HostServices };

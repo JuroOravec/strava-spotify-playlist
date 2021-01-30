@@ -20,4 +20,5 @@ const createBaseModule = (options: BaseModuleOptions = {}): BaseModule => {
   });
 };
 
-export { createBaseModule as default, BaseModule, BaseModuleOptions };
+export default createBaseModule;
+export type { BaseModule, BaseModuleOptions };

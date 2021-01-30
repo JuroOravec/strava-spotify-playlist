@@ -18,4 +18,4 @@ const createStoreUserInstaller = (): Installer => {
   return install;
 };
 
-export { createStoreUserInstaller as default };
+export default createStoreUserInstaller;

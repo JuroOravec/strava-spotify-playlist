@@ -15,4 +15,5 @@ const createStravaModule = (options: StravaModuleOptions = {}): StravaModule =>
     data: { ...options },
   });
 
-export { createStravaModule as default, StravaModule, StravaModuleOptions };
+export default createStravaModule;
+export type { StravaModule, StravaModuleOptions };

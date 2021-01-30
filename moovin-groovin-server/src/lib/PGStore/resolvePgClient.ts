@@ -31,4 +31,5 @@ const resolvePgClient = (
   };
 };
 
-export { resolvePgClient as default, PGClientOptions };
+export default resolvePgClient;
+export type { PGClientOptions };

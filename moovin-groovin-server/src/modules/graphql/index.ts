@@ -32,4 +32,5 @@ const createGraphqlModule = (
   });
 };
 
-export { createGraphqlModule as default, GraphqlModule, GraphqlModuleOptions };
+export default createGraphqlModule;
+export type { GraphqlModule, GraphqlModuleOptions };

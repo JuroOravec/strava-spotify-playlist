@@ -37,8 +37,5 @@ const createStoreSessionModule = (
   });
 };
 
-export {
-  createStoreSessionModule as default,
-  StoreSessionModule,
-  StoreSessionModuleOptions,
-};
+export default createStoreSessionModule;
+export type { StoreSessionModule, StoreSessionModuleOptions };

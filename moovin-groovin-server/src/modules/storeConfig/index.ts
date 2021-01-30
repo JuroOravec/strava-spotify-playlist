@@ -28,8 +28,5 @@ const createStoreConfigModule = (
   });
 };
 
-export {
-  createStoreConfigModule as default,
-  StoreConfigModule,
-  StoreConfigModuleOptions,
-};
+export default createStoreConfigModule;
+export type { StoreConfigModule, StoreConfigModuleOptions };

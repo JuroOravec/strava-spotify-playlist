@@ -30,4 +30,4 @@ const createStoreSessionInstaller = (): Installer => {
   return install;
 };
 
-export { createStoreSessionInstaller as default };
+export default createStoreSessionInstaller;

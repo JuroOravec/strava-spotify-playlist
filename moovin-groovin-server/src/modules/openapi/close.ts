@@ -17,4 +17,4 @@ const createOpenApiCloser = (): Closer => {
   return close;
 };
 
-export { createOpenApiCloser as default };
+export default createOpenApiCloser;

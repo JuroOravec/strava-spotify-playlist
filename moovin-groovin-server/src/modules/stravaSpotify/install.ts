@@ -13,4 +13,4 @@ const createStravaSpotifyInstaller = (): Installer => {
   return install;
 };
 
-export { createStravaSpotifyInstaller as default };
+export default createStravaSpotifyInstaller;

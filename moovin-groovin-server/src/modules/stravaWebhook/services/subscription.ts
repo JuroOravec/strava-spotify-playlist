@@ -103,7 +103,5 @@ const createStravaWebhookSubscriptionServices = (): StravaWebhookSubscriptionSer
   };
 };
 
-export {
-  createStravaWebhookSubscriptionServices as default,
-  StravaWebhookSubscriptionServices,
-};
+export default createStravaWebhookSubscriptionServices;
+export type { StravaWebhookSubscriptionServices };

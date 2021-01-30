@@ -34,4 +34,5 @@ const createOpenApiModule = (
   });
 };
 
-export { createOpenApiModule as default, OpenApiModule, OpenApiModuleOptions };
+export default createOpenApiModule;
+export type { OpenApiModule, OpenApiModuleOptions };

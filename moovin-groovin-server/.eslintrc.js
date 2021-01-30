@@ -1,3 +1,13 @@
+const commonRestrictedSyntax = [
+  {
+    // Raise on `export { xyz as default }`
+    selector:
+      'ExportNamedDeclaration > ExportSpecifier[exported.name="default"]',
+    message:
+      'TypeScript auto-completion is not available for `export { abc as default }` syntax. Use `export default abc` instead.',
+  },
+];
+
 module.exports = {
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   parserOptions: {
@@ -14,5 +24,7 @@ module.exports = {
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
     '@typescript-eslint/ban-ts-comment': 0,
     '@typescript-eslint/no-empty-function': 0,
+    // Define forbidden syntax by AST selector
+    'no-restricted-syntax': ['error', ...commonRestrictedSyntax],
   },
 };

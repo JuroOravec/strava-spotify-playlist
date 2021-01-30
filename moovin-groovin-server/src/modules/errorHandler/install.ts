@@ -32,4 +32,4 @@ const createErrorHandlerInstaller = (): Installer => {
   return install;
 };
 
-export { createErrorHandlerInstaller as default };
+export default createErrorHandlerInstaller;

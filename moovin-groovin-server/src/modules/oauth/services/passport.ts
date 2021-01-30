@@ -96,4 +96,5 @@ const createOAuthPassportServices = (): OAuthPassportServices => {
   };
 };
 
-export { createOAuthPassportServices as default, OAuthPassportServices };
+export default createOAuthPassportServices;
+export type { OAuthPassportServices };

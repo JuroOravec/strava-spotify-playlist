@@ -136,4 +136,5 @@ const createStravaWebhookHandlers = (): StravaWebhookHandlers => {
   };
 };
 
-export { createStravaWebhookHandlers as default, StravaWebhookHandlers };
+export default createStravaWebhookHandlers;
+export type { StravaWebhookHandlers };

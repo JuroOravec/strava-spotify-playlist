@@ -56,8 +56,5 @@ const createOAuthSpotifyModule = (
   });
 };
 
-export {
-  createOAuthSpotifyModule as default,
-  OAuthSpotifyModule,
-  OAuthSpotifyModuleOptions,
-};
+export default createOAuthSpotifyModule;
+export type { OAuthSpotifyModule, OAuthSpotifyModuleOptions };

@@ -305,9 +305,9 @@ function assertContext(
   throw Error(errorMessage);
 }
 
-export {
-  ServerModule as default,
-  assertContext,
+export default ServerModule;
+export { assertContext };
+export type {
   ServerModule,
   AnyServerModule,
   ModuleContext,

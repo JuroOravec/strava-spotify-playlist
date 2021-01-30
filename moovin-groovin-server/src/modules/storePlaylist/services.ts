@@ -158,4 +158,5 @@ const createStorePlaylistServices = (): StorePlaylistServices => {
   };
 };
 
-export { createStorePlaylistServices as default, StorePlaylistServices };
+export default createStorePlaylistServices;
+export type { StorePlaylistServices };

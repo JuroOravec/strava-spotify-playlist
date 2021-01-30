@@ -17,4 +17,4 @@ const createStravaSpotifyCloser = (): Closer => {
   return close;
 };
 
-export { createStravaSpotifyCloser as default };
+export default createStravaSpotifyCloser;

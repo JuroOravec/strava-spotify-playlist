@@ -149,4 +149,5 @@ const createOAuthHandlers = (
   };
 };
 
-export { createOAuthHandlers as default, OAuthHandlers };
+export default createOAuthHandlers;
+export type { OAuthHandlers };

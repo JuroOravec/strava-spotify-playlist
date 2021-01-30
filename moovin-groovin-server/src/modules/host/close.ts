@@ -21,4 +21,4 @@ const createHostCloser = (): Closer => {
   return close;
 };
 
-export { createHostCloser as default };
+export default createHostCloser;

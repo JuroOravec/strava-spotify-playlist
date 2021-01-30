@@ -44,4 +44,5 @@ const createStravaServices = (): StravaServices => {
   };
 };
 
-export { createStravaServices as default, StravaServices };
+export default createStravaServices;
+export type { StravaServices };

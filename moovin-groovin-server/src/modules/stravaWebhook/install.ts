@@ -35,4 +35,4 @@ const createStravaWebhookInstaller = (): Installer => {
   return install;
 };
 
-export { createStravaWebhookInstaller as default };
+export default createStravaWebhookInstaller;

@@ -68,4 +68,5 @@ const createStoreTrackServices = (): StoreTrackServices => {
   };
 };
 
-export { createStoreTrackServices as default, StoreTrackServices };
+export default createStoreTrackServices;
+export type { StoreTrackServices };

@@ -31,8 +31,5 @@ const createStoreTrackModule = (
   });
 };
 
-export {
-  createStoreTrackModule as default,
-  StoreTrackModule,
-  StoreTrackModuleOptions,
-};
+export default createStoreTrackModule;
+export type { StoreTrackModule, StoreTrackModuleOptions };

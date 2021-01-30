@@ -48,8 +48,5 @@ const createStravaWebhookModule = (
   });
 };
 
-export {
-  createStravaWebhookModule as default,
-  StravaWebhookModule,
-  StravaWebhookModuleOptions,
-};
+export default createStravaWebhookModule;
+export type { StravaWebhookModule, StravaWebhookModuleOptions };

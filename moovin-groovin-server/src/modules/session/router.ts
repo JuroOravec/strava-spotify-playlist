@@ -21,4 +21,4 @@ const createRouter = (): RouterCreator => {
   return router;
 };
 
-export { createRouter as default };
+export default createRouter;

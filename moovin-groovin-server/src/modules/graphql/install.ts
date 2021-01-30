@@ -65,4 +65,4 @@ const createGraphqlInstaller = (): Installer => {
   return install;
 };
 
-export { createGraphqlInstaller as default };
+export default createGraphqlInstaller;

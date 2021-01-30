@@ -17,4 +17,4 @@ const createStoreSessionCloser = (): Closer => {
   return close;
 };
 
-export { createStoreSessionCloser as default };
+export default createStoreSessionCloser;

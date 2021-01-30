@@ -37,4 +37,4 @@ function createStoreUserGraphqlSchema(
   `;
 }
 
-export { createStoreUserGraphqlSchema as default };
+export default createStoreUserGraphqlSchema;

@@ -39,8 +39,5 @@ const createSpotifyHistoryModule = (
   });
 };
 
-export {
-  createSpotifyHistoryModule as default,
-  SpotifyHistoryModule,
-  SpotifyHistoryModuleOptions,
-};
+export default createSpotifyHistoryModule;
+export type { SpotifyHistoryModule, SpotifyHistoryModuleOptions };

@@ -13,4 +13,5 @@ const createStravaWebhookServices = (): StravaWebhookServices => ({
   ...createAthleteServices(),
 });
 
-export { createStravaWebhookServices as default, StravaWebhookServices };
+export default createStravaWebhookServices;
+export type { StravaWebhookServices };

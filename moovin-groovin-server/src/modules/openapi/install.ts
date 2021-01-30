@@ -81,4 +81,4 @@ const createOpenApiInstaller = (): Installer => {
   return install;
 };
 
-export { createOpenApiInstaller as default };
+export default createOpenApiInstaller;

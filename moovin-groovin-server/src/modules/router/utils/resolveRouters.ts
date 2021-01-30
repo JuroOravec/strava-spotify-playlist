@@ -76,4 +76,5 @@ const resolveRouters = (...routerValues: RouterInput[]): Router | undefined => {
   return resolvedRouter;
 };
 
-export { resolveRouters as default, mergeRouters, getModuleRouter };
+export default resolveRouters;
+export { mergeRouters, getModuleRouter };

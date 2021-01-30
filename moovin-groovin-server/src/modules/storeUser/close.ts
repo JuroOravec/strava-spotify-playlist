@@ -17,4 +17,4 @@ const createStoreUserCloser = (): Closer => {
   return close;
 };
 
-export { createStoreUserCloser as default };
+export default createStoreUserCloser;

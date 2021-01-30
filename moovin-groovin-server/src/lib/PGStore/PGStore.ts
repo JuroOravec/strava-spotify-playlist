@@ -130,4 +130,6 @@ function assertQueries<
   }
 }
 
-export { PGStore as default, PGStoreOptions, PGQueries, assertStore };
+export default PGStore;
+export { assertStore };
+export type { PGStoreOptions, PGQueries };

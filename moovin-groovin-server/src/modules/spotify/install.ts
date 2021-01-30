@@ -21,4 +21,4 @@ const createSpotifyInstaller = (): Installer => {
   return install;
 };
 
-export { createSpotifyInstaller as default };
+export default createSpotifyInstaller;

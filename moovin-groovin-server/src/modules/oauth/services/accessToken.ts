@@ -100,4 +100,5 @@ const createOAuthAccessTokenServices = (
   };
 };
 
-export { createOAuthAccessTokenServices as default, OAuthAccessTokenServices };
+export default createOAuthAccessTokenServices;
+export type { OAuthAccessTokenServices };
