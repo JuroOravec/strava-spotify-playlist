@@ -4,7 +4,8 @@ import passport, { AuthenticateOptions } from 'passport';
 
 import logger from '../../lib/logger';
 import type { ServerModule } from '../../lib/ServerModule';
-import { asyncSafeInvoke } from '../../utils/safeInvoke';
+import { asyncSafeInvoke, safeInvoke } from '../../utils/safeInvoke';
+import { serializeState, deserializeState } from './utils/state';
 import { ServerModuleName } from '../../types';
 import type { OAuthData } from './data';
 import type { OAuthDeps } from './types';
@@ -16,19 +17,21 @@ type OAuthHandlers = Record<
   RequestHandler<Record<string, string>, any, any, any>
 >;
 
-type AuthLoginParams = Record<'redirect_url' | 'error', string>;
+type AuthLoginParams = Record<'redirect_url' | 'state' | 'error', string>;
 type AuthLoginReq = Request<Record<string, string>, any, any, AuthLoginParams>;
 
-type AuthCallbackParams = Record<
-  'redirect_url' | 'error' | 'scope' | 'code',
-  string
->;
+type AuthCallbackParams = Record<'error' | 'scope' | 'code' | 'state', string>;
 type AuthCallbackReq = Request<
   Record<string, string>,
   any,
   any,
   AuthCallbackParams
 >;
+
+interface StateParam {
+  redirectUrl?: string;
+  origState?: string;
+}
 
 type ThisModule = ServerModule<
   OAuthServices,
@@ -60,12 +63,15 @@ const createOAuthHandlers = (
     res: Response,
     next: NextFunction
   ) {
+    const { redirect_url: redirectUrl, state: origState } = req.query;
+
     // TODO: Allow to pass data from module initiation
     const passportAuthOptions = {
       failWithError: true,
       session: false,
       showDialog: true,
       passReqToCallback: true,
+      state: serializeState({ redirectUrl, origState }),
       ...passportOptions,
     };
 
@@ -112,12 +118,21 @@ const createOAuthHandlers = (
     next: NextFunction
   ) {
     asyncSafeInvoke<void>(async () => {
-      const { error, redirect_url: redirectUrl } = req.query;
+      const { error, state } = req.query;
 
       if (error) throw new BadRequest({ path: req.path, message: error });
 
+      const { result: stateObj } = safeInvoke<StateParam>(() =>
+        deserializeState(state || '{}')
+      );
+      const { redirectUrl, origState } = stateObj || {};
+
       if (redirectUrl) {
-        res.redirect(redirectUrl);
+        const redirectUrlWithState = new URL(redirectUrl);
+        if (origState) {
+          redirectUrlWithState.searchParams.append('state', origState);
+        }
+        res.redirect(redirectUrlWithState.toString());
         return next();
       }
 
