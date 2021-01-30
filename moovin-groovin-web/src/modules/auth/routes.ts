@@ -9,6 +9,19 @@ const createRoutes = (): RouteConfig[] => {
       name: AuthRoute.CALLBACK,
       path: '/callback',
       component: AuthCallback,
+      meta: {
+        requireAuth: false,
+      },
+    },
+    {
+      name: AuthRoute.UNKNOWN,
+      path: '/*',
+      redirect: '/',
+    },
+    {
+      name: AuthRoute.ROOT,
+      path: '',
+      redirect: '/',
     },
   ];
 

@@ -1,6 +1,6 @@
 export enum RootRoute {
   AUTH = 'root:auth',
-  BASE = 'root:base',
   PROFILE = 'root:profile',
+  ROOT = 'root:root',
   UNKNOWN = 'root:unknown',
 }

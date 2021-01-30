@@ -1,4 +1,4 @@
-import { RouteConfig } from 'vue-router';
+import type { RouteConfig } from 'vue-router';
 
 import createProfileRoutes from '@/modules/profile/routes';
 import createAuthRoutes from '@/modules/auth/routes';
@@ -15,7 +15,7 @@ const loadProfilePage = () =>
 
 /**
  * Configure path prefixes.
- * 
+ *
  * See https://github.com/vuejs/vue-router/issues/2105
  */
 const createRoutes = (): RouteConfig[] => {
@@ -24,27 +24,36 @@ const createRoutes = (): RouteConfig[] => {
       name: RootRoute.AUTH,
       path: '/auth',
       children: createAuthRoutes(),
+      meta: {
+        requireAuth: false,
+      },
     },
     {
       name: RootRoute.PROFILE,
-      path: '/',
+      path: '/profile',
       components: {
         default: loadProfilePage,
         appbar: Navbar,
       },
       children: createProfileRoutes(),
+      meta: {
+        requireAuth: false,
+      },
     },
     {
-      name: RootRoute.BASE,
-      path: '/',
+      name: RootRoute.ROOT,
+      path: '',
       children: createBaseRoutes(),
+      meta: {
+        requireAuth: false,
+      },
     },
     {
       name: RootRoute.UNKNOWN,
-      path: '*',
+      path: '/*',
       redirect: '/',
     },
-  ].map(route => route.children?.length ? addChildRoutes(route, route.children) : route);
+  ].map((route) => (route.children?.length ? addChildRoutes(route, route.children) : route));
 
   return routes;
 };
