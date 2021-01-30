@@ -22,7 +22,15 @@ export type GqlQuery = {
 
 export type GqlMutation = {
   __typename?: 'Mutation';
+  deleteCurrentUser: GqlUser;
+  deleteCurrentUserProviders: Array<Maybe<GqlUserProvider>>;
   hello: Maybe<Scalars['String']>;
+  logoutCurrentUser: GqlUser;
+};
+
+
+export type GqlMutationdeleteCurrentUserProvidersArgs = {
+  providerIds: Array<Scalars['String']>;
 };
 
 export type GqlUser = {
@@ -56,14 +64,52 @@ export type GqlgetCurrentUserQuery = (
   ) }
 );
 
+export type GqldeleteCurrentUserMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GqldeleteCurrentUserMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteCurrentUser: (
+    { __typename?: 'User' }
+    & Pick<GqlUser, 'userId'>
+  ) }
+);
+
+export type GqldeleteCurrentUserIntegrationsMutationVariables = Exact<{
+  providerIds: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type GqldeleteCurrentUserIntegrationsMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteCurrentUserProviders: Array<Maybe<(
+    { __typename?: 'UserProvider' }
+    & Pick<GqlUserProvider, 'providerId'>
+  )>> }
+);
+
+export type GqllogoutCurrentUserMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GqllogoutCurrentUserMutation = (
+  { __typename?: 'Mutation' }
+  & { logoutCurrentUser: (
+    { __typename?: 'User' }
+    & Pick<GqlUser, 'userId'>
+  ) }
+);
+
 export type QueryKeySpecifier = ('getCurrentUser' | 'hello' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
 	getCurrentUser?: FieldPolicy<any> | FieldReadFunction<any>,
 	hello?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type MutationKeySpecifier = ('hello' | MutationKeySpecifier)[];
+export type MutationKeySpecifier = ('deleteCurrentUser' | 'deleteCurrentUserProviders' | 'hello' | 'logoutCurrentUser' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {
-	hello?: FieldPolicy<any> | FieldReadFunction<any>
+	deleteCurrentUser?: FieldPolicy<any> | FieldReadFunction<any>,
+	deleteCurrentUserProviders?: FieldPolicy<any> | FieldReadFunction<any>,
+	hello?: FieldPolicy<any> | FieldReadFunction<any>,
+	logoutCurrentUser?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type UserKeySpecifier = ('userId' | 'email' | 'nameFamily' | 'nameGiven' | 'nameDisplay' | 'photo' | 'providers' | UserKeySpecifier)[];
 export type UserFieldPolicy = {
@@ -97,4 +143,4 @@ export type TypedTypePolicies = TypePolicies & {
 		fields?: UserProviderFieldPolicy,
 	}
 };
-// Generated on 2021-01-25T23:02:00+00:00
+// Generated on 2021-01-27T22:56:54+00:00

@@ -3,6 +3,11 @@
 export const namedOperations = {
   Query: {
     getCurrentUser: 'getCurrentUser'
+  },
+  Mutation: {
+    deleteCurrentUser: 'deleteCurrentUser',
+    deleteCurrentUserIntegrations: 'deleteCurrentUserIntegrations',
+    logoutCurrentUser: 'logoutCurrentUser'
   }
 }
-// Generated on 2021-01-25T23:02:00+00:00
+// Generated on 2021-01-27T22:56:54+00:00

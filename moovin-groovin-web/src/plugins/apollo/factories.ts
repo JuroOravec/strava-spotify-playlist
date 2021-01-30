@@ -22,7 +22,15 @@ type Query = {
 
 type Mutation = {
   __typename?: 'Mutation';
+  deleteCurrentUser: User;
+  deleteCurrentUserProviders: Array<Maybe<UserProvider>>;
   hello: Maybe<Scalars['String']>;
+  logoutCurrentUser: User;
+};
+
+
+type MutationdeleteCurrentUserProvidersArgs = {
+  providerIds: Array<Scalars['String']>;
 };
 
 type User = {
@@ -56,6 +64,41 @@ type getCurrentUserQuery = (
   ) }
 );
 
+type deleteCurrentUserMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+type deleteCurrentUserMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteCurrentUser: (
+    { __typename?: 'User' }
+    & Pick<User, 'userId'>
+  ) }
+);
+
+type deleteCurrentUserIntegrationsMutationVariables = Exact<{
+  providerIds: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+type deleteCurrentUserIntegrationsMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteCurrentUserProviders: Array<Maybe<(
+    { __typename?: 'UserProvider' }
+    & Pick<UserProvider, 'providerId'>
+  )>> }
+);
+
+type logoutCurrentUserMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+type logoutCurrentUserMutation = (
+  { __typename?: 'Mutation' }
+  & { logoutCurrentUser: (
+    { __typename?: 'User' }
+    & Pick<User, 'userId'>
+  ) }
+);
+
 
  const getCurrentUserDocument = gql`
     query getCurrentUser {
@@ -69,6 +112,27 @@ type getCurrentUserQuery = (
     providers {
       providerId
     }
+  }
+}
+    `;
+ const deleteCurrentUserDocument = gql`
+    mutation deleteCurrentUser {
+  deleteCurrentUser {
+    userId
+  }
+}
+    `;
+ const deleteCurrentUserIntegrationsDocument = gql`
+    mutation deleteCurrentUserIntegrations($providerIds: [String!]!) {
+  deleteCurrentUserProviders(providerIds: $providerIds) {
+    providerId
+  }
+}
+    `;
+ const logoutCurrentUserDocument = gql`
+    mutation logoutCurrentUser {
+  logoutCurrentUser {
+    userId
   }
 }
     `;
@@ -195,6 +259,78 @@ export function newgetCurrentUserResponse(
     request: { query: getCurrentUserDocument },
     // TODO Remove the any by having interfaces have a __typename that pacifies mutation type unions
     result: { data: data instanceof Error ? undefined : (newgetCurrentUserData(data) as any) },
+    error: data instanceof Error ? data : undefined,
+  };
+}
+interface deleteCurrentUserDataOptions {
+  deleteCurrentUser?: UserOptions;
+}
+
+export function newdeleteCurrentUserData(data: deleteCurrentUserDataOptions) {
+  return {
+    __typename: 'Mutation' as const,
+    deleteCurrentUser: maybeNewUser(data['deleteCurrentUser'] || undefined, {}),
+  };
+}
+
+export function newdeleteCurrentUserResponse(
+  data: deleteCurrentUserDataOptions | Error
+): MockedResponse<deleteCurrentUserMutationVariables, deleteCurrentUserMutation> {
+  return {
+    request: { query: deleteCurrentUserDocument },
+    // TODO Remove the any by having interfaces have a __typename that pacifies mutation type unions
+    result: { data: data instanceof Error ? undefined : (newdeleteCurrentUserData(data) as any) },
+    error: data instanceof Error ? data : undefined,
+  };
+}
+interface deleteCurrentUserIntegrationsDataOptions {
+  deleteCurrentUserProviders?: UserProviderOptions[];
+}
+
+export function newdeleteCurrentUserIntegrationsData(
+  data: deleteCurrentUserIntegrationsDataOptions
+) {
+  return {
+    __typename: 'Mutation' as const,
+    deleteCurrentUserProviders:
+      data['deleteCurrentUserProviders']?.map((d) => newUserProvider(d)) || [],
+  };
+}
+
+export function newdeleteCurrentUserIntegrationsResponse(
+  variables: deleteCurrentUserIntegrationsMutationVariables,
+  data: deleteCurrentUserIntegrationsDataOptions | Error
+): MockedResponse<
+  deleteCurrentUserIntegrationsMutationVariables,
+  deleteCurrentUserIntegrationsMutation
+> {
+  return {
+    request: { query: deleteCurrentUserIntegrationsDocument, variables },
+    // TODO Remove the any by having interfaces have a __typename that pacifies mutation type unions
+    result: {
+      data: data instanceof Error ? undefined : (newdeleteCurrentUserIntegrationsData(data) as any),
+    },
+    error: data instanceof Error ? data : undefined,
+  };
+}
+interface logoutCurrentUserDataOptions {
+  logoutCurrentUser?: UserOptions;
+}
+
+export function newlogoutCurrentUserData(data: logoutCurrentUserDataOptions) {
+  return {
+    __typename: 'Mutation' as const,
+    logoutCurrentUser: maybeNewUser(data['logoutCurrentUser'] || undefined, {}),
+  };
+}
+
+export function newlogoutCurrentUserResponse(
+  data: logoutCurrentUserDataOptions | Error
+): MockedResponse<logoutCurrentUserMutationVariables, logoutCurrentUserMutation> {
+  return {
+    request: { query: logoutCurrentUserDocument },
+    // TODO Remove the any by having interfaces have a __typename that pacifies mutation type unions
+    result: { data: data instanceof Error ? undefined : (newlogoutCurrentUserData(data) as any) },
     error: data instanceof Error ? data : undefined,
   };
 }

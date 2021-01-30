@@ -25,7 +25,15 @@ type Query = {
 
 type Mutation = {
   __typename?: 'Mutation';
+  deleteCurrentUser: User;
+  deleteCurrentUserProviders: Array<Maybe<UserProvider>>;
   hello: Maybe<Scalars['String']>;
+  logoutCurrentUser: User;
+};
+
+
+type MutationdeleteCurrentUserProvidersArgs = {
+  providerIds: Array<Scalars['String']>;
 };
 
 type User = {
@@ -56,6 +64,41 @@ type getCurrentUserQuery = (
       { __typename?: 'UserProvider' }
       & Pick<UserProvider, 'providerId'>
     )> }
+  ) }
+);
+
+type deleteCurrentUserMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+type deleteCurrentUserMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteCurrentUser: (
+    { __typename?: 'User' }
+    & Pick<User, 'userId'>
+  ) }
+);
+
+type deleteCurrentUserIntegrationsMutationVariables = Exact<{
+  providerIds: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+type deleteCurrentUserIntegrationsMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteCurrentUserProviders: Array<Maybe<(
+    { __typename?: 'UserProvider' }
+    & Pick<UserProvider, 'providerId'>
+  )>> }
+);
+
+type logoutCurrentUserMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+type logoutCurrentUserMutation = (
+  { __typename?: 'Mutation' }
+  & { logoutCurrentUser: (
+    { __typename?: 'User' }
+    & Pick<User, 'userId'>
   ) }
 );
 
@@ -92,4 +135,83 @@ export function usegetCurrentUserQuery(options: VueApolloComposable.UseQueryOpti
   return VueApolloComposable.useQuery<getCurrentUserQuery, getCurrentUserQueryVariables>(getCurrentUserDocument, {}, options);
 }
 export type getCurrentUserQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<getCurrentUserQuery, getCurrentUserQueryVariables>;
-// Generated on 2021-01-25T23:02:00+00:00
+ const deleteCurrentUserDocument = gql`
+    mutation deleteCurrentUser {
+  deleteCurrentUser {
+    userId
+  }
+}
+    `;
+
+/**
+ * __usedeleteCurrentUserMutation__
+ *
+ * To run a mutation, you first call `usedeleteCurrentUserMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `usedeleteCurrentUserMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = usedeleteCurrentUserMutation();
+ */
+export function usedeleteCurrentUserMutation(options: VueApolloComposable.UseMutationOptions<deleteCurrentUserMutation, deleteCurrentUserMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<deleteCurrentUserMutation, deleteCurrentUserMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<deleteCurrentUserMutation, deleteCurrentUserMutationVariables>(deleteCurrentUserDocument, options);
+}
+export type deleteCurrentUserMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<deleteCurrentUserMutation, deleteCurrentUserMutationVariables>;
+ const deleteCurrentUserIntegrationsDocument = gql`
+    mutation deleteCurrentUserIntegrations($providerIds: [String!]!) {
+  deleteCurrentUserProviders(providerIds: $providerIds) {
+    providerId
+  }
+}
+    `;
+
+/**
+ * __usedeleteCurrentUserIntegrationsMutation__
+ *
+ * To run a mutation, you first call `usedeleteCurrentUserIntegrationsMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `usedeleteCurrentUserIntegrationsMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = usedeleteCurrentUserIntegrationsMutation({
+ *   variables: {
+ *     providerIds: // value for 'providerIds'
+ *   },
+ * });
+ */
+export function usedeleteCurrentUserIntegrationsMutation(options: VueApolloComposable.UseMutationOptions<deleteCurrentUserIntegrationsMutation, deleteCurrentUserIntegrationsMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<deleteCurrentUserIntegrationsMutation, deleteCurrentUserIntegrationsMutationVariables>>) {
+  return VueApolloComposable.useMutation<deleteCurrentUserIntegrationsMutation, deleteCurrentUserIntegrationsMutationVariables>(deleteCurrentUserIntegrationsDocument, options);
+}
+export type deleteCurrentUserIntegrationsMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<deleteCurrentUserIntegrationsMutation, deleteCurrentUserIntegrationsMutationVariables>;
+ const logoutCurrentUserDocument = gql`
+    mutation logoutCurrentUser {
+  logoutCurrentUser {
+    userId
+  }
+}
+    `;
+
+/**
+ * __uselogoutCurrentUserMutation__
+ *
+ * To run a mutation, you first call `uselogoutCurrentUserMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `uselogoutCurrentUserMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = uselogoutCurrentUserMutation();
+ */
+export function uselogoutCurrentUserMutation(options: VueApolloComposable.UseMutationOptions<logoutCurrentUserMutation, logoutCurrentUserMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<logoutCurrentUserMutation, logoutCurrentUserMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<logoutCurrentUserMutation, logoutCurrentUserMutationVariables>(logoutCurrentUserDocument, options);
+}
+export type logoutCurrentUserMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<logoutCurrentUserMutation, logoutCurrentUserMutationVariables>;
+// Generated on 2021-01-27T22:56:54+00:00
