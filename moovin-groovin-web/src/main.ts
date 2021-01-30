@@ -6,6 +6,7 @@ import installCompositionAPI from './plugins/compositionAPI';
 import installRouter from './plugins/router';
 import installVuetify from './plugins/vuetify';
 import installApollo from './plugins/apollo';
+import installConfig from './plugins/config';
 import createRoutes from './modules/install/routes';
 import App from './modules/install/components/App.vue';
 
@@ -16,6 +17,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 installBase(Vue);
 installCompositionAPI(Vue);
+const config = installConfig(Vue);
 const vuetify = installVuetify(Vue);
 const router = installRouter(Vue, {
   mode: 'history',
