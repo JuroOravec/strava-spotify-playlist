@@ -18,10 +18,10 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        prependData: '@import "~@/modules/install/styles/main.scss" ',
+        prependData: '',
       },
       scss: {
-        prependData: '@import "~@/modules/install/styles/main.scss"; ',
+        prependData: '',
       },
     },
   },
