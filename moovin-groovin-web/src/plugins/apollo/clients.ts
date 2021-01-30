@@ -7,35 +7,46 @@ import {
 } from '@apollo/client/core';
 import { onError } from '@apollo/client/link/error';
 
+import type { EnvironmentConfig } from '../config/config';
 import possibleTypes from './possibleTypes';
 
 interface VueApolloClients {
   default: ApolloClient<any>;
 }
 
-const createApolloClients = (): VueApolloClients => {
+const createApolloClients = (config: EnvironmentConfig): VueApolloClients => {
   const serverHttpLink = createHttpLink({
-    // TODO: Move these to env config
-    uri: 'https://api.moovingroovin.com/api/v1/graphql',
-    // uri: 'http://localhost:3000/api/v1/graphql',
+    uri: config.GRAPHQL_URL,
     credentials: 'include',
   });
 
   const onErrorLink = onError((errorResponse) => {
     const { graphQLErrors = [], networkError = null } = errorResponse;
-    graphQLErrors.forEach((error) => console.error(error));
+    graphQLErrors
+      .filter((error) => error?.extensions?.code !== 'UNAUTHENTICATED')
+      .forEach((error) => console.error(error));
 
     if (networkError) console.error(networkError);
   });
 
   const defaultOptions: DefaultOptions = {
     watchQuery: { errorPolicy: 'all' },
-    query: { errorPolicy: 'all' },
+    query: { errorPolicy: 'all', fetchPolicy: 'cache-first' },
     mutate: { errorPolicy: 'all' },
   };
 
   const cache = new InMemoryCache({
     possibleTypes,
+    typePolicies: {
+      User: {
+        keyFields: ['userId'],
+        fields: {
+          providers: {
+            merge: (existing, incoming) => incoming,
+          },
+        },
+      },
+    },
   });
 
   const serverClient = new ApolloClient({
@@ -45,6 +56,7 @@ const createApolloClients = (): VueApolloClients => {
     name: 'MoovinGroovin',
     assumeImmutableResults: true,
     credentials: 'include',
+    connectToDevTools: true,
   });
 
   return {
@@ -52,4 +64,5 @@ const createApolloClients = (): VueApolloClients => {
   };
 };
 
-export { createApolloClients as default, VueApolloClients };
+export default createApolloClients;
+export type { VueApolloClients };
