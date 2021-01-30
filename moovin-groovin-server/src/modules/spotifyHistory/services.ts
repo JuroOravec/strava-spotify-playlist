@@ -96,6 +96,7 @@ const createSpotifyHistoryServices = (): SpotifyHistoryServices => {
     spotifyUserId: string,
     options: PlayedTracksOptions
   ) {
+    logger.debug(`Fetching played tracks for Spotify ID "${spotifyUserId}"`);
     assertContext(this.context);
     const {
       before: beforeInSec = unixTimestamp(),
