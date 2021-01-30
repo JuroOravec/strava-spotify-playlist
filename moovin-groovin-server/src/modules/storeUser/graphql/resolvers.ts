@@ -77,6 +77,12 @@ function createStoreUserGraphqlResolvers(
 
         return removedTokens;
       },
+
+      logoutCurrentUser: async (parent, args, context) => {
+        const user = getCurrentAuthenticatedUser(context.req);
+        context.req.logout();
+        return transformUserToGqlUser(user);
+      },
     },
 
     User: {

@@ -43,6 +43,7 @@ export type GqlMutation = {
   deleteCurrentUser: GqlUser;
   deleteCurrentUserProviders: Array<Maybe<GqlUserProvider>>;
   hello?: Maybe<Scalars['String']>;
+  logoutCurrentUser: GqlUser;
 };
 
 
@@ -171,6 +172,7 @@ export type GqlMutationResolvers<ContextType = ResolverContext, ParentType exten
   deleteCurrentUser?: Resolver<GqlResolversTypes['User'], ParentType, ContextType>;
   deleteCurrentUserProviders?: Resolver<Array<Maybe<GqlResolversTypes['UserProvider']>>, ParentType, ContextType, RequireFields<GqlMutationDeleteCurrentUserProvidersArgs, 'providerIds'>>;
   hello?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
+  logoutCurrentUser?: Resolver<GqlResolversTypes['User'], ParentType, ContextType>;
 };
 
 export type GqlUserResolvers<ContextType = ResolverContext, ParentType extends GqlResolversParentTypes['User'] = GqlResolversParentTypes['User']> = {
@@ -198,4 +200,4 @@ export type GqlResolvers<ContextType = ResolverContext> = {
 
 
 
-// Generated on 2021-01-27T20:38:43+00:00
+// Generated on 2021-01-30T12:37:47+00:00
