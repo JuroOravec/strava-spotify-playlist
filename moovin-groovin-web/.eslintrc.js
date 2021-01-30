@@ -1,3 +1,22 @@
+const commonRestrictedSyntax = [
+  {
+    // Raise on `Vue.extend()`
+    selector: 'CallExpression > MemberExpression[object.name="Vue"][property.name="extend"]',
+    message: "Use 'defineComponent' instead of 'Vue.extend'.",
+  },
+  {
+    // Raise when calling watch() inside a watch() callback
+    selector: 'CallExpression[callee.name="watch"] CallExpression[callee.name="watch"]',
+    message: 'Do not use nested watchers.',
+  },
+  {
+    // Raise on `export { xyz as default }`
+    selector: 'ExportNamedDeclaration > ExportSpecifier[exported.name="default"]',
+    message:
+      'TypeScript auto-completion is not available for `export { abc as default }` syntax. Use `export default abc` instead.',
+  },
+];
+
 module.exports = {
   root: true,
   env: {
@@ -45,20 +64,7 @@ module.exports = {
       },
     ],
     // Define forbidden syntax by AST selector
-    'no-restricted-syntax': [
-      'error',
-      {
-        // Raise on `Vue.extend()`
-        selector: 'CallExpression > MemberExpression[object.name="Vue"][property.name="extend"]',
-        message: "Use 'defineComponent' instead of 'Vue.extend'.",
-      },
-      // {
-      //   // Raise when calling watch() inside a watch() callback
-      //   selector:
-      //     'CallExpression[callee.name="watch"] CallExpression[callee.name="watch"]',
-      //   message: 'Do not use nested watchers.',
-      // },
-    ],
+    'no-restricted-syntax': ['error', ...commonRestrictedSyntax],
 
     // //////////////////////////////
     // TYPESCRIPT
