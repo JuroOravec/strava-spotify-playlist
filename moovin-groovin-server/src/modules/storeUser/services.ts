@@ -1,3 +1,4 @@
+import type { Request } from 'express';
 import zip from 'lodash/zip';
 
 import logger from '../../lib/logger';
@@ -37,6 +38,7 @@ interface StoreUserServices extends Services {
   createUsers: (
     users: (UserInput & { tokens?: AuthToken[] })[]
   ) => Promise<UserMeta[]>;
+  getCurrentAuthenticatedUser: (req: Request) => Express.User;
 }
 
 type ThisModule = ServerModule<
@@ -159,6 +161,18 @@ const createStoreUserServices = (): StoreUserServices => {
     );
   }
 
+  function getCurrentAuthenticatedUser(req: Request): Express.User {
+    if (!req.isAuthenticated()) {
+      throw new Error(
+        'User not authenticated. Not authorized to access this resource.'
+      );
+    }
+    if (!req.user?.internalUserId) {
+      throw new Error('Failed to find user.');
+    }
+    return req.user;
+  }
+
   return {
     deleteUser,
     deleteUsers,
@@ -170,6 +184,7 @@ const createStoreUserServices = (): StoreUserServices => {
     getUsersByTokensOrEmails,
     createUser,
     createUsers,
+    getCurrentAuthenticatedUser,
   };
 };
 

@@ -1,4 +1,3 @@
-import type { Request } from 'express';
 import { AuthenticationError, ApolloError } from 'apollo-server-express';
 import { isNil } from 'lodash';
 
@@ -7,22 +6,11 @@ import {
   assertContext,
   Handlers,
 } from '../../../lib/ServerModule';
+import { safeInvoke } from '../../../utils/safeInvoke';
 import type { GqlResolvers, GqlUser } from '../../../types/graphql';
 import type { StoreUserData } from '../data';
 import type { StoreUserServices } from '../services';
 import type { StoreUserDeps } from '../types';
-
-const getCurrentAuthenticatedUser = (req: Request): Express.User => {
-  if (!req.isAuthenticated()) {
-    throw new AuthenticationError(
-      'User not authenticated. Not authorized to access this resource.'
-    );
-  }
-  if (!req.user?.internalUserId) {
-    throw new AuthenticationError('Failed to find user.');
-  }
-  return req.user;
-};
 
 const transformUserToGqlUser = (
   user: Express.User
@@ -41,21 +29,26 @@ function createStoreUserGraphqlResolvers(
   return {
     Query: {
       getCurrentUser: async (parent, args, context) => {
-        const user = getCurrentAuthenticatedUser(context.req);
+        const { result: user } = safeInvoke(
+          () => this.services.getCurrentAuthenticatedUser(context.req),
+          (err) => {
+            throw new AuthenticationError(err.message);
+          }
+        );
         return transformUserToGqlUser(user);
       },
     },
 
     Mutation: {
       deleteCurrentUser: async (parent, args, context) => {
-        const user = getCurrentAuthenticatedUser(context.req);
+        const user = this.services.getCurrentAuthenticatedUser(context.req);
         await this.services.deleteUser(user.internalUserId);
         context.req.logout();
         return transformUserToGqlUser(user);
       },
 
       deleteCurrentUserProviders: async (parent, { providerIds }, context) => {
-        const user = getCurrentAuthenticatedUser(context.req);
+        const user = this.services.getCurrentAuthenticatedUser(context.req);
 
         assertContext(this.context);
         const {
@@ -79,7 +72,7 @@ function createStoreUserGraphqlResolvers(
       },
 
       logoutCurrentUser: async (parent, args, context) => {
-        const user = getCurrentAuthenticatedUser(context.req);
+        const user = this.services.getCurrentAuthenticatedUser(context.req);
         context.req.logout();
         return transformUserToGqlUser(user);
       },
