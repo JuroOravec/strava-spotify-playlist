@@ -35,6 +35,7 @@ export type Scalars = {
 export type GqlQuery = {
   __typename?: 'Query';
   getCurrentUser: GqlUser;
+  getCurrentUserConfig: GqlUserConfig;
   hello?: Maybe<Scalars['String']>;
 };
 
@@ -44,11 +45,48 @@ export type GqlMutation = {
   deleteCurrentUserProviders: Array<Maybe<GqlUserProvider>>;
   hello?: Maybe<Scalars['String']>;
   logoutCurrentUser: GqlUser;
+  updateCurrentUserConfig: GqlUserConfig;
 };
 
 
 export type GqlMutationDeleteCurrentUserProvidersArgs = {
   providerIds: Array<Scalars['String']>;
+};
+
+
+export type GqlMutationUpdateCurrentUserConfigArgs = {
+  userConfigInput: GqlUserConfigInput;
+};
+
+export type GqlUserConfig = {
+  __typename?: 'UserConfig';
+  /** Whether user playlists should be created as collaborative */
+  playlistCollaborative: Scalars['Boolean'];
+  /** Whether user playlists should be created as public */
+  playlistPublic: Scalars['Boolean'];
+  /** Whether user playlists should be created automatically */
+  playlistAutoCreate: Scalars['Boolean'];
+  /** Template for creating playlist description */
+  playlistDescriptionTemplate?: Maybe<Scalars['String']>;
+  /** Template for creating playlist title */
+  playlistTitleTemplate?: Maybe<Scalars['String']>;
+  /** Template for creating updated activity description that includes playlist */
+  activityDescriptionTemplate?: Maybe<Scalars['String']>;
+};
+
+export type GqlUserConfigInput = {
+  /** Whether user playlists should be created as collaborative */
+  playlistCollaborative?: Maybe<Scalars['Boolean']>;
+  /** Whether user playlists should be created as public */
+  playlistPublic?: Maybe<Scalars['Boolean']>;
+  /** Whether user playlists should be created automatically */
+  playlistAutoCreate?: Maybe<Scalars['Boolean']>;
+  /** Template for creating playlist description */
+  playlistDescriptionTemplate?: Maybe<Scalars['String']>;
+  /** Template for creating playlist title */
+  playlistTitleTemplate?: Maybe<Scalars['String']>;
+  /** Template for creating updated activity description that includes playlist */
+  activityDescriptionTemplate?: Maybe<Scalars['String']>;
 };
 
 export type GqlUser = {
@@ -148,9 +186,11 @@ export type GqlResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Partial<Scalars['String']>>;
   Mutation: ResolverTypeWrapper<{}>;
+  UserConfig: ResolverTypeWrapper<Partial<GqlUserConfig>>;
+  Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>;
+  UserConfigInput: ResolverTypeWrapper<Partial<GqlUserConfigInput>>;
   User: ResolverTypeWrapper<Partial<GqlUser>>;
   UserProvider: ResolverTypeWrapper<Partial<GqlUserProvider>>;
-  Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -158,13 +198,16 @@ export type GqlResolversParentTypes = {
   Query: {};
   String: Partial<Scalars['String']>;
   Mutation: {};
+  UserConfig: Partial<GqlUserConfig>;
+  Boolean: Partial<Scalars['Boolean']>;
+  UserConfigInput: Partial<GqlUserConfigInput>;
   User: Partial<GqlUser>;
   UserProvider: Partial<GqlUserProvider>;
-  Boolean: Partial<Scalars['Boolean']>;
 };
 
 export type GqlQueryResolvers<ContextType = ResolverContext, ParentType extends GqlResolversParentTypes['Query'] = GqlResolversParentTypes['Query']> = {
   getCurrentUser?: Resolver<GqlResolversTypes['User'], ParentType, ContextType>;
+  getCurrentUserConfig?: Resolver<GqlResolversTypes['UserConfig'], ParentType, ContextType>;
   hello?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
 };
 
@@ -173,6 +216,17 @@ export type GqlMutationResolvers<ContextType = ResolverContext, ParentType exten
   deleteCurrentUserProviders?: Resolver<Array<Maybe<GqlResolversTypes['UserProvider']>>, ParentType, ContextType, RequireFields<GqlMutationDeleteCurrentUserProvidersArgs, 'providerIds'>>;
   hello?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
   logoutCurrentUser?: Resolver<GqlResolversTypes['User'], ParentType, ContextType>;
+  updateCurrentUserConfig?: Resolver<GqlResolversTypes['UserConfig'], ParentType, ContextType, RequireFields<GqlMutationUpdateCurrentUserConfigArgs, 'userConfigInput'>>;
+};
+
+export type GqlUserConfigResolvers<ContextType = ResolverContext, ParentType extends GqlResolversParentTypes['UserConfig'] = GqlResolversParentTypes['UserConfig']> = {
+  playlistCollaborative?: Resolver<GqlResolversTypes['Boolean'], ParentType, ContextType>;
+  playlistPublic?: Resolver<GqlResolversTypes['Boolean'], ParentType, ContextType>;
+  playlistAutoCreate?: Resolver<GqlResolversTypes['Boolean'], ParentType, ContextType>;
+  playlistDescriptionTemplate?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
+  playlistTitleTemplate?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
+  activityDescriptionTemplate?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type GqlUserResolvers<ContextType = ResolverContext, ParentType extends GqlResolversParentTypes['User'] = GqlResolversParentTypes['User']> = {
@@ -194,10 +248,11 @@ export type GqlUserProviderResolvers<ContextType = ResolverContext, ParentType e
 export type GqlResolvers<ContextType = ResolverContext> = {
   Query?: GqlQueryResolvers<ContextType>;
   Mutation?: GqlMutationResolvers<ContextType>;
+  UserConfig?: GqlUserConfigResolvers<ContextType>;
   User?: GqlUserResolvers<ContextType>;
   UserProvider?: GqlUserProviderResolvers<ContextType>;
 };
 
 
 
-// Generated on 2021-01-30T12:37:47+00:00
+// Generated on 2021-02-06T11:00:22+00:00
