@@ -1,3 +1,5 @@
+import defaults from 'lodash/defaults';
+
 import logger from '../../lib/logger';
 import type { Handlers, ServerModule, Services } from '../../lib/ServerModule';
 import type { UserConfig, UserConfigMeta, UserConfigModel } from './types';
@@ -56,13 +58,9 @@ const createStoreConfigServices = (): StoreConfigServices => {
   ): Promise<(UserConfigMeta | null)[]> {
     if (!configData.length) return [];
     assertConfigStore(this.data.configStore);
-    const defaultUserConfig = this.data.userConfig;
     const input = configData.map(
-      ({ config, internalUserId }): UserConfigModel => ({
-        ...defaultUserConfig,
-        ...config,
-        internalUserId,
-      })
+      ({ config, internalUserId }): UserConfigModel =>
+        defaults({ internalUserId }, config, this.data.userConfig)
     );
     const responses = await this.data.configStore.insert(input);
 
@@ -104,13 +102,9 @@ const createStoreConfigServices = (): StoreConfigServices => {
     internalUserIds: string[]
   ): Promise<UserConfig[]> {
     const configsResponse = await this.services.getUserConfigs(internalUserIds);
-    const defaultUserConfig = this.data.userConfig;
-
     return configsResponse.map(
-      (configResponse): UserConfig => ({
-        ...defaultUserConfig,
-        ...(configResponse ?? {}),
-      })
+      (configResponse): UserConfig =>
+        defaults({}, configResponse ?? {}, this.data.userConfig)
     );
   }
 

@@ -1,5 +1,5 @@
 INSERT INTO 
-  app_user (
+  user_config (
     internal_user_id,
     playlist_collaborative,
     playlist_public,
