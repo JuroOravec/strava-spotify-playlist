@@ -40,7 +40,7 @@ const createPlaylistTemplateContext = (
 
   const tracks = inputTracks.map(
     (track): TemplateContextTrack => ({
-      name: track.metadata?.name || missingValue,
+      title: track.metadata?.name || missingValue,
       album: track.metadata?.album.name || missingValue,
       artist:
         track.metadata?.artists.map((artist) => artist.name).join(', ') ||
@@ -56,7 +56,7 @@ const createPlaylistTemplateContext = (
 
   const formattedSongs: string = tracks.length
     ? tracks
-        .map((track) => `${track.startTime} ${track.name} - ${track.artist}`)
+        .map((track) => `${track.startTime} ${track.title} - ${track.artist}`)
         .join('\n')
     : 'No songs';
   const tracklist = `Tracklist:\n${formattedSongs}`;
@@ -121,7 +121,7 @@ const createActivityTemplateContext = (
   input: {
     activity: ActivityInput;
     tracks: TrackWithMetadata[];
-    playlist: { url: string; name: string };
+    playlist: { url: string; title: string };
     meta: TemplateContextMeta;
   },
   options: {
@@ -140,7 +140,7 @@ const createActivityTemplateContext = (
     proxiedContext: ActivityTemplateContext;
   };
   context.playlist.url = playlist.url;
-  context.playlist.name = playlist.name;
+  context.playlist.title = playlist.title;
 
   return {
     context,

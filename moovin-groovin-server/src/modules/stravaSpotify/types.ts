@@ -36,7 +36,7 @@ export type TrackWithMetadata = UserTrackModel & {
 };
 
 export interface TemplateContextTrack {
-  name: string;
+  title: string;
   album: string;
   artist: string;
   duration: string;
@@ -69,7 +69,7 @@ export interface PlaylistTemplateContext {
 
 interface ActivityTemplateContextPlaylist extends TemplateContextPlaylist {
   url: string;
-  name: string;
+  title: string;
 }
 
 export type ActivityTemplateContext = PlaylistTemplateContext & {

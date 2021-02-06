@@ -36,7 +36,7 @@ interface GetTracksForActivityOptions {
 interface UpdateActivityWithPlaylistOptions {
   stravaToken: UserTokenModel;
   activity: ActivityInput;
-  playlist: { name: string; url: string };
+  playlist: { title: string; url: string };
   tracks: TrackWithMetadata[];
   userConfig: UserConfig;
 }
@@ -48,7 +48,7 @@ interface CreatePlaylistForActivityOptions {
 }
 interface CreatePlaylistForActivityReturn {
   playlist: UserActivityPlaylistMeta;
-  playlistData: { url: string; name: string } | null;
+  playlistData: { title: string; url: string } | null;
 }
 type SetupPlaylistForActivityOptions = StravaOrSpotifyUserId & {
   activity: ActivityInput;
@@ -423,7 +423,7 @@ const createStravaSpotifyServices = (): StravaSpotifyServices => {
         activity,
         userConfig,
         tracks,
-        playlist: playlistData ?? { name: 'UNKNOWN', url: 'UNKNOWN' },
+        playlist: playlistData ?? { title: 'UNKNOWN', url: 'UNKNOWN' },
       })
     );
 
