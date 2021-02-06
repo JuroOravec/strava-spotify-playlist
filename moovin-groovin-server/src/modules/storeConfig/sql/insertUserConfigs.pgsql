@@ -3,6 +3,7 @@ INSERT INTO
     internal_user_id,
     playlist_collaborative,
     playlist_public,
+    playlist_auto_create,
     playlist_description_template,
     playlist_title_template,
     activity_description_template

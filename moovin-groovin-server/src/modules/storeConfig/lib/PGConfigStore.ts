@@ -20,9 +20,9 @@ import {
 } from '../sql';
 
 const transformUserConfigMetaResponse = (
-  user: UserConfigMetaResponse
+  config: UserConfigMetaResponse
 ): UserConfigMeta => ({
-  internalUserId: user.internal_user_id,
+  internalUserId: config.internal_user_id,
 });
 
 const transformUserConfigResponse = (
@@ -31,6 +31,7 @@ const transformUserConfigResponse = (
   ...transformUserConfigMetaResponse(config as UserConfigMetaResponse),
   playlistCollaborative: config.playlist_collaborative,
   playlistPublic: config.playlist_public,
+  playlistAutoCreate: config.playlist_auto_create,
   playlistDescriptionTemplate: config.playlist_description_template ?? null,
   playlistTitleTemplate: config.playlist_title_template ?? null,
   activityDescriptionTemplate: config.activity_description_template ?? null,
@@ -79,6 +80,7 @@ class PGConfigStore
           config.internalUserId,
           config.playlistCollaborative,
           config.playlistPublic,
+          config.playlistAutoCreate,
           config.playlistDescriptionTemplate,
           config.playlistTitleTemplate,
           config.activityDescriptionTemplate,
@@ -107,6 +109,7 @@ class PGConfigStore
           config.internalUserId,
           config.playlistCollaborative,
           config.playlistPublic,
+          config.playlistAutoCreate,
           config.playlistDescriptionTemplate,
           config.playlistTitleTemplate,
           config.activityDescriptionTemplate,

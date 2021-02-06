@@ -1,3 +1,6 @@
+import type { ServerModules } from '../../lib/ServerModule';
+import type { ServerModuleName } from '../../types';
+import type { StoreUserModule } from '../storeUser';
 import type { UserModel } from '../storeUser/types';
 
 /** User preferences */
@@ -8,6 +11,8 @@ export interface UserConfigModel {
   playlistCollaborative: boolean;
   /** Whether user playlists should be created as public */
   playlistPublic: boolean;
+  /** Whether user playlists should be created automatically */
+  playlistAutoCreate: boolean;
   /** Template for creating playlist description */
   playlistDescriptionTemplate: string | null;
   /** Template for creating playlist title */
@@ -32,3 +37,7 @@ export interface ConfigStore {
 }
 
 export type UserConfig = Omit<UserConfigModel, 'internalUserId'>;
+
+export interface StoreConfigDeps extends ServerModules {
+  [ServerModuleName.STORE_USER]: StoreUserModule;
+}

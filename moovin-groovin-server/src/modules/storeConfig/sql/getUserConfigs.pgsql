@@ -2,6 +2,7 @@ SELECT
   input.internal_user_id,
   user_config.playlist_collaborative,
   user_config.playlist_public,
+  user_config.playlist_auto_create,
   user_config.playlist_description_template,
   user_config.playlist_title_template,
   user_config.activity_description_template

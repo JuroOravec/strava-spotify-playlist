@@ -17,20 +17,21 @@ type StoreConfigData = StoreConfigExternalData & StoreConfigInternalData;
 const createDefaultUserConfig = (): UserConfig => ({
   playlistCollaborative: false,
   playlistPublic: false,
+  playlistAutoCreate: false,
   // TODO: Ensure on user input that none of the templates include `this` as key, or invalid syntax like `{{ a..b }}`
-  playlistTitleTemplate: '[Strava] {{activity.title}}',
+  playlistTitleTemplate: '[Strava] {{ activity.title }}',
   playlistDescriptionTemplate: [
-    'Songs you listened to during your Strava {{activity.type}} on',
-    '{{activity.date}}. See the activity at {{activity.url}}.',
-    `Playlist created by {{meta.app}}.`,
+    'Songs you listened to during your Strava {{ activity.type }} on',
+    '{{ activity.date }}. See the activity at {{ activity.url }}.',
+    `Playlist created by {{ meta.app }}.`,
   ].join(' '),
   activityDescriptionTemplate: [
-    '{{activity.description}}',
+    '{{ activity.description }}',
     '',
-    '{{playlist.tracklist}}',
+    '{{ playlist.tracklist }}',
     '',
-    'See the playlist at {{playlist.url}}.',
-    `Playlist created by {{meta.app}}.`,
+    'See the playlist at {{ playlist.url }}.',
+    `Playlist created by {{ meta.app }}.`,
   ].join('\n'),
 });
 

@@ -9,6 +9,7 @@ interface UserConfigResponse {
   internal_user_id: UserConfigModel['internalUserId'];
   playlist_collaborative: UserConfigModel['playlistCollaborative'];
   playlist_public: UserConfigModel['playlistPublic'];
+  playlist_auto_create: UserConfigModel['playlistAutoCreate'];
   playlist_description_template: UserConfigModel['playlistDescriptionTemplate'];
   playlist_title_template: UserConfigModel['playlistTitleTemplate'];
   activity_description_template: UserConfigModel['activityDescriptionTemplate'];
@@ -30,6 +31,7 @@ interface ConfigStoreSQLQueries extends PGQueries {
         UserConfigResponse['internal_user_id'],
         UserConfigResponse['playlist_collaborative'],
         UserConfigResponse['playlist_public'],
+        UserConfigResponse['playlist_auto_create'],
         UserConfigResponse['playlist_description_template'],
         UserConfigResponse['playlist_title_template'],
         UserConfigResponse['activity_description_template']
@@ -43,6 +45,7 @@ interface ConfigStoreSQLQueries extends PGQueries {
         UserConfigResponse['internal_user_id'],
         UserConfigResponse['playlist_collaborative'] | undefined,
         UserConfigResponse['playlist_public'] | undefined,
+        UserConfigResponse['playlist_auto_create'] | undefined,
         UserConfigResponse['playlist_description_template'] | undefined,
         UserConfigResponse['playlist_title_template'] | undefined,
         UserConfigResponse['activity_description_template'] | undefined
