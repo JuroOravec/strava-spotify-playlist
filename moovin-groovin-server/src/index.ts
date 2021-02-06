@@ -126,6 +126,7 @@ const main = async () => {
   const graphqlModule = createGraphqlModule({
     apolloConfig: (ctx: ModuleContext<AppServerModules>) => [
       ctx.modules.storeUser,
+      ctx.modules.storeConfig,
       { debug: !isProduction() },
     ],
     schemaConfig: {

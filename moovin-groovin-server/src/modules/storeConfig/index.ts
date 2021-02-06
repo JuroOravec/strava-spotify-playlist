@@ -3,6 +3,7 @@ import { ServerModuleName } from '../../types';
 import createCloser from './close';
 import createInstaller from './install';
 import createServices, { StoreConfigServices } from './services';
+import createGraphql from './graphql';
 import createStoreConfigData, {
   StoreConfigData,
   StoreConfigExternalData,
@@ -24,6 +25,7 @@ const createStoreConfigModule = (
     install: createInstaller(),
     close: createCloser(),
     services: createServices(),
+    graphql: createGraphql(),
     data: createStoreConfigData(options),
   });
 };
