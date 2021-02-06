@@ -4,10 +4,16 @@ type Await<T> = T extends {
   ? U
   : T;
 
-const asyncSafeInvoke = async <T>(
+const asyncSafeInvoke = async <
+  T,
+  TErrCallback extends ((error: Error) => void) | ((error: Error) => never)
+>(
   fn: () => T | Promise<T>,
-  errCallback: (error: Error) => void | Promise<void> = () => {}
-): Promise<{ result: Await<T> | null; error: Error | null }> => {
+  errCallback?: TErrCallback
+): Promise<{
+  result: Await<TErrCallback extends (error: Error) => never ? T : T | null>;
+  error: Error | null;
+}> => {
   let result: Await<T> | null = null;
   let error: Error | null = null;
 
@@ -18,13 +24,19 @@ const asyncSafeInvoke = async <T>(
     await errCallback?.(e);
   }
 
-  return { result, error };
+  return { result: result as any, error };
 };
 
-const safeInvoke = <T>(
+const safeInvoke = <
+  T,
+  TErrCallback extends ((error: Error) => void) | ((error: Error) => never)
+>(
   fn: () => T,
-  errCallback: (error: Error) => void = () => {}
-): { result: T | null; error: Error | null } => {
+  errCallback?: TErrCallback
+): {
+  result: TErrCallback extends (error: Error) => never ? T : T | null;
+  error: Error | null;
+} => {
   let result: T | null = null;
   let error: Error | null = null;
 
@@ -35,7 +47,7 @@ const safeInvoke = <T>(
     errCallback?.(e);
   }
 
-  return { result, error };
+  return { result: result as any, error };
 };
 
 export { safeInvoke, asyncSafeInvoke };

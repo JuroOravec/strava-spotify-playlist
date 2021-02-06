@@ -89,17 +89,13 @@ class PGStore<TQueries extends PGQueries = PGQueries> {
     map: (val: TQueries[TQuery][1]) => TTransform = identity
   ): Promise<CustomQueryResult<TTransform>> {
     const queryDefinition = await this.getQuery(query);
-    const { result: queryText, error } = safeInvoke(() =>
-      pgFormat(queryDefinition, input)
-    );
-    if (isNil(queryText) || error) {
-      if (!error) {
-        throw Error('Failed to prepare query');
-      } else {
+    const { result: queryText } = safeInvoke(
+      () => pgFormat(queryDefinition, input),
+      (error) => {
         error.message = 'Failed to prepare query: ' + error.message;
         throw error;
       }
-    }
+    );
 
     const client = this.getClient();
     logger.debug(`Running query "${query}"`);

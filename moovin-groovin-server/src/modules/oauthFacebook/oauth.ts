@@ -32,27 +32,29 @@ const passportVerifier: VerifyFunctionWithRequest = async function verifier(
   profile,
   done
 ) {
-  const { result, error } = await asyncSafeInvoke<UserModel>(async () => {
-    assertContext(this.context);
+  const { result, error } = await asyncSafeInvoke(
+    async (): Promise<UserModel> => {
+      assertContext(this.context);
 
-    const token: AuthToken = {
-      accessToken,
-      refreshToken,
-      providerId: profile.provider,
-      providerUserId: profile.id,
-      expiresAt: 0,
-      scope: req.query.scope ?? null,
-    };
+      const token: AuthToken = {
+        accessToken,
+        refreshToken,
+        providerId: profile.provider,
+        providerUserId: profile.id,
+        expiresAt: 0,
+        scope: req.query.scope ?? null,
+      };
 
-    const { processLoginProviderToken } = this.context.modules.oauth.services;
-    return processLoginProviderToken(token, {
-      nameDisplay: profile.displayName,
-      nameFamily: profile.name?.familyName,
-      nameGiven: profile.name?.givenName,
-      email: profile.emails?.[0]?.value,
-      photo: profile.photos?.[0]?.value,
-    });
-  });
+      const { processLoginProviderToken } = this.context.modules.oauth.services;
+      return processLoginProviderToken(token, {
+        nameDisplay: profile.displayName,
+        nameFamily: profile.name?.familyName,
+        nameGiven: profile.name?.givenName,
+        email: profile.emails?.[0]?.value,
+        photo: profile.photos?.[0]?.value,
+      });
+    }
+  );
 
   return done(error, result);
 };

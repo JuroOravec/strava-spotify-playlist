@@ -117,13 +117,13 @@ const createOAuthHandlers = (
     res: Response,
     next: NextFunction
   ) {
-    asyncSafeInvoke<void>(async () => {
+    asyncSafeInvoke(async () => {
       const { error, state } = req.query;
 
       if (error) throw new BadRequest({ path: req.path, message: error });
 
-      const { result: stateObj } = safeInvoke<StateParam>(() =>
-        deserializeState(state || '{}')
+      const { result: stateObj } = safeInvoke(
+        (): StateParam => deserializeState(state || '{}')
       );
       const { redirectUrl, origState } = stateObj || {};
 
