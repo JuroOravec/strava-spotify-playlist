@@ -1,6 +1,6 @@
 <template>
-  <v-card class="ProfileCard">
-    <v-row class="ProfileCard__header">
+  <v-card class="ProfileCard" :class="{ 'ProfileCard--no-title': !$slots['title'] }">
+    <v-row class="ProfileCard__title">
       <v-col cols="auto" class="px-0">
         <v-card-title>
           <slot name="title" />
@@ -11,7 +11,7 @@
 
     <v-card-text class="ProfileCard__body">
       <v-row>
-        <slot name="body" />
+        <slot />
       </v-row>
     </v-card-text>
   </v-card>
@@ -32,7 +32,11 @@ export default ProfileCard;
 .ProfileCard {
   @extend .elevation-3, .pa-3;
 
-  &__header {
+  & + & {
+    @extend .mt-8;
+  }
+
+  &__title {
     @extend .my-3, .mx-0;
 
     .col {
@@ -42,6 +46,12 @@ export default ProfileCard;
     .v-card__title {
       padding-bottom: 0;
       padding-top: 0;
+    }
+  }
+
+  &--no-title {
+    .ProfileCard__title {
+      @extend .my-0;
     }
   }
 }

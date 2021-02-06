@@ -15,25 +15,23 @@
       </v-col>
     </template>
 
-    <template slot="body">
-      <template v-if="integrated">
-        <v-col cols="auto">
-          <v-btn color="primary" outlined @click="openAuthWindow(providerId)">
-            <slot name="action"> Change account </slot>
-          </v-btn>
-        </v-col>
-        <v-col cols="auto">
-          <v-btn color="red lighten-2" dark outlined @click="deleteIntegration(providerId)">
-            <slot name="action">Remove </slot>
-          </v-btn>
-        </v-col>
-      </template>
-      <v-col v-else>
-        <v-btn color="primary" @click="openAuthWindow(providerId)">
-          <slot name="action"> Connect account </slot>
+    <template v-if="integrated">
+      <v-col cols="auto">
+        <v-btn color="primary" outlined @click="openAuthWindow(providerId)">
+          <slot name="action"> Change account </slot>
+        </v-btn>
+      </v-col>
+      <v-col cols="auto">
+        <v-btn color="red lighten-2" dark outlined @click="deleteIntegration(providerId)">
+          <slot name="action">Remove </slot>
         </v-btn>
       </v-col>
     </template>
+    <v-col v-else>
+      <v-btn color="primary" @click="openAuthWindow(providerId)">
+        <slot name="action"> Connect account </slot>
+      </v-btn>
+    </v-col>
   </ProfileCard>
 </template>
 

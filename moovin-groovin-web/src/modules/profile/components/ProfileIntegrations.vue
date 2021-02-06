@@ -56,12 +56,6 @@ export default ProfileIntegrations;
 </script>
 
 <style lang="scss">
-@import '@/plugins/vuetify/vuetify';
 .ProfileIntegrations {
-  &__item {
-    & + & {
-      @extend .mt-8;
-    }
-  }
 }
 </style>

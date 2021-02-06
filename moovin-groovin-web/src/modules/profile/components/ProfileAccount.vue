@@ -3,35 +3,33 @@
     <v-col>
       <ProfileCard>
         <template slot="title">Danger Zone</template>
-        <template slot="body">
-          <v-col>
-            <v-row>
-              <v-col>
-                <WarningIrreversible />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="auto">
-                <ConfirmDialogSmall @confirm="deleteUser">
-                  <template #activator="{ on, attrs }">
-                    <v-btn v-bind="attrs" color="red lighten-2" dark outlined v-on="on">
-                      <slot name="action"> Delete Account </slot>
-                    </v-btn>
-                  </template>
-                  <template #dialog-title> Delete account? </template>
-                  <template #dialog-text>
-                    <WarningIrreversible class="text-center" />
-                  </template>
-                  <template #confirm-action="{ confirm }">
-                    <v-btn color="red lighten-2" dark @click="confirm">
-                      <slot name="confirm-text">Delete</slot>
-                    </v-btn>
-                  </template>
-                </ConfirmDialogSmall>
-              </v-col>
-            </v-row>
-          </v-col>
-        </template>
+        <v-col>
+          <v-row>
+            <v-col>
+              <WarningIrreversible />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="auto">
+              <ConfirmDialogSmall @confirm="deleteUser">
+                <template #activator="{ on, attrs }">
+                  <v-btn v-bind="attrs" color="red lighten-2" dark outlined v-on="on">
+                    <slot name="action"> Delete Account </slot>
+                  </v-btn>
+                </template>
+                <template #dialog-title> Delete account? </template>
+                <template #dialog-text>
+                  <WarningIrreversible class="text-center" />
+                </template>
+                <template #confirm-action="{ confirm }">
+                  <v-btn color="red lighten-2" dark @click="confirm">
+                    <slot name="confirm-text">Delete</slot>
+                  </v-btn>
+                </template>
+              </ConfirmDialogSmall>
+            </v-col>
+          </v-row>
+        </v-col>
       </ProfileCard>
     </v-col>
   </v-row>
