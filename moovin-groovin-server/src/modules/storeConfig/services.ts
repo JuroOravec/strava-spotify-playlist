@@ -1,22 +1,26 @@
 import logger from '../../lib/logger';
 import type { Handlers, ServerModule, Services } from '../../lib/ServerModule';
-import type { UserConfig, UserConfigMeta } from './types';
+import type { UserConfig, UserConfigMeta, UserConfigModel } from './types';
 import type { StoreConfigData } from './data';
 import assertConfigStore from './utils/assertConfigStore';
 
 interface StoreConfigServices extends Services {
-  createUserConfig: (
+  insertUserConfig: (
     internalUserId: string,
-    config: UserConfig
+    config: Partial<UserConfig>
   ) => Promise<UserConfigMeta | null>;
-  createUserConfigs: (
+  insertUserConfigs: (
     data: {
       internalUserId: string;
-      config: UserConfig;
+      config: Partial<UserConfig>;
     }[]
   ) => Promise<(UserConfigMeta | null)[]>;
-  getUserConfig: (internalUserId: string) => Promise<UserConfig>;
-  getUserConfigs: (internalUserIds: string[]) => Promise<UserConfig[]>;
+  getUserConfig: (internalUserId: string) => Promise<UserConfig | null>;
+  getUserConfigs: (internalUserIds: string[]) => Promise<(UserConfig | null)[]>;
+  getUserConfigWithDefaults: (internalUserId: string) => Promise<UserConfig>;
+  getUserConfigsWithDefaults: (
+    internalUserIds: string[]
+  ) => Promise<UserConfig[]>;
   updateUserConfig: (
     internalUserId: string,
     config: Partial<UserConfig>
@@ -32,32 +36,34 @@ interface StoreConfigServices extends Services {
 type ThisModule = ServerModule<StoreConfigServices, Handlers, StoreConfigData>;
 
 const createStoreConfigServices = (): StoreConfigServices => {
-  async function createUserConfig(
+  async function insertUserConfig(
     this: ThisModule,
     internalUserId: string,
-    config: UserConfig
+    config: Partial<UserConfig>
   ): Promise<UserConfigMeta | null> {
-    const [response] = await this.services.createUserConfigs([
+    const [response] = await this.services.insertUserConfigs([
       { internalUserId, config },
     ]);
     return response;
   }
 
-  async function createUserConfigs(
+  async function insertUserConfigs(
     this: ThisModule,
     configData: {
       internalUserId: string;
-      config: UserConfig;
+      config: Partial<UserConfig>;
     }[]
   ): Promise<(UserConfigMeta | null)[]> {
     if (!configData.length) return [];
     assertConfigStore(this.data.configStore);
     const defaultUserConfig = this.data.userConfig;
-    const input = configData.map(({ config, internalUserId }) => ({
-      ...defaultUserConfig,
-      ...config,
-      internalUserId,
-    }));
+    const input = configData.map(
+      ({ config, internalUserId }): UserConfigModel => ({
+        ...defaultUserConfig,
+        ...config,
+        internalUserId,
+      })
+    );
     const responses = await this.data.configStore.insert(input);
 
     return responses;
@@ -66,25 +72,46 @@ const createStoreConfigServices = (): StoreConfigServices => {
   async function getUserConfig(
     this: ThisModule,
     internalUserId: string
-  ): Promise<UserConfig> {
-    const [userConfig] = await this.services.getUserConfigs([internalUserId]);
+  ): Promise<UserConfig | null> {
+    const [userConfig = null] = await this.services.getUserConfigs([
+      internalUserId,
+    ]);
     return userConfig;
   }
 
   async function getUserConfigs(
     this: ThisModule,
     internalUserIds: string[]
-  ): Promise<UserConfig[]> {
+  ): Promise<(UserConfig | null)[]> {
     if (!internalUserIds.length) return [];
+
     assertConfigStore(this.data.configStore);
-    const configsResponse = await this.data.configStore.get(internalUserIds);
+    return this.data.configStore.get(internalUserIds);
+  }
+
+  async function getUserConfigWithDefaults(
+    this: ThisModule,
+    internalUserId: string
+  ): Promise<UserConfig> {
+    const [userConfig] = await this.services.getUserConfigsWithDefaults([
+      internalUserId,
+    ]);
+    return userConfig;
+  }
+
+  async function getUserConfigsWithDefaults(
+    this: ThisModule,
+    internalUserIds: string[]
+  ): Promise<UserConfig[]> {
+    const configsResponse = await this.services.getUserConfigs(internalUserIds);
     const defaultUserConfig = this.data.userConfig;
 
-    return configsResponse.map((configResponse) => {
-      if (!configResponse) return { ...defaultUserConfig };
-      const { internalUserId: _, ...config } = configResponse;
-      return { ...defaultUserConfig, ...config };
-    });
+    return configsResponse.map(
+      (configResponse): UserConfig => ({
+        ...defaultUserConfig,
+        ...(configResponse ?? {}),
+      })
+    );
   }
 
   async function updateUserConfig(
@@ -113,10 +140,12 @@ const createStoreConfigServices = (): StoreConfigServices => {
   }
 
   return {
-    createUserConfig,
-    createUserConfigs,
+    insertUserConfig,
+    insertUserConfigs,
     getUserConfig,
     getUserConfigs,
+    getUserConfigWithDefaults,
+    getUserConfigsWithDefaults,
     updateUserConfig,
     updateUserConfigs,
   };

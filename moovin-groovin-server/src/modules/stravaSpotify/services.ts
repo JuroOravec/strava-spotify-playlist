@@ -388,8 +388,10 @@ const createStravaSpotifyServices = (): StravaSpotifyServices => {
       spotifyToken,
     });
 
-    const { getUserConfig } = this.context.modules.storeConfig.services;
-    const userConfig = await getUserConfig(user.internalUserId);
+    const {
+      getUserConfigWithDefaults,
+    } = this.context.modules.storeConfig.services;
+    const userConfig = await getUserConfigWithDefaults(user.internalUserId);
 
     const {
       playlist,
