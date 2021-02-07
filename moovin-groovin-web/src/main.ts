@@ -4,6 +4,7 @@ import installServiceWorker from './plugins/serviceWorker';
 import installBase from './plugins/base';
 import installCompositionAPI from './plugins/compositionAPI';
 import installRouter from './plugins/router';
+import installRouteGuard from './plugins/routeGuard';
 import installVuetify from './plugins/vuetify';
 import installApollo from './plugins/apollo';
 import installConfig from './plugins/config';
@@ -24,6 +25,7 @@ const router = installRouter(Vue, {
   base: process.env.BASE_URL,
   routes: createRoutes(),
 });
+installRouteGuard(Vue);
 const { provider: apolloProvider } = installApollo(Vue, currentConfig);
 
 new Vue({
