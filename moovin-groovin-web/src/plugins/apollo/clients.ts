@@ -30,7 +30,7 @@ const createApolloClients = (config: EnvironmentConfig): VueApolloClients => {
   });
 
   const defaultOptions: DefaultOptions = {
-    watchQuery: { errorPolicy: 'all' },
+    watchQuery: { errorPolicy: 'all', fetchPolicy: 'cache-and-network' },
     query: { errorPolicy: 'all', fetchPolicy: 'cache-first' },
     mutate: { errorPolicy: 'all' },
   };
