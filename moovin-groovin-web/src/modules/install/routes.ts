@@ -6,6 +6,7 @@ import createBaseRoutes from '@/modules/base/routes';
 import Navbar from '@/modules/base/components/Navbar.vue';
 import addChildRoutes from './utils/addChildRoutes';
 import { RootRoute } from './types';
+import { ProfileRoute } from '../profile/types';
 
 // route level code-splitting
 // this generates a separate chunk (about.[hash].js) for this route
@@ -35,6 +36,7 @@ const createRoutes = (): RouteConfig[] => {
         default: loadProfilePage,
         appbar: Navbar,
       },
+      redirect: { name: ProfileRoute.ROOT },
       children: createProfileRoutes(),
       meta: {
         requireAuth: false,
