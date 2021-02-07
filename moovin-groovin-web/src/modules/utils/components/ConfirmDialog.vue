@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     class="ConfirmDialog"
-    content-class="ConfirmDialog__dialog"
+    :content-class="usedContentClass"
     :value="internalValue"
     v-bind="$attrs"
     v-on="{
@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, unref, ref, toRefs, watch } from '@vue/composition-api';
+import { defineComponent, Ref, unref, ref, toRefs, watch, computed } from '@vue/composition-api';
 
 import makeSetter from '@/modules/utils/utils/vue/makeSetter';
 
@@ -58,9 +58,10 @@ const ConfirmDialog = defineComponent({
   inheritAttrs: false,
   props: {
     value: { type: Boolean, required: false, default: false },
+    contentClass: { type: String, required: false, default: '' },
   },
   setup(props, { emit }) {
-    const { value } = toRefs(props);
+    const { value, contentClass } = toRefs(props);
 
     const internalValue: Ref<boolean> = ref(unref(value));
     const setInternalValue = makeSetter(internalValue);
@@ -77,11 +78,14 @@ const ConfirmDialog = defineComponent({
       setInternalValue(false);
     };
 
+    const usedContentClass = computed((): string => `${unref(contentClass)} ConfirmDialog__dialog`);
+
     return {
       confirm,
       cancel,
       internalValue,
       setInternalValue,
+      usedContentClass,
     };
   },
 });

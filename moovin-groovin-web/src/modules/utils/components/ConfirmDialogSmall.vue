@@ -1,5 +1,11 @@
 <template>
-  <ConfirmDialog class="ConfirmDialogSmall" v-bind="$attrs" width="350px" v-on="$listeners">
+  <ConfirmDialog
+    class="ConfirmDialogSmall"
+    v-bind="$attrs"
+    :width="width"
+    :content-class="usedContentClass"
+    v-on="$listeners"
+  >
     <!-- Pass on all named slots -->
     <slot v-for="slot in Object.keys($slots)" :slot="slot" :name="slot" />
 
@@ -49,7 +55,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { computed, defineComponent, toRefs, unref } from '@vue/composition-api';
 
 import ConfirmDialog from './ConfirmDialog.vue';
 
@@ -59,6 +65,21 @@ const ConfirmDialogSmall = defineComponent({
     ConfirmDialog,
   },
   inheritAttrs: false,
+  props: {
+    width: { type: String, required: false, default: '350px' },
+    contentClass: { type: String, required: false, default: '' },
+  },
+  setup(props) {
+    const { contentClass } = toRefs(props);
+
+    const usedContentClass = computed(
+      (): string => `${unref(contentClass)} ConfirmDialogSmall__dialog`
+    );
+
+    return {
+      usedContentClass,
+    };
+  },
 });
 
 export default ConfirmDialogSmall;
@@ -87,7 +108,7 @@ export default ConfirmDialogSmall;
   }
 
   &__actions {
-    @extend .px-8, .py-5;
+    @extend .px-8, .pt-5;
     flex: 0 0 auto;
   }
 }
