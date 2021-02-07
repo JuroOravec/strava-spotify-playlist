@@ -25,6 +25,7 @@ const createDefaultUserConfig = (): UserConfig => ({
     '{{ activity.date }}. See the activity at {{ activity.url }}.',
     `Playlist created by {{ meta.app }}.`,
   ].join(' '),
+  activityDescriptionEnabled: true,
   activityDescriptionTemplate: [
     '{{ activity.description }}',
     '',

@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS user_config (
   playlist_auto_create bool NOT NULL,
   playlist_description_template varchar,
   playlist_title_template varchar,
+  activity_description_enabled bool NOT NULL,
   activity_description_template varchar,
   CONSTRAINT fk_internal_user_id
     FOREIGN KEY(internal_user_id) 

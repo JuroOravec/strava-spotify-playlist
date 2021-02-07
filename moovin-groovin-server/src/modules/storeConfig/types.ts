@@ -17,6 +17,8 @@ export interface UserConfigModel {
   playlistDescriptionTemplate: string | null;
   /** Template for creating playlist title */
   playlistTitleTemplate: string | null;
+  /** Whether activity description should be updated after playlist is created */
+  activityDescriptionEnabled: boolean;
   /** Template for creating updated activity description that includes playlist */
   activityDescriptionTemplate: string | null;
 }

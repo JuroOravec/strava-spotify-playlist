@@ -70,6 +70,8 @@ export type GqlUserConfig = {
   playlistDescriptionTemplate?: Maybe<Scalars['String']>;
   /** Template for creating playlist title */
   playlistTitleTemplate?: Maybe<Scalars['String']>;
+  /** Whether activity description should be updated after playlist is created */
+  activityDescriptionEnabled: Scalars['Boolean'];
   /** Template for creating updated activity description that includes playlist */
   activityDescriptionTemplate?: Maybe<Scalars['String']>;
 };
@@ -85,6 +87,8 @@ export type GqlUserConfigInput = {
   playlistDescriptionTemplate?: Maybe<Scalars['String']>;
   /** Template for creating playlist title */
   playlistTitleTemplate?: Maybe<Scalars['String']>;
+  /** Whether activity description should be updated after playlist is created */
+  activityDescriptionEnabled?: Maybe<Scalars['Boolean']>;
   /** Template for creating updated activity description that includes playlist */
   activityDescriptionTemplate?: Maybe<Scalars['String']>;
 };
@@ -225,6 +229,7 @@ export type GqlUserConfigResolvers<ContextType = ResolverContext, ParentType ext
   playlistAutoCreate?: Resolver<GqlResolversTypes['Boolean'], ParentType, ContextType>;
   playlistDescriptionTemplate?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
   playlistTitleTemplate?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
+  activityDescriptionEnabled?: Resolver<GqlResolversTypes['Boolean'], ParentType, ContextType>;
   activityDescriptionTemplate?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -255,4 +260,4 @@ export type GqlResolvers<ContextType = ResolverContext> = {
 
 
 
-// Generated on 2021-02-06T11:00:22+00:00
+// Generated on 2021-02-07T15:49:25+00:00

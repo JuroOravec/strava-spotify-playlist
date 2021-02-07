@@ -12,6 +12,7 @@ interface UserConfigResponse {
   playlist_auto_create: UserConfigModel['playlistAutoCreate'];
   playlist_description_template: UserConfigModel['playlistDescriptionTemplate'];
   playlist_title_template: UserConfigModel['playlistTitleTemplate'];
+  activity_description_enabled: UserConfigModel['activityDescriptionEnabled'];
   activity_description_template: UserConfigModel['activityDescriptionTemplate'];
 }
 
@@ -34,6 +35,7 @@ interface ConfigStoreSQLQueries extends PGQueries {
         UserConfigResponse['playlist_auto_create'],
         UserConfigResponse['playlist_description_template'],
         UserConfigResponse['playlist_title_template'],
+        UserConfigResponse['activity_description_enabled'],
         UserConfigResponse['activity_description_template']
       ]
     >[],
@@ -48,6 +50,7 @@ interface ConfigStoreSQLQueries extends PGQueries {
         UserConfigResponse['playlist_auto_create'] | undefined,
         UserConfigResponse['playlist_description_template'] | undefined,
         UserConfigResponse['playlist_title_template'] | undefined,
+        UserConfigResponse['activity_description_enabled'] | undefined,
         UserConfigResponse['activity_description_template'] | undefined
       ]
     >[],

@@ -6,6 +6,7 @@ INSERT INTO
     playlist_auto_create,
     playlist_description_template,
     playlist_title_template,
+    activity_description_enabled,
     activity_description_template
   )
 VALUES

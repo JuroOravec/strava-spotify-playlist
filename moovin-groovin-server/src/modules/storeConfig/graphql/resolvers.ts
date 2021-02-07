@@ -9,10 +9,8 @@ import type { StoreConfigServices } from '../services';
 import type { StoreConfigDeps, UserConfig } from '../types';
 
 const transformConfigToGqlConfig = (config: UserConfig): GqlUserConfig => ({
-  playlistCollaborative: config.playlistCollaborative,
-  playlistPublic: config.playlistPublic,
-  playlistAutoCreate: config.playlistAutoCreate,
-  playlistDescriptionTemplate: config.activityDescriptionTemplate ?? null,
+  ...config,
+  playlistDescriptionTemplate: config.playlistDescriptionTemplate ?? null,
   playlistTitleTemplate: config.playlistTitleTemplate ?? null,
   activityDescriptionTemplate: config.activityDescriptionTemplate ?? null,
 });
@@ -46,6 +44,7 @@ function createStoreConfigGraphqlResolvers(
           playlistCollaborative,
           playlistPublic,
           playlistAutoCreate,
+          activityDescriptionEnabled,
         } = userConfigInput;
 
         const normUserConfigInput = {
@@ -53,6 +52,7 @@ function createStoreConfigGraphqlResolvers(
           playlistCollaborative: playlistCollaborative ?? undefined,
           playlistPublic: playlistPublic ?? undefined,
           playlistAutoCreate: playlistAutoCreate ?? undefined,
+          activityDescriptionEnabled: activityDescriptionEnabled ?? undefined,
         };
 
         assertContext(this.context);

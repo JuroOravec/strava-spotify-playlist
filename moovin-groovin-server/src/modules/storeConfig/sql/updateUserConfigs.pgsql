@@ -22,6 +22,10 @@ SET
     input.playlist_title_template,
     user_config.playlist_title_template
   ),
+  activity_description_enabled = COALESCE(
+    CAST(input.activity_description_enabled as BOOLEAN),
+    user_config.activity_description_enabled
+  ),
   activity_description_template = COALESCE(
     input.activity_description_template,
     user_config.activity_description_template
@@ -36,6 +40,7 @@ FROM
     playlist_auto_create,
     playlist_description_template,
     playlist_title_template,
+    activity_description_enabled,
     activity_description_template
   )
 WHERE
@@ -49,6 +54,7 @@ WHERE
     (input.playlist_auto_create IS NOT NULL AND CAST(input.playlist_auto_create as BOOLEAN) IS DISTINCT FROM user_config.playlist_auto_create) OR
     (input.playlist_description_template IS NOT NULL AND input.playlist_description_template IS DISTINCT FROM user_config.playlist_description_template) OR
     (input.playlist_title_template IS NOT NULL AND input.playlist_title_template IS DISTINCT FROM user_config.playlist_title_template) OR
+    (input.activity_description_enabled IS NOT NULL AND CAST(input.activity_description_enabled as BOOLEAN) IS DISTINCT FROM user_config.activity_description_enabled) OR
     (input.activity_description_template IS NOT NULL AND input.activity_description_template IS DISTINCT FROM user_config.activity_description_template)
   )
 RETURNING

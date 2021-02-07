@@ -34,6 +34,8 @@ function createStoreConfigGraphqlSchema(
       playlistDescriptionTemplate: String
       "Template for creating playlist title"
       playlistTitleTemplate: String
+      "Whether activity description should be updated after playlist is created"
+      activityDescriptionEnabled: Boolean!
       "Template for creating updated activity description that includes playlist"
       activityDescriptionTemplate: String
     }
@@ -49,6 +51,8 @@ function createStoreConfigGraphqlSchema(
       playlistDescriptionTemplate: String
       "Template for creating playlist title"
       playlistTitleTemplate: String
+      "Whether activity description should be updated after playlist is created"
+      activityDescriptionEnabled: Boolean
       "Template for creating updated activity description that includes playlist"
       activityDescriptionTemplate: String
     }

@@ -34,6 +34,7 @@ const transformUserConfigResponse = (
   playlistAutoCreate: config.playlist_auto_create,
   playlistDescriptionTemplate: config.playlist_description_template ?? null,
   playlistTitleTemplate: config.playlist_title_template ?? null,
+  activityDescriptionEnabled: config.activity_description_enabled,
   activityDescriptionTemplate: config.activity_description_template ?? null,
 });
 
@@ -83,6 +84,7 @@ class PGConfigStore
           config.playlistAutoCreate,
           config.playlistDescriptionTemplate,
           config.playlistTitleTemplate,
+          config.activityDescriptionEnabled,
           config.activityDescriptionTemplate,
         ] as const
     );
@@ -112,6 +114,7 @@ class PGConfigStore
           config.playlistAutoCreate,
           config.playlistDescriptionTemplate,
           config.playlistTitleTemplate,
+          config.activityDescriptionEnabled,
           config.activityDescriptionTemplate,
         ] as const
     );
