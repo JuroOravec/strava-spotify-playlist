@@ -17,6 +17,7 @@ type Scalars = {
 type Query = {
   __typename?: 'Query';
   getCurrentUser: User;
+  getCurrentUserConfig: UserConfig;
   hello: Maybe<Scalars['String']>;
 };
 
@@ -26,11 +27,52 @@ type Mutation = {
   deleteCurrentUserProviders: Array<Maybe<UserProvider>>;
   hello: Maybe<Scalars['String']>;
   logoutCurrentUser: User;
+  updateCurrentUserConfig: UserConfig;
 };
 
 
 type MutationdeleteCurrentUserProvidersArgs = {
   providerIds: Array<Scalars['String']>;
+};
+
+
+type MutationupdateCurrentUserConfigArgs = {
+  userConfigInput: UserConfigInput;
+};
+
+type UserConfig = {
+  __typename?: 'UserConfig';
+  /** Whether user playlists should be created as collaborative */
+  playlistCollaborative: Scalars['Boolean'];
+  /** Whether user playlists should be created as public */
+  playlistPublic: Scalars['Boolean'];
+  /** Whether user playlists should be created automatically */
+  playlistAutoCreate: Scalars['Boolean'];
+  /** Template for creating playlist description */
+  playlistDescriptionTemplate: Maybe<Scalars['String']>;
+  /** Template for creating playlist title */
+  playlistTitleTemplate: Maybe<Scalars['String']>;
+  /** Whether activity description should be updated after playlist is created */
+  activityDescriptionEnabled: Scalars['Boolean'];
+  /** Template for creating updated activity description that includes playlist */
+  activityDescriptionTemplate: Maybe<Scalars['String']>;
+};
+
+type UserConfigInput = {
+  /** Whether user playlists should be created as collaborative */
+  playlistCollaborative?: Maybe<Scalars['Boolean']>;
+  /** Whether user playlists should be created as public */
+  playlistPublic?: Maybe<Scalars['Boolean']>;
+  /** Whether user playlists should be created automatically */
+  playlistAutoCreate?: Maybe<Scalars['Boolean']>;
+  /** Template for creating playlist description */
+  playlistDescriptionTemplate?: Maybe<Scalars['String']>;
+  /** Template for creating playlist title */
+  playlistTitleTemplate?: Maybe<Scalars['String']>;
+  /** Whether activity description should be updated after playlist is created */
+  activityDescriptionEnabled?: Maybe<Scalars['Boolean']>;
+  /** Template for creating updated activity description that includes playlist */
+  activityDescriptionTemplate?: Maybe<Scalars['String']>;
 };
 
 type User = {
@@ -99,6 +141,30 @@ type logoutCurrentUserMutation = (
   ) }
 );
 
+type getCurrentUserConfigQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+type getCurrentUserConfigQuery = (
+  { __typename?: 'Query' }
+  & { getCurrentUserConfig: (
+    { __typename?: 'UserConfig' }
+    & Pick<UserConfig, 'playlistCollaborative' | 'playlistPublic' | 'playlistAutoCreate' | 'playlistDescriptionTemplate' | 'playlistTitleTemplate' | 'activityDescriptionEnabled' | 'activityDescriptionTemplate'>
+  ) }
+);
+
+type updateCurrentUserConfigMutationVariables = Exact<{
+  userConfigInput: UserConfigInput;
+}>;
+
+
+type updateCurrentUserConfigMutation = (
+  { __typename?: 'Mutation' }
+  & { updateCurrentUserConfig: (
+    { __typename?: 'UserConfig' }
+    & Pick<UserConfig, 'playlistCollaborative' | 'playlistPublic' | 'playlistAutoCreate' | 'playlistDescriptionTemplate' | 'playlistTitleTemplate' | 'activityDescriptionEnabled' | 'activityDescriptionTemplate'>
+  ) }
+);
+
 
  const getCurrentUserDocument = gql`
     query getCurrentUser {
@@ -136,6 +202,85 @@ type logoutCurrentUserMutation = (
   }
 }
     `;
+ const getCurrentUserConfigDocument = gql`
+    query getCurrentUserConfig {
+  getCurrentUserConfig {
+    playlistCollaborative
+    playlistPublic
+    playlistAutoCreate
+    playlistDescriptionTemplate
+    playlistTitleTemplate
+    activityDescriptionEnabled
+    activityDescriptionTemplate
+  }
+}
+    `;
+ const updateCurrentUserConfigDocument = gql`
+    mutation updateCurrentUserConfig($userConfigInput: UserConfigInput!) {
+  updateCurrentUserConfig(userConfigInput: $userConfigInput) {
+    playlistCollaborative
+    playlistPublic
+    playlistAutoCreate
+    playlistDescriptionTemplate
+    playlistTitleTemplate
+    activityDescriptionEnabled
+    activityDescriptionTemplate
+  }
+}
+    `;
+export interface UserConfigOptions {
+  __typename?: 'UserConfig';
+  playlistCollaborative?: UserConfig['playlistCollaborative'];
+  playlistPublic?: UserConfig['playlistPublic'];
+  playlistAutoCreate?: UserConfig['playlistAutoCreate'];
+  playlistDescriptionTemplate?: UserConfig['playlistDescriptionTemplate'];
+  playlistTitleTemplate?: UserConfig['playlistTitleTemplate'];
+  activityDescriptionEnabled?: UserConfig['activityDescriptionEnabled'];
+  activityDescriptionTemplate?: UserConfig['activityDescriptionTemplate'];
+}
+
+export function newUserConfig(
+  options: UserConfigOptions = {},
+  cache: Record<string, any> = {}
+): UserConfig {
+  const o = (cache['UserConfig'] = {} as UserConfig);
+  o.__typename = 'UserConfig';
+  o.playlistCollaborative = options.playlistCollaborative ?? false;
+  o.playlistPublic = options.playlistPublic ?? false;
+  o.playlistAutoCreate = options.playlistAutoCreate ?? false;
+  o.playlistDescriptionTemplate = options.playlistDescriptionTemplate ?? null;
+  o.playlistTitleTemplate = options.playlistTitleTemplate ?? null;
+  o.activityDescriptionEnabled = options.activityDescriptionEnabled ?? false;
+  o.activityDescriptionTemplate = options.activityDescriptionTemplate ?? null;
+  return o;
+}
+
+function maybeNewUserConfig(
+  value: UserConfigOptions | undefined,
+  cache: Record<string, any>,
+  isSet: boolean = false
+): UserConfig {
+  if (value === undefined) {
+    return isSet ? undefined : cache['UserConfig'] || newUserConfig({}, cache);
+  } else if (value.__typename) {
+    return value as UserConfig;
+  } else {
+    return newUserConfig(value, cache);
+  }
+}
+
+function maybeNewOrNullUserConfig(
+  value: UserConfigOptions | undefined | null,
+  cache: Record<string, any>
+): UserConfig | null {
+  if (!value) {
+    return null;
+  } else if (value.__typename) {
+    return value as UserConfig;
+  } else {
+    return newUserConfig(value, cache);
+  }
+}
 export interface UserOptions {
   __typename?: 'User';
   userId?: User['userId'];
@@ -331,6 +476,53 @@ export function newlogoutCurrentUserResponse(
     request: { query: logoutCurrentUserDocument },
     // TODO Remove the any by having interfaces have a __typename that pacifies mutation type unions
     result: { data: data instanceof Error ? undefined : (newlogoutCurrentUserData(data) as any) },
+    error: data instanceof Error ? data : undefined,
+  };
+}
+interface getCurrentUserConfigDataOptions {
+  getCurrentUserConfig?: UserConfigOptions;
+}
+
+export function newgetCurrentUserConfigData(data: getCurrentUserConfigDataOptions) {
+  return {
+    __typename: 'Query' as const,
+    getCurrentUserConfig: maybeNewUserConfig(data['getCurrentUserConfig'] || undefined, {}),
+  };
+}
+
+export function newgetCurrentUserConfigResponse(
+  data: getCurrentUserConfigDataOptions | Error
+): MockedResponse<getCurrentUserConfigQueryVariables, getCurrentUserConfigQuery> {
+  return {
+    request: { query: getCurrentUserConfigDocument },
+    // TODO Remove the any by having interfaces have a __typename that pacifies mutation type unions
+    result: {
+      data: data instanceof Error ? undefined : (newgetCurrentUserConfigData(data) as any),
+    },
+    error: data instanceof Error ? data : undefined,
+  };
+}
+interface updateCurrentUserConfigDataOptions {
+  updateCurrentUserConfig?: UserConfigOptions;
+}
+
+export function newupdateCurrentUserConfigData(data: updateCurrentUserConfigDataOptions) {
+  return {
+    __typename: 'Mutation' as const,
+    updateCurrentUserConfig: maybeNewUserConfig(data['updateCurrentUserConfig'] || undefined, {}),
+  };
+}
+
+export function newupdateCurrentUserConfigResponse(
+  variables: updateCurrentUserConfigMutationVariables,
+  data: updateCurrentUserConfigDataOptions | Error
+): MockedResponse<updateCurrentUserConfigMutationVariables, updateCurrentUserConfigMutation> {
+  return {
+    request: { query: updateCurrentUserConfigDocument, variables },
+    // TODO Remove the any by having interfaces have a __typename that pacifies mutation type unions
+    result: {
+      data: data instanceof Error ? undefined : (newupdateCurrentUserConfigData(data) as any),
+    },
     error: data instanceof Error ? data : undefined,
   };
 }

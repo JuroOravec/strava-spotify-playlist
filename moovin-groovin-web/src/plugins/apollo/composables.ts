@@ -20,6 +20,7 @@ type Scalars = {
 type Query = {
   __typename?: 'Query';
   getCurrentUser: User;
+  getCurrentUserConfig: UserConfig;
   hello: Maybe<Scalars['String']>;
 };
 
@@ -29,11 +30,52 @@ type Mutation = {
   deleteCurrentUserProviders: Array<Maybe<UserProvider>>;
   hello: Maybe<Scalars['String']>;
   logoutCurrentUser: User;
+  updateCurrentUserConfig: UserConfig;
 };
 
 
 type MutationdeleteCurrentUserProvidersArgs = {
   providerIds: Array<Scalars['String']>;
+};
+
+
+type MutationupdateCurrentUserConfigArgs = {
+  userConfigInput: UserConfigInput;
+};
+
+type UserConfig = {
+  __typename?: 'UserConfig';
+  /** Whether user playlists should be created as collaborative */
+  playlistCollaborative: Scalars['Boolean'];
+  /** Whether user playlists should be created as public */
+  playlistPublic: Scalars['Boolean'];
+  /** Whether user playlists should be created automatically */
+  playlistAutoCreate: Scalars['Boolean'];
+  /** Template for creating playlist description */
+  playlistDescriptionTemplate: Maybe<Scalars['String']>;
+  /** Template for creating playlist title */
+  playlistTitleTemplate: Maybe<Scalars['String']>;
+  /** Whether activity description should be updated after playlist is created */
+  activityDescriptionEnabled: Scalars['Boolean'];
+  /** Template for creating updated activity description that includes playlist */
+  activityDescriptionTemplate: Maybe<Scalars['String']>;
+};
+
+type UserConfigInput = {
+  /** Whether user playlists should be created as collaborative */
+  playlistCollaborative?: Maybe<Scalars['Boolean']>;
+  /** Whether user playlists should be created as public */
+  playlistPublic?: Maybe<Scalars['Boolean']>;
+  /** Whether user playlists should be created automatically */
+  playlistAutoCreate?: Maybe<Scalars['Boolean']>;
+  /** Template for creating playlist description */
+  playlistDescriptionTemplate?: Maybe<Scalars['String']>;
+  /** Template for creating playlist title */
+  playlistTitleTemplate?: Maybe<Scalars['String']>;
+  /** Whether activity description should be updated after playlist is created */
+  activityDescriptionEnabled?: Maybe<Scalars['Boolean']>;
+  /** Template for creating updated activity description that includes playlist */
+  activityDescriptionTemplate?: Maybe<Scalars['String']>;
 };
 
 type User = {
@@ -99,6 +141,30 @@ type logoutCurrentUserMutation = (
   & { logoutCurrentUser: (
     { __typename?: 'User' }
     & Pick<User, 'userId'>
+  ) }
+);
+
+type getCurrentUserConfigQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+type getCurrentUserConfigQuery = (
+  { __typename?: 'Query' }
+  & { getCurrentUserConfig: (
+    { __typename?: 'UserConfig' }
+    & Pick<UserConfig, 'playlistCollaborative' | 'playlistPublic' | 'playlistAutoCreate' | 'playlistDescriptionTemplate' | 'playlistTitleTemplate' | 'activityDescriptionEnabled' | 'activityDescriptionTemplate'>
+  ) }
+);
+
+type updateCurrentUserConfigMutationVariables = Exact<{
+  userConfigInput: UserConfigInput;
+}>;
+
+
+type updateCurrentUserConfigMutation = (
+  { __typename?: 'Mutation' }
+  & { updateCurrentUserConfig: (
+    { __typename?: 'UserConfig' }
+    & Pick<UserConfig, 'playlistCollaborative' | 'playlistPublic' | 'playlistAutoCreate' | 'playlistDescriptionTemplate' | 'playlistTitleTemplate' | 'activityDescriptionEnabled' | 'activityDescriptionTemplate'>
   ) }
 );
 
@@ -214,4 +280,69 @@ export function uselogoutCurrentUserMutation(options: VueApolloComposable.UseMut
   return VueApolloComposable.useMutation<logoutCurrentUserMutation, logoutCurrentUserMutationVariables>(logoutCurrentUserDocument, options);
 }
 export type logoutCurrentUserMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<logoutCurrentUserMutation, logoutCurrentUserMutationVariables>;
-// Generated on 2021-01-27T22:56:54+00:00
+ const getCurrentUserConfigDocument = gql`
+    query getCurrentUserConfig {
+  getCurrentUserConfig {
+    playlistCollaborative
+    playlistPublic
+    playlistAutoCreate
+    playlistDescriptionTemplate
+    playlistTitleTemplate
+    activityDescriptionEnabled
+    activityDescriptionTemplate
+  }
+}
+    `;
+
+/**
+ * __usegetCurrentUserConfigQuery__
+ *
+ * To run a query within a Vue component, call `usegetCurrentUserConfigQuery` and pass it any options that fit your needs.
+ * When your component renders, `usegetCurrentUserConfigQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = usegetCurrentUserConfigQuery();
+ */
+export function usegetCurrentUserConfigQuery(options: VueApolloComposable.UseQueryOptions<getCurrentUserConfigQuery, getCurrentUserConfigQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<getCurrentUserConfigQuery, getCurrentUserConfigQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<getCurrentUserConfigQuery, getCurrentUserConfigQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<getCurrentUserConfigQuery, getCurrentUserConfigQueryVariables>(getCurrentUserConfigDocument, {}, options);
+}
+export type getCurrentUserConfigQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<getCurrentUserConfigQuery, getCurrentUserConfigQueryVariables>;
+ const updateCurrentUserConfigDocument = gql`
+    mutation updateCurrentUserConfig($userConfigInput: UserConfigInput!) {
+  updateCurrentUserConfig(userConfigInput: $userConfigInput) {
+    playlistCollaborative
+    playlistPublic
+    playlistAutoCreate
+    playlistDescriptionTemplate
+    playlistTitleTemplate
+    activityDescriptionEnabled
+    activityDescriptionTemplate
+  }
+}
+    `;
+
+/**
+ * __useupdateCurrentUserConfigMutation__
+ *
+ * To run a mutation, you first call `useupdateCurrentUserConfigMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useupdateCurrentUserConfigMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useupdateCurrentUserConfigMutation({
+ *   variables: {
+ *     userConfigInput: // value for 'userConfigInput'
+ *   },
+ * });
+ */
+export function useupdateCurrentUserConfigMutation(options: VueApolloComposable.UseMutationOptions<updateCurrentUserConfigMutation, updateCurrentUserConfigMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<updateCurrentUserConfigMutation, updateCurrentUserConfigMutationVariables>>) {
+  return VueApolloComposable.useMutation<updateCurrentUserConfigMutation, updateCurrentUserConfigMutationVariables>(updateCurrentUserConfigDocument, options);
+}
+export type updateCurrentUserConfigMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<updateCurrentUserConfigMutation, updateCurrentUserConfigMutationVariables>;
+// Generated on 2021-02-07T15:51:51+00:00

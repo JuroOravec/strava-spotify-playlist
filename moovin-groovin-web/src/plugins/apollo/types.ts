@@ -17,6 +17,7 @@ export type Scalars = {
 export type GqlQuery = {
   __typename?: 'Query';
   getCurrentUser: GqlUser;
+  getCurrentUserConfig: GqlUserConfig;
   hello: Maybe<Scalars['String']>;
 };
 
@@ -26,11 +27,52 @@ export type GqlMutation = {
   deleteCurrentUserProviders: Array<Maybe<GqlUserProvider>>;
   hello: Maybe<Scalars['String']>;
   logoutCurrentUser: GqlUser;
+  updateCurrentUserConfig: GqlUserConfig;
 };
 
 
 export type GqlMutationdeleteCurrentUserProvidersArgs = {
   providerIds: Array<Scalars['String']>;
+};
+
+
+export type GqlMutationupdateCurrentUserConfigArgs = {
+  userConfigInput: GqlUserConfigInput;
+};
+
+export type GqlUserConfig = {
+  __typename?: 'UserConfig';
+  /** Whether user playlists should be created as collaborative */
+  playlistCollaborative: Scalars['Boolean'];
+  /** Whether user playlists should be created as public */
+  playlistPublic: Scalars['Boolean'];
+  /** Whether user playlists should be created automatically */
+  playlistAutoCreate: Scalars['Boolean'];
+  /** Template for creating playlist description */
+  playlistDescriptionTemplate: Maybe<Scalars['String']>;
+  /** Template for creating playlist title */
+  playlistTitleTemplate: Maybe<Scalars['String']>;
+  /** Whether activity description should be updated after playlist is created */
+  activityDescriptionEnabled: Scalars['Boolean'];
+  /** Template for creating updated activity description that includes playlist */
+  activityDescriptionTemplate: Maybe<Scalars['String']>;
+};
+
+export type GqlUserConfigInput = {
+  /** Whether user playlists should be created as collaborative */
+  playlistCollaborative?: Maybe<Scalars['Boolean']>;
+  /** Whether user playlists should be created as public */
+  playlistPublic?: Maybe<Scalars['Boolean']>;
+  /** Whether user playlists should be created automatically */
+  playlistAutoCreate?: Maybe<Scalars['Boolean']>;
+  /** Template for creating playlist description */
+  playlistDescriptionTemplate?: Maybe<Scalars['String']>;
+  /** Template for creating playlist title */
+  playlistTitleTemplate?: Maybe<Scalars['String']>;
+  /** Whether activity description should be updated after playlist is created */
+  activityDescriptionEnabled?: Maybe<Scalars['Boolean']>;
+  /** Template for creating updated activity description that includes playlist */
+  activityDescriptionTemplate?: Maybe<Scalars['String']>;
 };
 
 export type GqlUser = {
@@ -99,17 +141,53 @@ export type GqllogoutCurrentUserMutation = (
   ) }
 );
 
-export type QueryKeySpecifier = ('getCurrentUser' | 'hello' | QueryKeySpecifier)[];
+export type GqlgetCurrentUserConfigQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GqlgetCurrentUserConfigQuery = (
+  { __typename?: 'Query' }
+  & { getCurrentUserConfig: (
+    { __typename?: 'UserConfig' }
+    & Pick<GqlUserConfig, 'playlistCollaborative' | 'playlistPublic' | 'playlistAutoCreate' | 'playlistDescriptionTemplate' | 'playlistTitleTemplate' | 'activityDescriptionEnabled' | 'activityDescriptionTemplate'>
+  ) }
+);
+
+export type GqlupdateCurrentUserConfigMutationVariables = Exact<{
+  userConfigInput: GqlUserConfigInput;
+}>;
+
+
+export type GqlupdateCurrentUserConfigMutation = (
+  { __typename?: 'Mutation' }
+  & { updateCurrentUserConfig: (
+    { __typename?: 'UserConfig' }
+    & Pick<GqlUserConfig, 'playlistCollaborative' | 'playlistPublic' | 'playlistAutoCreate' | 'playlistDescriptionTemplate' | 'playlistTitleTemplate' | 'activityDescriptionEnabled' | 'activityDescriptionTemplate'>
+  ) }
+);
+
+export type QueryKeySpecifier = ('getCurrentUser' | 'getCurrentUserConfig' | 'hello' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
 	getCurrentUser?: FieldPolicy<any> | FieldReadFunction<any>,
+	getCurrentUserConfig?: FieldPolicy<any> | FieldReadFunction<any>,
 	hello?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type MutationKeySpecifier = ('deleteCurrentUser' | 'deleteCurrentUserProviders' | 'hello' | 'logoutCurrentUser' | MutationKeySpecifier)[];
+export type MutationKeySpecifier = ('deleteCurrentUser' | 'deleteCurrentUserProviders' | 'hello' | 'logoutCurrentUser' | 'updateCurrentUserConfig' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {
 	deleteCurrentUser?: FieldPolicy<any> | FieldReadFunction<any>,
 	deleteCurrentUserProviders?: FieldPolicy<any> | FieldReadFunction<any>,
 	hello?: FieldPolicy<any> | FieldReadFunction<any>,
-	logoutCurrentUser?: FieldPolicy<any> | FieldReadFunction<any>
+	logoutCurrentUser?: FieldPolicy<any> | FieldReadFunction<any>,
+	updateCurrentUserConfig?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type UserConfigKeySpecifier = ('playlistCollaborative' | 'playlistPublic' | 'playlistAutoCreate' | 'playlistDescriptionTemplate' | 'playlistTitleTemplate' | 'activityDescriptionEnabled' | 'activityDescriptionTemplate' | UserConfigKeySpecifier)[];
+export type UserConfigFieldPolicy = {
+	playlistCollaborative?: FieldPolicy<any> | FieldReadFunction<any>,
+	playlistPublic?: FieldPolicy<any> | FieldReadFunction<any>,
+	playlistAutoCreate?: FieldPolicy<any> | FieldReadFunction<any>,
+	playlistDescriptionTemplate?: FieldPolicy<any> | FieldReadFunction<any>,
+	playlistTitleTemplate?: FieldPolicy<any> | FieldReadFunction<any>,
+	activityDescriptionEnabled?: FieldPolicy<any> | FieldReadFunction<any>,
+	activityDescriptionTemplate?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type UserKeySpecifier = ('userId' | 'email' | 'nameFamily' | 'nameGiven' | 'nameDisplay' | 'photo' | 'providers' | UserKeySpecifier)[];
 export type UserFieldPolicy = {
@@ -134,6 +212,10 @@ export type TypedTypePolicies = TypePolicies & {
 		keyFields?: false | MutationKeySpecifier | (() => undefined | MutationKeySpecifier),
 		fields?: MutationFieldPolicy,
 	},
+	UserConfig?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | UserConfigKeySpecifier | (() => undefined | UserConfigKeySpecifier),
+		fields?: UserConfigFieldPolicy,
+	},
 	User?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | UserKeySpecifier | (() => undefined | UserKeySpecifier),
 		fields?: UserFieldPolicy,
@@ -143,4 +225,4 @@ export type TypedTypePolicies = TypePolicies & {
 		fields?: UserProviderFieldPolicy,
 	}
 };
-// Generated on 2021-01-27T22:56:54+00:00
+// Generated on 2021-02-07T15:51:51+00:00
