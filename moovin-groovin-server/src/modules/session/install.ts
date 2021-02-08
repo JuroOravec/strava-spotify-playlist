@@ -2,6 +2,7 @@ import passport from 'passport';
 import session from 'express-session';
 import { v4 as genUuid } from 'uuid';
 
+import { asyncSafeInvoke } from '../../../../moovin-groovin-shared/src/utils/safeInvoke';
 import {
   ServerModule,
   ModuleContext,
@@ -11,7 +12,6 @@ import {
   assertContext,
 } from '../../lib/ServerModule';
 import logger from '../../lib/logger';
-import { asyncSafeInvoke } from '../../utils/safeInvoke';
 import type { SessionData } from './data';
 import type { SessionDeps } from './types';
 

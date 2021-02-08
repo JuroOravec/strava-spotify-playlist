@@ -5,8 +5,8 @@ import {
   VerifyCallback,
 } from 'passport-spotify';
 
+import { asyncSafeInvoke } from '../../../../moovin-groovin-shared/src/utils/safeInvoke';
 import unixTimestamp from '../../utils/unixTimestamp';
-import { asyncSafeInvoke } from '../../utils/safeInvoke';
 import {
   ServerModule,
   OAuthCreator,

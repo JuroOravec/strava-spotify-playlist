@@ -2,13 +2,13 @@ import type Spotify from 'spotify-web-api-node';
 import Queue from 'better-queue';
 import chunk from 'lodash/chunk';
 
+import { asyncSafeInvoke } from '../../../../moovin-groovin-shared/src/utils/safeInvoke';
 import logger from '../../lib/logger';
 import ServerModule, {
   assertContext,
   Handlers,
   Services,
 } from '../../lib/ServerModule';
-import { asyncSafeInvoke } from '../../utils/safeInvoke';
 import type { SpotifyData } from './data';
 import type {
   RecentlyPlayedTracksOptions,

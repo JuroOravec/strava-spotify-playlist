@@ -2,9 +2,12 @@ import type { NextFunction, Request, Response, RequestHandler } from 'express';
 import { BadRequest } from 'express-openapi-validator/dist/framework/types';
 import passport, { AuthenticateOptions } from 'passport';
 
+import {
+  asyncSafeInvoke,
+  safeInvoke,
+} from '../../../../moovin-groovin-shared/src/utils/safeInvoke';
 import logger from '../../lib/logger';
 import type { ServerModule } from '../../lib/ServerModule';
-import { asyncSafeInvoke, safeInvoke } from '../../utils/safeInvoke';
 import { serializeState, deserializeState } from './utils/state';
 import { ServerModuleName } from '../../types';
 import type { OAuthData } from './data';

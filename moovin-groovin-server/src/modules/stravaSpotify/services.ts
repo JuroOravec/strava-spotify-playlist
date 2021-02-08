@@ -1,6 +1,7 @@
 import isNil from 'lodash/isNil';
 import truncate from 'lodash/truncate';
 
+import { asyncSafeInvoke } from '../../../../moovin-groovin-shared/src/utils/safeInvoke';
 import {
   ServerModule,
   Handlers,
@@ -8,7 +9,6 @@ import {
   assertContext,
 } from '../../lib/ServerModule';
 import logger from '../../lib/logger';
-import { asyncSafeInvoke } from '../../utils/safeInvoke';
 import type { UserActivityPlaylistMeta } from '../storePlaylist/types';
 import type { UserTrackMeta } from '../storeTrack/types';
 import type { UserTokenModel } from '../storeToken/types';

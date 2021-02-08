@@ -5,12 +5,12 @@ import {
   VerifyFunction,
 } from 'passport-google-oauth';
 
+import { asyncSafeInvoke } from '../../../../moovin-groovin-shared/src/utils/safeInvoke';
 import ServerModule, {
   assertContext,
   OAuthCreator,
   Services,
 } from '../../lib/ServerModule';
-import { asyncSafeInvoke } from '../../utils/safeInvoke';
 import type { OAuthModule } from '../oauth';
 import type { OAuthHandlers } from '../oauth/handlers';
 import type { OAuthDeps } from '../oauth/types';

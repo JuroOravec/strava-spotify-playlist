@@ -1,12 +1,12 @@
 import { AuthenticationError, ApolloError } from 'apollo-server-express';
 import { isNil } from 'lodash';
 
+import { safeInvoke } from '../../../../../moovin-groovin-shared/src/utils/safeInvoke';
 import {
   ServerModule,
   assertContext,
   Handlers,
 } from '../../../lib/ServerModule';
-import { safeInvoke } from '../../../utils/safeInvoke';
 import type { GqlResolvers, GqlUser } from '../../../types/graphql';
 import type { StoreUserData } from '../data';
 import type { StoreUserServices } from '../services';
