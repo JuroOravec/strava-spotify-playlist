@@ -51,11 +51,12 @@
             <ProfileFormTextarea
               :value="configFormData.playlistTitleTemplate"
               :default-value="config && config.playlistTitleTemplate"
+              :error-messages="formDataErrors.playlistTitleTemplate"
               @input="(playlistTitleTemplate) => updateFormData({ playlistTitleTemplate })"
               @cancel="resetFormData(['playlistTitleTemplate'])"
             >
-              <template #label> Customize playlist title </template>
-              <template #label-detail>
+              <template #checkbox-label> Customize playlist title </template>
+              <template #checkbox-label-detail>
                 Specify what should go into the playlist title. Title is trimmed to 100 characters
                 after formatting.
               </template>
@@ -64,13 +65,14 @@
             <ProfileFormTextarea
               :value="configFormData.playlistDescriptionTemplate"
               :default-value="config && config.playlistDescriptionTemplate"
+              :error-messages="formDataErrors.playlistDescriptionTemplate"
               @input="
                 (playlistDescriptionTemplate) => updateFormData({ playlistDescriptionTemplate })
               "
               @cancel="resetFormData(['playlistDescriptionTemplate'])"
             >
-              <template #label> Customize playlist description </template>
-              <template #label-detail>
+              <template #checkbox-label> Customize playlist description </template>
+              <template #checkbox-label-detail>
                 Specify what should go into the playlist description. Description is trimmed to 300
                 characters after formatting.
               </template>
@@ -88,6 +90,7 @@
               :checkbox-input-value="configFormData.activityDescriptionEnabled"
               :value="configFormData.activityDescriptionTemplate"
               :default-value="config && config.activityDescriptionTemplate"
+              :error-messages="formDataErrors.activityDescriptionTemplate"
               @input="
                 (activityDescriptionTemplate) => updateFormData({ activityDescriptionTemplate })
               "
@@ -96,8 +99,8 @@
                 (activityDescriptionEnabled) => updateFormData({ activityDescriptionEnabled })
               "
             >
-              <template #label> Customize activity description </template>
-              <template #label-detail>
+              <template #checkbox-label> Customize activity description </template>
+              <template #checkbox-label-detail>
                 Specify what should go into the activity description.
               </template>
             </ProfileFormTextarea>
@@ -108,7 +111,11 @@
 
         <ProfileCard>
           <v-col cols="auto">
-            <v-btn color="primary" :disabled="!hasUnconfirmedChanges" @click="onSubmit">
+            <v-btn
+              color="primary"
+              :disabled="!formIsValid || !hasUnconfirmedChanges"
+              @click="onSubmit"
+            >
               <slot name="action"> Save changes </slot>
             </v-btn>
           </v-col>
@@ -126,7 +133,9 @@
 <script lang="ts">
 import { defineComponent, ref, unref, watch, computed } from '@vue/composition-api';
 
+import validateTemplate from '@/../../moovin-groovin-shared/src/lib/TemplateFormatter/utils/validateTemplate';
 import useFormData from '@/modules/utils/composables/useFormData';
+import useValidators from '@/modules/utils/composables/useValidators';
 import ConfirmDialogGuard from '@/modules/utils/components/ConfirmDialogGuard.vue';
 import SaveDialogSmall from '@/modules/utils/components/SaveDialogSmall.vue';
 import useCurrentUserConfig, { UserConfig } from '../composables/useCurrentUserConfig';
@@ -157,6 +166,18 @@ const ProfilePreferences = defineComponent({
       resetFormData,
       hasUnconfirmedChanges,
     } = useFormData<UserConfig>({ defaults: config });
+
+    const doValidateTemplate = async (template: string | null | undefined) => {
+      if (!template) return;
+      const { error } = await validateTemplate(template);
+      if (error) return error.message;
+    };
+
+    const { isValid: formIsValid, errors: formDataErrors } = useValidators(configFormData, {
+      activityDescriptionTemplate: doValidateTemplate,
+      playlistTitleTemplate: doValidateTemplate,
+      playlistDescriptionTemplate: doValidateTemplate,
+    });
 
     watch(config, (newConfig) => updateFormData({ ...newConfig }), { immediate: true });
 
@@ -190,6 +211,8 @@ const ProfilePreferences = defineComponent({
       hasUnconfirmedChanges,
       loadingOrWaiting,
       SaveDialogSmall,
+      formDataErrors,
+      formIsValid,
     };
   },
 });

@@ -23,10 +23,10 @@
     "
   >
     <template #label>
-      <slot name="label" />
+      <slot name="checkbox-label" />
     </template>
     <template #label-detail>
-      <slot name="label-detail" />
+      <slot name="checkbox-label-detail" />
     </template>
     <v-textarea
       rows="3"
@@ -48,6 +48,14 @@
         <v-btn icon x-small @click="$emit('cancel')">
           <v-icon>cancel</v-icon>
         </v-btn>
+      </template>
+
+      <!-- Pass on all named slots -->
+      <slot v-for="slot in Object.keys($slots)" :slot="slot" :name="slot" />
+
+      <!-- Pass on all scoped slots -->
+      <template v-for="slot in Object.keys($scopedSlots)" :slot="slot" slot-scope="scope">
+        <slot :name="slot" v-bind="scope" />
       </template>
     </v-textarea>
   </ProfileFormCheckbox>
@@ -119,7 +127,7 @@ export default ProfileFormTextarea;
   .v-text-field__details {
     @extend .pt-2;
     margin-bottom: 0 !important;
-    flex-direction: row-reverse;
+    flex-direction: row;
   }
 
   .v-input__append-inner {
@@ -129,6 +137,10 @@ export default ProfileFormTextarea;
   textarea {
     @extend .text-body-2;
     margin-bottom: 10px !important;
+  }
+
+  .v-messages {
+    display: initial;
   }
 
   &--no-checkbox {
