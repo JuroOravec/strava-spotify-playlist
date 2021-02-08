@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.build.json",
+
+  "compilerOptions": {
+    "baseUrl": "./packages",
+    "paths": {
+      "@moovin-groovin/server": ["moovin-groovin-server/src"],
+      "@moovin-groovin/shared": ["moovin-groovin-shared/src"],
+      "@moovin-groovin/web": ["moovin-groovin-web/src"],
+      "@moovin-groovin/*": ["*/src"]
+    },
+    "strict": true
+  }
+}

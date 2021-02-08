@@ -1,6 +1,6 @@
 {
-  "name": "moovin-groovin-web",
-  "version": "0.1.0",
+  "name": "@moovin-groovin/web",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve --mode development",
@@ -14,6 +14,7 @@
     "typegen:ts": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@moovin-groovin/shared": "^1.0.0",
     "@apollo/client": "^3.3.7",
     "@types/handlebars": "^4.1.0",
     "@vue/apollo-composable": "^4.0.0-alpha.12",

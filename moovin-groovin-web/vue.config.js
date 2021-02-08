@@ -15,6 +15,12 @@ module.exports = {
       chunkFilename: `[id].${Date.now()}.js`,
     },
   },
+  chainWebpack: (config) => {
+    config.plugin('fork-ts-checker').tap((args) => {
+      args[0].tsconfig = './tsconfig.build.json';
+      return args;
+    });
+  },
   css: {
     loaderOptions: {
       sass: {

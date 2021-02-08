@@ -1,13 +1,15 @@
 {
-  "name": "moovin-groovin-server",
+  "name": "@moovin-groovin/server",
   "version": "1.0.0",
   "description": "Server for integrating Strava API with Spotify API",
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com> (https://github.com/jurooravec)",
-  "main": "index.ts",
+  "main": "dist/index",
+  "types": "dist/index",
   "scripts": {
-    "build": "ts-node build/beforeBuild.ts && tsc && ts-node build/afterBuild.ts",
+    "build": "ts-node build/beforeBuild.ts && tsc -p tsconfig.build.json && ts-node build/afterBuild.ts",
     "start": "NODE_ENV=development nodemon src/index.ts | pino-pretty",
     "start:debug": "NODE_ENV=development nodemon --exec \"node -r ts-node/register --inspect-brk\" src/index.ts | pino-pretty",
+    "start:prd:1": "NODE_ENV=production STRAVA_VERIFY_TOKEN_SEED=$(date +%s) pm2 start dist/index.js -i 1 --name=\"moovin-groovin-server\" --watch --ignore-watch=\"node_modules\"",
     "start:prd": "NODE_ENV=production STRAVA_VERIFY_TOKEN_SEED=$(date +%s) pm2 start dist/index.js -i 0 --name=\"moovin-groovin-server\" --watch --ignore-watch=\"node_modules\"",
     "lint": "eslint -c .eslintrc.js \"{src, test}/**/*.{js,ts,tsx}\" --quiet",
     "lint:fix": "eslint -c .eslintrc.js \"{src, test}/**/*.{js,ts,tsx}\" --quiet --fix",
@@ -16,6 +18,7 @@
     "typegen": "graphql-codegen -- --config codegen.yml"
   },
   "dependencies": {
+    "@moovin-groovin/shared": "^1.0.0",
     "@types/better-queue": "^3.8.2",
     "@types/connect-pg-simple": "^4.2.2",
     "@types/express-session": "^1.17.3",

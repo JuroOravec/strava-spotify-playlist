@@ -1,0 +1,9 @@
+{
+  "packages": [
+    "moovin-groovin-shared",
+    "moovin-groovin-server",
+    "moovin-groovin-web",
+    "packages/*"
+  ],
+  "version": "1.0.0"
+}
