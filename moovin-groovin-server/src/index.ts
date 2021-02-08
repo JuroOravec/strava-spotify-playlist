@@ -1,4 +1,5 @@
-// TODO: Document the tutorial on how to do proper authentication on endpoints
+// TODO: docs - Document the tutorial on how to do proper authentication on endpoints
+// TODO: docs - Document monorepo https://medium.com/@NiGhTTraX/how-to-set-up-a-typescript-monorepo-with-lerna-c6acda7d4559
 
 // TODO: nice to have - make data module prop private to that module
 //                    - and move the store implementations and caches to private data
@@ -6,13 +7,13 @@
 //                    - use that as the ModuleDeps type, but defined maybe like Vue does it with props (e.g. Object as () => XYZ)
 // TODO: nice to have - Add support for delete request webhook for oauth providers (FB, google, ...)
 // TODO: nice to have - Set caching for S3 files (see https://www.gauntface.com/blog/2020/static-site-hosting-on-aws/)
-// TODO: nice to have - Set CORS policies for the routes
 // TODO: nice to have - Allow to pass arrays to options object versions of routers and openapi input
 // TODO: nice to have - Allow to pass modules to OAuthModuleConfig.providers
 // TODO: nice to have - Update the types of ServerModule similarly to ResolverContext so individual modules can
 //                      extend the common interface
 // TODO: nice to have - Type SQL queries (see https://github.com/adelsz/pgtyped)
 // TODO: nice to have - Flyway DB migrations (see https://flywaydb.org/)
+// TODO: nice to have - Build server with Webpack so we can import shared files directly instead of through top-level import
 
 import { Pool } from 'pg';
 import { v5 as uuidV5 } from 'uuid';
