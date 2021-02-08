@@ -105,7 +105,9 @@ const createStravaWebhookHandlers = (): StravaWebhookHandlers => {
       // but use object_id as it describes the affected object.
       const stravaUserId = event.object_id.toString();
       if (event.updates.authorized === webhookEvents.BooleanType.FALSE) {
-        this.services.unregisterAthlete(stravaUserId);
+        this.services
+          .unregisterAthlete(stravaUserId)
+          .catch((e) => logger.error(e));
       }
     }
 
@@ -114,11 +116,15 @@ const createStravaWebhookHandlers = (): StravaWebhookHandlers => {
       const stravaUserId = event.owner_id.toString();
 
       if (event.aspect_type === webhookEvents.AspectType.CREATE) {
-        this.services.registerAthleteActivity(stravaUserId, activityId);
+        this.services
+          .registerAthleteActivity(stravaUserId, activityId)
+          .catch((e) => logger.error(e));
       }
 
       if (event.aspect_type === webhookEvents.AspectType.DELETE) {
-        this.services.unregisterAthleteActivity(stravaUserId, activityId);
+        this.services
+          .unregisterAthleteActivity(stravaUserId, activityId)
+          .catch((e) => logger.error(e));
       }
 
       if (event.aspect_type === webhookEvents.AspectType.UPDATE) {
