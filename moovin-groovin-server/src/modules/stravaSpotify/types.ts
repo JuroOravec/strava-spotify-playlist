@@ -1,4 +1,4 @@
-import type { OptionalPromise } from '../../../../moovin-groovin-shared/src/types/optionals';
+import type { OptionalPromise } from '@moovin-groovin/shared';
 import type { ServerModules } from '../../lib/ServerModule';
 import type { ServerModuleName } from '../../types';
 import type { StravaModule } from '../strava';

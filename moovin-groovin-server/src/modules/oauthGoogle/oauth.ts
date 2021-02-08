@@ -5,7 +5,7 @@ import {
   VerifyFunction,
 } from 'passport-google-oauth';
 
-import { asyncSafeInvoke } from '../../../../moovin-groovin-shared/src/utils/safeInvoke';
+import { asyncSafeInvoke } from '@moovin-groovin/shared';
 import ServerModule, {
   assertContext,
   OAuthCreator,

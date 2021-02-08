@@ -4,7 +4,7 @@ import {
   VerifyFunctionWithRequest,
 } from 'passport-facebook';
 
-import { asyncSafeInvoke } from '../../../../moovin-groovin-shared/src/utils/safeInvoke';
+import { asyncSafeInvoke } from '@moovin-groovin/shared';
 import ServerModule, {
   assertContext,
   Handlers,

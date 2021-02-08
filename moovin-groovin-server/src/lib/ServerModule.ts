@@ -9,7 +9,7 @@ import {
 import http from 'http';
 import { Strategy } from 'passport';
 
-import type { OptionalArray } from '../../../moovin-groovin-shared/src/types/optionals';
+import type { OptionalArray } from '@moovin-groovin/shared';
 import isRouter from '../modules/router/utils/isRouter';
 import type { RouterInputBase } from '../modules/router/types';
 import type { OpenApiSpecInputBase } from '../modules/openapi/types';

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import isNil from 'lodash/isNil';
 
-import type { OptionalArray } from '../../../../../moovin-groovin-shared/src/types/optionals';
+import type { OptionalArray } from '@moovin-groovin/shared';
 import ServerModule, { AnyServerModule } from '../../../lib/ServerModule';
 import type {
   RouterWithOptions,

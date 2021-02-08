@@ -2,7 +2,7 @@ import passport from 'passport';
 import session from 'express-session';
 import { v4 as genUuid } from 'uuid';
 
-import { asyncSafeInvoke } from '../../../../moovin-groovin-shared/src/utils/safeInvoke';
+import { asyncSafeInvoke } from '@moovin-groovin/shared';
 import {
   ServerModule,
   ModuleContext,

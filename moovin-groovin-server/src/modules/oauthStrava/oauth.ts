@@ -3,7 +3,7 @@ import type { Profile } from 'passport';
 // @ts-ignore
 import { Strategy as StravaStrategy } from 'passport-strava-oauth2';
 
-import { asyncSafeInvoke } from '../../../../moovin-groovin-shared/src/utils/safeInvoke';
+import { asyncSafeInvoke } from '@moovin-groovin/shared';
 import unixTimestamp from '../../utils/unixTimestamp';
 import ServerModule, {
   assertContext,

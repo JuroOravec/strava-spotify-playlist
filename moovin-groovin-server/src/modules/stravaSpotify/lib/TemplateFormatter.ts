@@ -1,8 +1,10 @@
 import type Handlebars from 'handlebars';
 import NodeCache from 'node-cache';
 
-import type { OptionalPromise } from '../../../../../moovin-groovin-shared/src/types/optionals';
-import { HandlebarsTemplateFormatter as BaseHandlebarsTemplateFormatter } from '../../../../../moovin-groovin-shared/src/lib/TemplateFormatter';
+import {
+  OptionalPromise,
+  HandlebarsTemplateFormatter as BaseHandlebarsTemplateFormatter,
+} from '@moovin-groovin/shared';
 import logger from '../../../lib/logger';
 import type {
   ActivityTemplateContext,

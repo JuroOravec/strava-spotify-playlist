@@ -1,7 +1,7 @@
 import isNil from 'lodash/isNil';
 import truncate from 'lodash/truncate';
 
-import { asyncSafeInvoke } from '../../../../moovin-groovin-shared/src/utils/safeInvoke';
+import { asyncSafeInvoke } from '@moovin-groovin/shared';
 import {
   ServerModule,
   Handlers,

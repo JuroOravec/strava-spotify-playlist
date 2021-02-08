@@ -1,6 +1,6 @@
 import type { QueryResultRow } from 'pg';
 
-import type { OptionalReadonly } from '../../../../../moovin-groovin-shared/src/types/optionals';
+import type { OptionalReadonly } from '@moovin-groovin/shared';
 import type { PGQueries } from '../../../lib/PGStore';
 import loadFilesFromDir from '../../../utils/loadFilesFromDir';
 import type { UserModel } from '../../storeUser/types';

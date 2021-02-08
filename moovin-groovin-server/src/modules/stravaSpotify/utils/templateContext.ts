@@ -1,6 +1,6 @@
 import lowerCase from 'lodash/lowerCase';
 
-import setOnMissingPropStringifierProxy from '../../../../../moovin-groovin-shared/src/lib/TemplateFormatter/utils/setOnMissingPropStringifierProxy';
+import { setOnMissingPropStringifierProxy } from '@moovin-groovin/shared';
 import logger from '../../../lib/logger';
 import getActivityUrl from '../../strava/utils/getActivityUrl';
 import type {

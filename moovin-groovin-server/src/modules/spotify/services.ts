@@ -2,7 +2,7 @@ import type Spotify from 'spotify-web-api-node';
 import Queue from 'better-queue';
 import chunk from 'lodash/chunk';
 
-import { asyncSafeInvoke } from '../../../../moovin-groovin-shared/src/utils/safeInvoke';
+import { asyncSafeInvoke } from '@moovin-groovin/shared';
 import logger from '../../lib/logger';
 import ServerModule, {
   assertContext,
