@@ -3,8 +3,7 @@ import pgFormat from 'pg-format';
 import isNil from 'lodash/isNil';
 import identity from 'lodash/identity';
 
-import type { OptionalReadonly } from '../../types';
-import { safeInvoke } from '../../utils/safeInvoke';
+import type { OptionalReadonly } from '../../../../moovin-groovin-shared/src/types/optionals';
 import logger from '../logger';
 import resolvePgClient, { PGClientOptions } from './resolvePgClient';
 

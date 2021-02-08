@@ -1,10 +1,6 @@
 export type SetRequiredFields<T, TFields extends keyof T> = Partial<T> &
   Required<Pick<T, TFields>>;
 
-export type OptionalReadonly<T> = Readonly<T> | T;
-export type OptionalPromise<T> = Promise<T> | T;
-export type OptionalArray<T> = Array<T> | T;
-
 export enum ServerModuleName {
   BASE = 'base',
   ERR_HANDLER = 'errorHandler',

@@ -9,11 +9,11 @@ import {
 import http from 'http';
 import { Strategy } from 'passport';
 
+import type { OptionalArray } from '../../../moovin-groovin-shared/src/types/optionals';
 import isRouter from '../modules/router/utils/isRouter';
 import type { RouterInputBase } from '../modules/router/types';
 import type { OpenApiSpecInputBase } from '../modules/openapi/types';
 import type { GraphqlApolloConfigInputBase } from '../modules/graphql/types';
-import type { OptionalArray } from '../types';
 import getProps from '../utils/props';
 import logger from './logger';
 

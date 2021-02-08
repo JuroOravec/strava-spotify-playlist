@@ -2,7 +2,7 @@ import type { ApolloServerExpressConfig } from 'apollo-server-express';
 import mergeWith from 'lodash/mergeWith';
 import isNil from 'lodash/isNil';
 
-import type { OptionalArray } from '../../../types';
+import type { OptionalArray } from '../../../../../moovin-groovin-shared/src/types/optionals';
 import ServerModule, { AnyServerModule } from '../../../lib/ServerModule';
 import type {
   GraphqlApolloConfigInput,

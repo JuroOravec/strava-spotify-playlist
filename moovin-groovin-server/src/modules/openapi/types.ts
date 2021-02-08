@@ -1,6 +1,6 @@
 import type { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types';
 
-import type { OptionalArray } from '../../types';
+import type { OptionalArray } from '../../../../moovin-groovin-shared/src/types/optionals';
 import type {
   ServerModules,
   ModuleContext,

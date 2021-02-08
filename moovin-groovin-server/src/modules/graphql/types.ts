@@ -4,7 +4,7 @@ import type {
   ExpressContext,
 } from 'apollo-server-express';
 
-import type { OptionalArray } from '../../types';
+import type { OptionalArray } from '../../../../moovin-groovin-shared/src/types/optionals';
 import type {
   AnyServerModule,
   ModuleContext,

@@ -4,8 +4,8 @@ import NodeCache from 'node-cache';
 import truncate from 'lodash/truncate';
 import isNil from 'lodash/isNil';
 
+import type { OptionalPromise } from '../../../../../moovin-groovin-shared/src/types/optionals';
 import logger from '../../../lib/logger';
-import type { OptionalPromise } from '../../../types';
 import type {
   ActivityTemplateContext,
   PlaylistTemplateContext,

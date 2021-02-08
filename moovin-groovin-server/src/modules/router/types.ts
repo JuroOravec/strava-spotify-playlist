@@ -1,6 +1,6 @@
 import type { Router, RouterOptions } from 'express';
 
-import type { OptionalArray } from '../../types';
+import type { OptionalArray } from '../../../../moovin-groovin-shared/src/types/optionals';
 import type {
   AnyServerModule,
   ModuleContext,
