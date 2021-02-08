@@ -4,7 +4,7 @@ import mapValues from 'lodash/mapValues';
 import isNil from 'lodash/isNil';
 import fromPairs from 'lodash/fromPairs';
 
-import type { OptionalPromise } from '@/../../../moovin-groovin-shared/src/types/optionals';
+import type { OptionalPromise } from '@moovin-groovin/shared/src/types/optionals';
 import type OptionalRef from '../types/OptionalRef';
 
 /* eslint-disable-next-line @typescript-eslint/ban-types */

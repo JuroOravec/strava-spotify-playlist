@@ -133,7 +133,7 @@
 <script lang="ts">
 import { defineComponent, ref, unref, watch, computed } from '@vue/composition-api';
 
-import validateTemplate from '@/../../moovin-groovin-shared/src/lib/TemplateFormatter/utils/validateTemplate';
+import validateTemplate from '@moovin-groovin/shared/src/lib/TemplateFormatter/utils/validateTemplate';
 import useFormData from '@/modules/utils/composables/useFormData';
 import useValidators from '@/modules/utils/composables/useValidators';
 import ConfirmDialogGuard from '@/modules/utils/components/ConfirmDialogGuard.vue';
