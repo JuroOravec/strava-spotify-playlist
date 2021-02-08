@@ -109,7 +109,7 @@ const createProxifier = (missingValue?: unknown) => {
  *
  * @example
  * obj = {a: 1, b: { c: '4' }};
- * p = setOnMissingPropStringifier(obj, 'Whoopsie!');
+ * p = setOnMissingPropStringifierProxy(obj, 'Whoopsie!');
  * console.log(p.a); // 1
  * console.log(p.b); // { c: '4' ;}
  * console.log(p.c); // 'Whoopsie!'
@@ -118,7 +118,7 @@ const createProxifier = (missingValue?: unknown) => {
  * console.log(p.b.c.d.ef.g.f.i); // 'Whoopsie!'
  */
 /* eslint-disable-next-line @typescript-eslint/ban-types */
-const setOnMissingPropStringifier = <T extends object>(
+const setOnMissingPropStringifierProxy = <T extends object>(
   obj: T,
   missingValue?: unknown
 ): T => {
@@ -130,4 +130,4 @@ const setOnMissingPropStringifier = <T extends object>(
   return proxy;
 };
 
-export default setOnMissingPropStringifier;
+export default setOnMissingPropStringifierProxy;

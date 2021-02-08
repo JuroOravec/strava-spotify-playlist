@@ -1,5 +1,6 @@
 import lowerCase from 'lodash/lowerCase';
 
+import setOnMissingPropStringifierProxy from '../../../../../moovin-groovin-shared/src/lib/TemplateFormatter/utils/setOnMissingPropStringifierProxy';
 import logger from '../../../lib/logger';
 import getActivityUrl from '../../strava/utils/getActivityUrl';
 import type {
@@ -12,7 +13,6 @@ import type {
   TemplateContextMeta,
 } from '../types';
 import unixTimestampToDate from './unixTimestampToDate';
-import setOnMissingPropStringifier from './setOnMissingPropStringifier';
 
 /** Capture '01:23:45' in `2021-01-01T01:23:45.678Z"` */
 const timeFromIsoDateRegex = /(?<=T).*?(?=\.)/i;
@@ -108,7 +108,10 @@ const createPlaylistTemplateContext = (
    * // b.d.c: UNKNOWN,      // Invalid prop
    * // b.d.c.e.f: UNKNOWN,  // Invalid prop
    */
-  const proxiedContext = setOnMissingPropStringifier(context, missingValue);
+  const proxiedContext = setOnMissingPropStringifierProxy(
+    context,
+    missingValue
+  );
 
   // Return both context and its proxy so the context can be extended.
   return {
