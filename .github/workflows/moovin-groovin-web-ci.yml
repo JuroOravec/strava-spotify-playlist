@@ -9,11 +9,13 @@ on:
     branches: [ main ]
     paths:
       - 'moovin-groovin-web/**/*'
+      - 'moovin-groovin-shared/**/*'
       - 'src/*'
   pull_request:
     branches: [ main ]
     paths:
       - 'moovin-groovin-web/**/*'
+      - 'moovin-groovin-shared/**/*'
       - 'src/*'    
 
   # Allows you to run this workflow manually from the Actions tab
