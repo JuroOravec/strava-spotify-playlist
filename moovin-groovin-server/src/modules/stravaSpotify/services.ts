@@ -277,7 +277,10 @@ const createStravaSpotifyServices = (): StravaSpotifyServices => {
     const { activity, tracks, playlist, stravaToken, userConfig } = input;
     const { providerUserId: stravaUserId, scope } = stravaToken;
     const { activityId } = activity;
-    const { activityDescriptionTemplate } = userConfig;
+    const {
+      activityDescriptionEnabled,
+      activityDescriptionTemplate,
+    } = userConfig;
 
     const { canWriteToActivities } = getScopesInfo(scope || '');
     if (!canWriteToActivities) {
@@ -298,7 +301,7 @@ const createStravaSpotifyServices = (): StravaSpotifyServices => {
     });
 
     // Allow user to update the strava activity description with playlist and tracks data
-    if (!isNil(activityDescriptionTemplate)) {
+    if (activityDescriptionEnabled && !isNil(activityDescriptionTemplate)) {
       let activityDescription: string | null = null;
       if (this.data.templateFormater) {
         logger.debug('Generating activity description.');
