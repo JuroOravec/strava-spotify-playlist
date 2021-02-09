@@ -214,6 +214,10 @@ For next time, it might be useful to give this one a go:
 
 - [Reddit: I built a GitHub Action that deploys static sites to Cloudfront](https://www.reddit.com/r/aws/comments/ja1k9g/i_built_a_github_action_that_deploys_static_sites/)
 
+Redirecting non-root URLs to avoid 404s and 403s and instead handle the invalid path inside Single-Page App:
+
+- [Using AWS CloudFront to serve an SPA hosted on S3](https://johnlouros.com/blog/using-CloudFront-to-serve-an-SPA-from-S3)
+
 ### Troubleshooting
 
 - Issue: Access Denied
