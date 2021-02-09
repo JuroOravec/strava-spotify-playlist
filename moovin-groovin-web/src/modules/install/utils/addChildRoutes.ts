@@ -1,23 +1,23 @@
-import type { RouteConfig } from "vue-router"
+import type { RouteConfig } from 'vue-router';
 
 import RoutePassthrough from '../components/RoutePassthrough.vue';
 
 const TRAILING_SLASH_PATTERN = /\/+$/g;
 
-const namespaceRoutes = (
-  namespace: string,
-  routes: RouteConfig[],
-) => routes.map(route => {
-  const normNamespace = namespace.replace(TRAILING_SLASH_PATTERN, '');
-  return {
-    ...route,
-    path: `${normNamespace}${route.path}`,
-  };
-});
+const namespaceRoutes = (namespace: string, routes: RouteConfig[]) =>
+  routes.map((route) => {
+    const normNamespace = namespace.replace(TRAILING_SLASH_PATTERN, '');
+    return {
+      ...route,
+      path: `${normNamespace}${route.path}`,
+    };
+  });
 
 const addChildRoutes = <T extends RouteConfig>(parentRoute: T, childRoutes: RouteConfig[]): T => {
-  // @ts-ignore
-  const parentHasSomeComponents = Boolean(parentRoute.component || Object.keys(parentRoute.components || {}).length);
+  const parentHasSomeComponents = Boolean(
+    // @ts-ignore
+    parentRoute.component || Object.keys(parentRoute.components || {}).length
+  );
 
   const mergedRoutes: T = {
     ...parentRoute,
@@ -26,6 +26,6 @@ const addChildRoutes = <T extends RouteConfig>(parentRoute: T, childRoutes: Rout
   };
 
   return mergedRoutes;
-}
+};
 
 export default addChildRoutes;

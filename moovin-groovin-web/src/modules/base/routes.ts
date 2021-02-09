@@ -8,7 +8,24 @@ const createRoutes = (): RouteConfig[] => {
     {
       name: BaseRoute.ABOUT,
       path: '/about',
-      component: About,
+      components: {
+        default: About,
+      },
+      meta: {
+        requireAuth: false,
+      },
+    },
+    {
+      name: BaseRoute.UNKNOWN,
+      path: '/*',
+      redirect: { name: BaseRoute.HOME },
+    },
+    {
+      name: BaseRoute.HOME,
+      path: '',
+      components: {
+        default: About,
+      },
       meta: {
         requireAuth: false,
       },

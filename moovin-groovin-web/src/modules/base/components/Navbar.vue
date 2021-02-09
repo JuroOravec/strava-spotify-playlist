@@ -39,7 +39,7 @@ import type { Location } from 'vue-router';
 
 import LoginMenu from '@/modules/auth/components/LoginMenu.vue';
 import { BaseRoute } from '@/modules/base/types';
-import { RootRoute } from '@/modules/install/types';
+import { ProfileRoute } from '@/modules/profile/types';
 
 const navbarLinks: {
   title: string;
@@ -47,7 +47,7 @@ const navbarLinks: {
 }[] = [
   {
     title: 'Profile',
-    to: { name: RootRoute.PROFILE },
+    to: { name: ProfileRoute.ROOT },
   },
   {
     title: 'About',

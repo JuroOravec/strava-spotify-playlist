@@ -5,14 +5,26 @@ import createAuthRoutes from '@/modules/auth/routes';
 import createBaseRoutes from '@/modules/base/routes';
 import Navbar from '@/modules/base/components/Navbar.vue';
 import addChildRoutes from './utils/addChildRoutes';
-import { RootRoute } from './types';
-import { ProfileRoute } from '../profile/types';
+
+/**
+ * We omit `name`s so child routes can specify the default routes instead.
+ *
+ * If we include `name`s, we get following warning:
+ *
+ * [vue-router] Named Route 'root:root' has a default child route. When navigating
+ * to this named route (:to="{name: 'root:root'"), the default child route will not
+ * be rendered. Remove the name from this route and use the name of the default child
+ * route for named links instead.
+ */
+type RouteConfigWithoutName = { name?: never } & RouteConfig;
 
 // route level code-splitting
 // this generates a separate chunk (about.[hash].js) for this route
 // which is lazy-loaded when the route is visited.
 const loadProfilePage = () =>
   import(/* webpackChunkName: "profile" */ '@/modules/profile/components/ProfilePage.vue');
+const loadBasePage = () =>
+  import(/* webpackChunkName: "base" */ '@/modules/base/components/Page.vue');
 
 /**
  * Configure path prefixes.
@@ -20,9 +32,8 @@ const loadProfilePage = () =>
  * See https://github.com/vuejs/vue-router/issues/2105
  */
 const createRoutes = (): RouteConfig[] => {
-  const routes: (RouteConfig & { name: RootRoute })[] = [
+  const routes: RouteConfigWithoutName[] = [
     {
-      name: RootRoute.AUTH,
       path: '/auth',
       children: createAuthRoutes(),
       meta: {
@@ -30,28 +41,28 @@ const createRoutes = (): RouteConfig[] => {
       },
     },
     {
-      name: RootRoute.PROFILE,
       path: '/profile',
       components: {
         default: loadProfilePage,
         appbar: Navbar,
       },
-      redirect: { name: ProfileRoute.ROOT },
       children: createProfileRoutes(),
       meta: {
         requireAuth: false,
       },
     },
     {
-      name: RootRoute.ROOT,
       path: '',
       children: createBaseRoutes(),
+      components: {
+        default: loadBasePage,
+        appbar: Navbar,
+      },
       meta: {
         requireAuth: false,
       },
     },
     {
-      name: RootRoute.UNKNOWN,
       path: '/*',
       redirect: '/',
     },
