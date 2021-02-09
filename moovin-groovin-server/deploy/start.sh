@@ -1,5 +1,4 @@
 #!/bin/sh
 cd ~/app/moovin-groovin-server
-npm ci --also=dev
-npm run build
+build:server
 npm run start:prd

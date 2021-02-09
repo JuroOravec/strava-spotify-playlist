@@ -32,7 +32,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: npm ci && npx lerna bootstrap && npx lerna run --scope "*/web" --scope "*/shared" build 
+        run: npm run build:web
 
       - name: Run moovin-groovin-web tests
         run: npm test
@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: npm ci && npx lerna bootstrap && npx lerna run --scope "*/web" --scope "*/shared" build 
+        run: npm run build:web
 
       - uses: actions/upload-artifact@v2
         with:
