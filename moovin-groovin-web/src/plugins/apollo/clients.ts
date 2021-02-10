@@ -49,6 +49,11 @@ const createApolloClients = (config: EnvironmentConfig): VueApolloClients => {
       UserConfig: {
         merge: true,
       },
+      Query: {
+        fields: {
+          getCurrentUserConfig: { merge: true },
+        },
+      },
     },
   });
 
