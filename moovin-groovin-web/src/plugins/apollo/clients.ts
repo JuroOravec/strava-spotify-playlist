@@ -46,6 +46,9 @@ const createApolloClients = (config: EnvironmentConfig): VueApolloClients => {
           },
         },
       },
+      UserConfig: {
+        merge: true,
+      },
     },
   });
 
