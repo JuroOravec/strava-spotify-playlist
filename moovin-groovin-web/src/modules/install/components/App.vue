@@ -12,14 +12,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, getCurrentInstance } from '@vue/composition-api';
 
 import AuthGuard from '@/modules/auth/components/AuthGuard.vue';
+import useCurrentUser from '@/modules/auth/composables/useCurrentUser';
 
 const App = defineComponent({
   name: 'App',
   components: {
     AuthGuard,
+  },
+  setup() {
+    const instance = getCurrentInstance();
+    const { onLogout } = useCurrentUser();
+
+    onLogout(() => {
+      instance?.proxy.$apolloProvider.defaultClient.clearStore();
+    });
   },
 });
 
