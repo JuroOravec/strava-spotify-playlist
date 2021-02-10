@@ -10,6 +10,7 @@ import {
 } from '@/plugins/apollo/composables';
 import type { GqlgetCurrentUserConfigQuery } from '@/plugins/apollo/types';
 import useCurrentUser from '@/modules/auth/composables/useCurrentUser';
+import useApolloQuery from '@/modules/utils/composables/useApolloQuery';
 
 interface UserConfig {
   playlistCollaborative: boolean;
@@ -78,13 +79,9 @@ const useCurrentUserConfig = (): UseCurrentUserConfig => {
   // To work around that, we keep a copy of the state that's sync'd to the cache.
   const configModel: Ref<UserConfig | null> = ref(null);
 
-  const {
-    onResult: onConfig,
-    loading: loadingGetConfig,
-    refetch: doRefetchConfig,
-    query,
-    start,
-  } = usegetCurrentUserConfigQuery({
+  const { onResult: onConfig, loading: loadingGetConfig, refetch: refetchConfig } = useApolloQuery(
+    usegetCurrentUserConfigQuery
+  )({
     fetchPolicy: 'cache-and-network',
   });
 
@@ -104,11 +101,6 @@ const useCurrentUserConfig = (): UseCurrentUserConfig => {
   );
 
   const { onLogin, onLogout } = useCurrentUser();
-
-  const refetchConfig = (...args: Parameters<typeof doRefetchConfig>) => {
-    if (!unref(query)) return start();
-    if (!unref(loadingGetConfig)) doRefetchConfig(...args);
-  };
 
   onConfig(({ data }) => {
     const config = transformUserConfig(data?.getCurrentUserConfig);
