@@ -154,7 +154,11 @@ class PGTokenStore extends PGStore<TokenStoreSQLQueries> implements TokenStore {
         isUserTokenResponse(token) ? transformAuthTokenResponse(token) : null
     );
 
-    return tokens;
+    return alignResultWithInput({
+      input: { value: data, alignBy: (d) => d.targetProviderId },
+      result: { value: tokens, alignBy: (token) => token?.providerId ?? '' },
+      missing: null,
+    }).map((keyValOrNull) => (keyValOrNull ? keyValOrNull : null));
   }
 
   async getByUsers(
