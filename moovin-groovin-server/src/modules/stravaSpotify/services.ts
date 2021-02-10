@@ -361,7 +361,7 @@ const createStravaSpotifyServices = (): StravaSpotifyServices => {
 
     assertContext(this.context);
     const { resolveTokens } = this.context.modules.storeToken.services;
-    const [stravaToken, spotifyToken] = await resolveTokens({
+    const { strava: stravaToken, spotify: spotifyToken } = await resolveTokens({
       startProviderId: maybeStravaUserId ? 'strava' : 'spotify',
       startProviderUserId: maybeStravaUserId
         ? maybeStravaUserId
@@ -450,7 +450,7 @@ const createStravaSpotifyServices = (): StravaSpotifyServices => {
     } = options;
 
     const { resolveTokens } = this.context.modules.storeToken.services;
-    const [stravaToken, spotifyToken] = await resolveTokens({
+    const { strava: stravaToken, spotify: spotifyToken } = await resolveTokens({
       startProviderId: maybeStravaUserId ? 'strava' : 'spotify',
       startProviderUserId: maybeStravaUserId
         ? maybeStravaUserId

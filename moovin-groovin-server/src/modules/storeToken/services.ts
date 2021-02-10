@@ -1,3 +1,5 @@
+import reduce from 'lodash/reduce';
+
 import logger from '../../lib/logger';
 import {
   assertContext,
@@ -15,10 +17,10 @@ import {
 } from './types';
 import assertTokenStore from './utils/assertTokenStore';
 
-interface ResolveTokensOptions {
+interface ResolveTokensOptions<T extends string> {
   startProviderId: string;
   startProviderUserId: string;
-  targetProviderIds: string[];
+  targetProviderIds: T[];
 }
 
 interface StoreTokenServices extends Services {
@@ -58,7 +60,9 @@ interface StoreTokenServices extends Services {
   ) => Promise<(UserTokenModel[] | null)[]>;
   upsertToken: (token: UserTokenModel) => Promise<UserTokenMeta | null>;
   upsertTokens: (tokens: UserTokenModel[]) => Promise<(UserTokenMeta | null)[]>;
-  resolveTokens: (input: ResolveTokensOptions) => Promise<UserTokenModel[]>;
+  resolveTokens: <T extends string>(
+    input: ResolveTokensOptions<T>
+  ) => Promise<Record<T, UserTokenModel>>;
 }
 
 type ThisModule = ServerModule<
@@ -222,10 +226,10 @@ const createTokenStoreServices = (): StoreTokenServices => {
     return response;
   }
 
-  async function resolveTokens(
+  async function resolveTokens<T extends string>(
     this: ThisModule,
-    options: ResolveTokensOptions
-  ): Promise<UserTokenModel[]> {
+    options: ResolveTokensOptions<T>
+  ): Promise<Record<T, UserTokenModel>> {
     const { startProviderId, startProviderUserId, targetProviderIds } = options;
 
     if (!startProviderId) {
@@ -242,17 +246,24 @@ const createTokenStoreServices = (): StoreTokenServices => {
       }))
     );
 
-    targetTokens.forEach((token, i) => {
-      const { providerUserId } = token || {};
+    const targetTokensObject = reduce(
+      targetTokens,
+      (agg, token, i) => {
+        const { providerUserId } = token || {};
 
-      if (!token || !providerUserId) {
-        throw Error(
-          `Failed to find user's ${targetProviderIds[i]} access token.`
-        );
-      }
-    });
+        if (!token || !providerUserId) {
+          throw Error(
+            `Failed to find user's ${targetProviderIds[i]} access token.`
+          );
+        }
 
-    return targetTokens as UserTokenModel[];
+        agg[targetProviderIds[i]] = token;
+        return agg;
+      },
+      {} as Record<T, UserTokenModel>
+    );
+
+    return targetTokensObject;
   }
 
   return {
