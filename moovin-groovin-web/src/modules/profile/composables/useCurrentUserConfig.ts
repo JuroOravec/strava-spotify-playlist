@@ -1,5 +1,5 @@
-import { computed, ref, unref, watch, ComputedRef, Ref, readonly } from '@vue/composition-api';
-import { ApolloQueryResult, gql } from '@apollo/client/core';
+import { computed, ref, unref, ComputedRef, Ref, readonly } from '@vue/composition-api';
+import { gql } from '@apollo/client/core';
 import clone from 'lodash/clone';
 import memoize from 'lodash/memoize';
 
@@ -9,6 +9,7 @@ import {
   useupdateCurrentUserConfigMutation,
 } from '@/plugins/apollo/composables';
 import type { GqlgetCurrentUserConfigQuery } from '@/plugins/apollo/types';
+import useCurrentUser from '@/modules/auth/composables/useCurrentUser';
 
 interface UserConfig {
   playlistCollaborative: boolean;
@@ -23,7 +24,7 @@ interface UserConfig {
 interface UseCurrentUserConfig {
   config: ComputedRef<Readonly<UserConfig | null>>;
   loading: ComputedRef<boolean>;
-  refetch: () => Promise<ApolloQueryResult<GqlgetCurrentUserConfigQuery>>;
+  refetch: () => void;
   updateConfig: updateCurrentUserConfigMutationCompositionFunctionResult['mutate'];
 }
 
@@ -78,9 +79,11 @@ const useCurrentUserConfig = (): UseCurrentUserConfig => {
   const configModel: Ref<UserConfig | null> = ref(null);
 
   const {
-    result: configResult,
+    onResult: onConfig,
     loading: loadingGetConfig,
-    refetch: refetchConfig,
+    refetch: doRefetchConfig,
+    query,
+    start,
   } = usegetCurrentUserConfigQuery({
     fetchPolicy: 'cache-and-network',
   });
@@ -100,9 +103,21 @@ const useCurrentUserConfig = (): UseCurrentUserConfig => {
     }
   );
 
-  watch(configResult, (newConfigResult) => {
-    const config = transformUserConfig(newConfigResult?.getCurrentUserConfig);
+  const { onLogin, onLogout } = useCurrentUser();
+
+  const refetchConfig = (...args: Parameters<typeof doRefetchConfig>) => {
+    if (!unref(query)) return start();
+    if (!unref(loadingGetConfig)) doRefetchConfig(...args);
+  };
+
+  onConfig(({ data }) => {
+    const config = transformUserConfig(data?.getCurrentUserConfig);
     configModel.value = clone(config);
+  });
+
+  onLogin(() => refetchConfig());
+  onLogout(() => {
+    configModel.value = null;
   });
 
   const isUserConfigLoading = computed(
