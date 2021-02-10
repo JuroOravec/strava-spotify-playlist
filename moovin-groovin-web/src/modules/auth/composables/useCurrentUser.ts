@@ -1,4 +1,4 @@
-import { computed, ref, unref, ComputedRef } from '@vue/composition-api';
+import { computed, ref, unref, ComputedRef, readonly } from '@vue/composition-api';
 import { gql } from '@apollo/client/core';
 import { MutateOverrideOptions, useResult } from '@vue/apollo-composable';
 import cloneDeep from 'lodash/cloneDeep';
@@ -12,6 +12,7 @@ import {
 } from '@/plugins/apollo/composables';
 import type { GqlgetCurrentUserQuery } from '@/plugins/apollo/types';
 import isNotNil from '@/modules/utils/utils/isNotNil';
+import useWatcher, { UseWatcher } from '@/modules/utils/composables/useWatcher';
 import { namedOperations } from '@/plugins/apollo/operations';
 
 interface CurrentUser {
@@ -34,6 +35,8 @@ interface UseCurrentUser {
     options?: MutateOverrideOptions
   ) => void;
   logout: (options?: MutateOverrideOptions) => void;
+  onLogin: UseWatcher<CurrentUser | null>['addWatcher'];
+  onLogout: UseWatcher<CurrentUser | null>['addWatcher'];
   isLoggedIn: ComputedRef<boolean>;
 }
 
@@ -95,6 +98,10 @@ const transformGetCurentUser = ({
   };
 };
 
+// TODO: This currently works, because we're not modifying & refetching user data
+// and b/c we delete apollo cache when we log user out. But once we allow user to
+// modify their data, consider refactoring this to use onResult instead of result,
+// similarly to useCurrentUserConfig.
 const useCurrentUser = (): UseCurrentUser => {
   const isLoggedIn = ref(false);
 
@@ -140,7 +147,7 @@ const useCurrentUser = (): UseCurrentUser => {
     refetchQueries: [namedOperations.Query.getCurrentUser],
   });
 
-  const { mutate: logoutUser, loading: loadingLogoutUser } = uselogoutCurrentUserMutation({
+  const { mutate: doLogoutUser, loading: loadingLogoutUser } = uselogoutCurrentUserMutation({
     awaitRefetchQueries: true,
     update: (cache) => {
       cache.writeQuery({ query: GET_CURRENT_USER, data: { getCurrentUser: null } });
@@ -153,6 +160,7 @@ const useCurrentUser = (): UseCurrentUser => {
   onError(() => {
     isLoggedIn.value = false;
   });
+
   onResult(({ data, errors, error }) => {
     isLoggedIn.value = Boolean(data?.getCurrentUser?.userId && !errors?.length && !error);
   });
@@ -173,18 +181,30 @@ const useCurrentUser = (): UseCurrentUser => {
     deleteUser(undefined, options);
   };
 
-  const doLogoutUser = (options?: MutateOverrideOptions) => {
-    logoutUser(undefined, options);
+  const logoutUser = (options?: MutateOverrideOptions) => {
+    doLogoutUser(undefined, options);
   };
+
+  const { addWatcher: onLogin } = useWatcher({
+    value: user,
+    filter: (newUser) => newUser !== null,
+  });
+
+  const { addWatcher: onLogout } = useWatcher({
+    value: user,
+    filter: (newUser) => newUser === null,
+  });
 
   return {
     user,
     loading: isUserLoading,
+    isLoggedIn: readonly(isLoggedIn),
     refetch,
     deleteUser: doDeleteUser,
     deleteIntegrations: deleteUserIntegrations,
-    logout: doLogoutUser,
-    isLoggedIn: computed(() => unref(isLoggedIn)),
+    logout: logoutUser,
+    onLogin,
+    onLogout,
   };
 };
 
