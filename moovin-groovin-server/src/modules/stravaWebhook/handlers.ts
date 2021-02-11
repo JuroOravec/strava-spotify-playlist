@@ -87,11 +87,18 @@ const createStravaWebhookHandlers = (): StravaWebhookHandlers => {
       return next(Error('No event data received'));
     }
 
-    logger.info(
-      `Received Strava webhook event (${event.aspect_type.toUpperCase()} ${event.object_type.toUpperCase()} ${
-        event.object_id
-      } (OWNER ID: ${event.owner_id})`
-    );
+    logger.info({
+      msg: 'Received Strava webhook event',
+      aspect_type: event.aspect_type,
+      object_type: event.object_type,
+      object_id: event.object_id,
+      owner_id: event.owner_id,
+      // TODO: Remove these
+      headers: req.headers,
+      ip: req.socket.remoteAddress,
+      host: req.get('host'),
+      origin: req.get('origin'),
+    });
 
     // End early if event not among cases we care about
     if (!isAthleteDeauthEvent(event) && !isActivityEvent(event)) {
