@@ -14,6 +14,7 @@
 // TODO: nice to have - Type SQL queries (see https://github.com/adelsz/pgtyped)
 // TODO: nice to have - Flyway DB migrations (see https://flywaydb.org/)
 // TODO: nice to have - Build server with Webpack so we can import shared files directly instead of through top-level import
+// TODO: nice to have - Update the security policy to allow only ports 80, 443, 3000
 
 import { Pool } from 'pg';
 import { v5 as uuidV5 } from 'uuid';
