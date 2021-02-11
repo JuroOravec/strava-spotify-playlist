@@ -1,6 +1,6 @@
 import { UserInputError } from 'apollo-server-express';
 import isNil from 'lodash/isNil';
-import validateTemplate from '@moovin-groovin/shared/src/lib/TemplateFormatter/utils/validateTemplate';
+import { validateTemplate } from '@moovin-groovin/shared';
 
 import {
   ServerModule,
