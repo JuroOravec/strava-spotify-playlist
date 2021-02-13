@@ -80,6 +80,8 @@ const createStravaWebhookHandlers = (): StravaWebhookHandlers => {
     res: Response,
     next: NextFunction
   ) {
+    // Note: We can access the IP where the request originated from, but we can't confirm
+    // if it's static or not. Whitelisting would need communication with Strava.
     const event = req.body;
     if (!event) {
       logger.info('Invalid Strava webhook event: No event data received');
@@ -93,11 +95,6 @@ const createStravaWebhookHandlers = (): StravaWebhookHandlers => {
       object_type: event.object_type,
       object_id: event.object_id,
       owner_id: event.owner_id,
-      // TODO: Remove these
-      headers: req.headers,
-      ip: req.socket.remoteAddress,
-      host: req.get('host'),
-      origin: req.get('origin'),
     });
 
     // End early if event not among cases we care about
