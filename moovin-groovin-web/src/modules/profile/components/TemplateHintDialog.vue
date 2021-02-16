@@ -216,13 +216,13 @@ export default TemplateHintDialog;
 
     .col,
     .v-icon {
-      color: var(--v-primary-darken-3) !important;
+      color: var(--v-primary-base) !important;
     }
 
     &:hover {
       .col,
       .v-icon {
-        color: var(--v-primary-base) !important;
+        color: var(--v-primary-darken1) !important;
       }
     }
   }
