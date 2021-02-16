@@ -20,6 +20,10 @@ module.exports = {
       args[0].tsconfig = './tsconfig.build.json';
       return args;
     });
+    config.plugin('html').tap((args) => {
+      args[0].title = 'MoovinGroovin - Save the songs that keep you moving';
+      return args;
+    });
   },
   css: {
     loaderOptions: {
