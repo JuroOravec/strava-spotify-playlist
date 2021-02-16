@@ -4,7 +4,7 @@ import pickBy from 'lodash/pickBy';
 import reduce from 'lodash/reduce';
 import isEqual from 'lodash/isEqual';
 
-import type OptionalRef from '../types/OptionalRef';
+import type OptionalRef from '@/modules/utils-reactivity/types/OptionalRef';
 
 /* eslint-disable-next-line @typescript-eslint/ban-types */
 interface UseFormData<T extends object> {
