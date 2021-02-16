@@ -33,6 +33,7 @@ function assertHandlebars(hb: typeof Handlebars | null): asserts hb {
 }
 
 class HandlebarsTemplateFormatter implements TemplateFormatter {
+  name = 'HandlebarsTemplateFormatter';
   cache: Cache | null = null;
   compileOptions: CompileOptions = {};
   handlebars: typeof Handlebars | null = null;

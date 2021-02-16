@@ -24,6 +24,9 @@ const createMissingValueProxy = (
           return () =>
             isObjectLike(missingValue) ? missingValue + '' : missingValue;
         }
+        if (prop === Symbol.iterator) {
+          return (missingValue as any)?.[Symbol.iterator];
+        }
         if (prop === 'toString') return Reflect.get(target, prop, receiver);
         return missingValueProxy;
       },
@@ -62,6 +65,9 @@ const createProxifier = (missingValue?: unknown) => {
       get: function (target, prop, receiver) {
         if (prop === Symbol.toPrimitive) {
           return () => (isObjectLike(wraps) ? wraps + '' : wraps);
+        }
+        if (prop === Symbol.iterator) {
+          return (wraps as any)?.[Symbol.iterator];
         }
         if (prop === 'toString') return Reflect.get(target, prop, receiver);
         if (!Reflect.has(target, prop)) return missingValueProxy;
