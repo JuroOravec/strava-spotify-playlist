@@ -1,10 +1,11 @@
 import type { RouteConfig } from 'vue-router';
 
+import addChildRoutes from '@/plugins/router/utils/addChildRoutes';
 import createProfileRoutes from '@/modules/profile/routes';
 import createAuthRoutes from '@/modules/auth/routes';
 import createBaseRoutes from '@/modules/base/routes';
-import Navbar from '@/modules/base/components/Navbar.vue';
-import addChildRoutes from './utils/addChildRoutes';
+import Appbar from '@/modules/base/components/Appbar.vue';
+import AppFooter from '@/modules/base/components/AppFooter.vue';
 
 /**
  * We omit `name`s so child routes can specify the default routes instead.
@@ -44,7 +45,8 @@ const createRoutes = (): RouteConfig[] => {
       path: '/profile',
       components: {
         default: loadProfilePage,
-        appbar: Navbar,
+        appbar: Appbar,
+        footer: AppFooter,
       },
       children: createProfileRoutes(),
       meta: {
@@ -56,7 +58,8 @@ const createRoutes = (): RouteConfig[] => {
       children: createBaseRoutes(),
       components: {
         default: loadBasePage,
-        appbar: Navbar,
+        appbar: Appbar,
+        footer: AppFooter,
       },
       meta: {
         requireAuth: false,

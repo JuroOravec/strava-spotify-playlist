@@ -1,3 +1,7 @@
 a {
   text-decoration: none;
+
+  &:hover {
+    color: var(--v-primary-base) !important;
+  }
 }

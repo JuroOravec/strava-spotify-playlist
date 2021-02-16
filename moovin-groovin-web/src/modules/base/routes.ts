@@ -1,20 +1,10 @@
 import type { RouteConfig } from 'vue-router';
 
 import { BaseRoute } from './types';
-import About from './components/About.vue';
+import Home from './components/Home.vue';
 
 const createRoutes = (): RouteConfig[] => {
   const routes: (RouteConfig & { name: BaseRoute })[] = [
-    {
-      name: BaseRoute.ABOUT,
-      path: '/about',
-      components: {
-        default: About,
-      },
-      meta: {
-        requireAuth: false,
-      },
-    },
     {
       name: BaseRoute.UNKNOWN,
       path: '/*',
@@ -24,7 +14,7 @@ const createRoutes = (): RouteConfig[] => {
       name: BaseRoute.HOME,
       path: '',
       components: {
-        default: About,
+        default: Home,
       },
       meta: {
         requireAuth: false,

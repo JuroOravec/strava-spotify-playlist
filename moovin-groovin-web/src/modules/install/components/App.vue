@@ -9,6 +9,7 @@
         </AuthGuard>
       </v-container>
     </v-main>
+    <router-view name="footer" />
   </v-app>
 </template>
 
