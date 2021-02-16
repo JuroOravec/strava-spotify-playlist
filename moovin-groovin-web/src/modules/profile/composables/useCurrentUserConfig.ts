@@ -11,6 +11,8 @@ import {
 import type { GqlgetCurrentUserConfigQuery } from '@/plugins/apollo/types';
 import useCurrentUser from '@/modules/auth/composables/useCurrentUser';
 import useApolloQuery from '@/modules/utils/composables/useApolloQuery';
+import useMutationWithNotif from '@/modules/utils/composables/useMutationWithNotif';
+import { NotifType } from '@/modules/utils/composables/useNotifSnackbar';
 
 interface UserConfig {
   playlistCollaborative: boolean;
@@ -25,6 +27,7 @@ interface UserConfig {
 interface UseCurrentUserConfig {
   config: ComputedRef<Readonly<UserConfig | null>>;
   loading: ComputedRef<boolean>;
+  loadingUpdate: ComputedRef<boolean>;
   refetch: () => void;
   updateConfig: updateCurrentUserConfigMutationCompositionFunctionResult['mutate'];
 }
@@ -85,20 +88,34 @@ const useCurrentUserConfig = (): UseCurrentUserConfig => {
     fetchPolicy: 'cache-and-network',
   });
 
-  const { mutate: updateConfig, loading: loadingUpdateConfig } = useupdateCurrentUserConfigMutation(
+  const { mutate: updateConfig, loading: loadingUpdateConfig } = useMutationWithNotif(
+    useupdateCurrentUserConfigMutation,
     {
-      update: (cache, result) => {
-        const newConfig = transformUserConfig(result.data?.updateCurrentUserConfig);
-
-        cache.writeQuery({
-          query: GET_CURRENT_USER_CONFIG,
-          data: { getCurrentUserConfig: clone(newConfig) },
-        });
-
-        configModel.value = clone(newConfig);
+      notifOnError: (errors) => ({
+        notifType: NotifType.ERROR,
+        attrs: {
+          content: `Failed to update preferences. Error: ${errors[0].message}`,
+        },
+      }),
+      notifOnSuccess: {
+        notifType: NotifType.CONFIRM,
+        attrs: {
+          content: 'Preferences updated successfully.',
+        },
       },
     }
-  );
+  )({
+    update: (cache, result) => {
+      const newConfig = transformUserConfig(result.data?.updateCurrentUserConfig);
+
+      cache.writeQuery({
+        query: GET_CURRENT_USER_CONFIG,
+        data: { getCurrentUserConfig: clone(newConfig) },
+      });
+
+      configModel.value = clone(newConfig);
+    },
+  });
 
   const { onLogin, onLogout } = useCurrentUser();
 
@@ -120,9 +137,10 @@ const useCurrentUserConfig = (): UseCurrentUserConfig => {
   // It does not work together.
   return {
     config: readonly(configModel),
-    loading: isUserConfigLoading,
-    refetch: refetchConfig,
     updateConfig,
+    loading: isUserConfigLoading,
+    loadingUpdate: loadingUpdateConfig,
+    refetch: refetchConfig,
   };
 };
 

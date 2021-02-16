@@ -11,9 +11,11 @@ import {
   uselogoutCurrentUserMutation,
 } from '@/plugins/apollo/composables';
 import type { GqlgetCurrentUserQuery } from '@/plugins/apollo/types';
-import isNotNil from '@/modules/utils/utils/isNotNil';
-import useWatcher, { UseWatcher } from '@/modules/utils/composables/useWatcher';
 import { namedOperations } from '@/plugins/apollo/operations';
+import isNotNil from '@/modules/utils/utils/isNotNil';
+import useRefWatcher, { UseRefWatcher } from '@/modules/utils-reactivity/composables/useRefWatcher';
+import { NotifType } from '@/modules/utils/composables/useNotifSnackbar';
+import useMutationWithNotif from '@/modules/utils/composables/useMutationWithNotif';
 
 interface CurrentUser {
   userId: string;
@@ -28,15 +30,15 @@ interface CurrentUser {
 interface UseCurrentUser {
   user: ComputedRef<CurrentUser | null>;
   loading: ComputedRef<boolean>;
-  refetch: () => void;
+  refetch: () => Promise<void>;
   deleteUser: (options?: MutateOverrideOptions) => void;
   deleteIntegrations: (
     variables: { providerIds: string[] },
     options?: MutateOverrideOptions
   ) => void;
   logout: (options?: MutateOverrideOptions) => void;
-  onLogin: UseWatcher<CurrentUser | null>['addWatcher'];
-  onLogout: UseWatcher<CurrentUser | null>['addWatcher'];
+  onLogin: UseRefWatcher<CurrentUser | null>['addWatcher'];
+  onLogout: UseRefWatcher<CurrentUser | null>['addWatcher'];
   isLoggedIn: ComputedRef<boolean>;
 }
 
@@ -105,18 +107,28 @@ const transformGetCurentUser = ({
 const useCurrentUser = (): UseCurrentUser => {
   const isLoggedIn = ref(false);
 
-  const {
-    result,
-    loading: loadingGetUser,
-    refetch: refetchUser,
-    onError,
-    onResult,
-  } = usegetCurrentUserQuery({
+  const { result, loading: loadingGetUser, refetch, onError, onResult } = usegetCurrentUserQuery({
     fetchPolicy: 'network-only',
     nextFetchPolicy: 'cache-only',
   });
 
-  const { mutate: deleteUser, loading: loadingDeleteUser } = usedeleteCurrentUserMutation({
+  const { mutate: deleteUser, loading: loadingDeleteUser } = useMutationWithNotif(
+    usedeleteCurrentUserMutation,
+    {
+      notifOnError: (errors) => ({
+        notifType: NotifType.ERROR,
+        attrs: {
+          content: `Failed to delete user. Error: ${errors[0].message}`,
+        },
+      }),
+      notifOnSuccess: {
+        notifType: NotifType.CONFIRM,
+        attrs: {
+          content: 'User deleted successfully.',
+        },
+      },
+    }
+  )({
     awaitRefetchQueries: true,
     update: (cache) => {
       cache.writeQuery({ query: GET_CURRENT_USER, data: { getCurrentUser: null } });
@@ -127,7 +139,20 @@ const useCurrentUser = (): UseCurrentUser => {
   const {
     mutate: deleteUserIntegrations,
     loading: loadingDeleteUserIntegrations,
-  } = usedeleteCurrentUserIntegrationsMutation({
+  } = useMutationWithNotif(usedeleteCurrentUserIntegrationsMutation, {
+    notifOnError: (errors) => ({
+      notifType: NotifType.ERROR,
+      attrs: {
+        content: `Failed to remove integration. Error: ${errors[0].message}`,
+      },
+    }),
+    notifOnSuccess: {
+      notifType: NotifType.CONFIRM,
+      attrs: {
+        content: 'Integration removed successfully.',
+      },
+    },
+  })({
     awaitRefetchQueries: true,
     update: (cache, { data }) => {
       const removedProviders =
@@ -173,10 +198,6 @@ const useCurrentUser = (): UseCurrentUser => {
       unref(loadingLogoutUser)
   );
 
-  const refetch = (): void => {
-    refetchUser();
-  };
-
   const doDeleteUser = (options?: MutateOverrideOptions) => {
     deleteUser(undefined, options);
   };
@@ -185,12 +206,12 @@ const useCurrentUser = (): UseCurrentUser => {
     doLogoutUser(undefined, options);
   };
 
-  const { addWatcher: onLogin } = useWatcher({
+  const { addWatcher: onLogin } = useRefWatcher<CurrentUser | null>({
     value: user,
     filter: (newUser) => newUser !== null,
   });
 
-  const { addWatcher: onLogout } = useWatcher({
+  const { addWatcher: onLogout } = useRefWatcher<CurrentUser | null>({
     value: user,
     filter: (newUser) => newUser === null,
   });
@@ -199,7 +220,7 @@ const useCurrentUser = (): UseCurrentUser => {
     user,
     loading: isUserLoading,
     isLoggedIn: readonly(isLoggedIn),
-    refetch,
+    refetch: refetch as () => Promise<any>,
     deleteUser: doDeleteUser,
     deleteIntegrations: deleteUserIntegrations,
     logout: logoutUser,

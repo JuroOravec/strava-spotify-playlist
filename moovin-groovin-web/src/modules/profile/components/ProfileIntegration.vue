@@ -17,7 +17,7 @@
 
     <template v-if="integrated">
       <v-col cols="auto">
-        <v-btn color="primary" outlined @click="openAuthWindow(providerId)">
+        <v-btn color="primary" outlined @click="authWindowHandler(providerId)">
           <slot name="action"> Change account </slot>
         </v-btn>
       </v-col>
@@ -28,7 +28,7 @@
       </v-col>
     </template>
     <v-col v-else>
-      <v-btn color="primary" @click="openAuthWindow(providerId)">
+      <v-btn color="primary" @click="authWindowHandler(providerId)">
         <slot name="action"> Connect account </slot>
       </v-btn>
     </v-col>
@@ -36,11 +36,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@vue/composition-api';
+import { defineComponent, PropType, unref } from '@vue/composition-api';
+import difference from 'lodash/difference';
 
 import useOpenAuthWindow, { AuthProviders } from '@/modules/auth/composables/useOpenAuthWindow';
 import useCurrentUser from '@/modules/auth/composables/useCurrentUser';
 import ProfileCard from './ProfileCard.vue';
+import useNotifSnackbar, { NotifType } from '@/modules/utils/composables/useNotifSnackbar';
 
 const ProfileIntegration = defineComponent({
   name: 'ProfileIntegration',
@@ -53,14 +55,53 @@ const ProfileIntegration = defineComponent({
     integrated: { type: Boolean, required: false, default: false },
   },
   setup() {
-    const { deleteIntegrations } = useCurrentUser();
+    const { user, deleteIntegrations, refetch: refetchUser } = useCurrentUser();
     const { openAuthWindow } = useOpenAuthWindow();
+    const { queueNotif } = useNotifSnackbar();
 
     const deleteIntegration = (providerId: string) =>
       deleteIntegrations({ providerIds: [providerId] });
 
+    const authWindowHandler = (providerId: AuthProviders) => {
+      const oldProviders = [...(unref(user)?.providers ?? [])];
+
+      const onDidCloseWindow = () =>
+        refetchUser()
+          .then(() => {
+            const newProviders = [...(unref(user)?.providers ?? [])];
+            if (!newProviders.find((provider) => provider === providerId)) {
+              queueNotif({
+                notifType: NotifType.ERROR,
+                attrs: {
+                  content: 'Failed to add integration',
+                },
+              });
+              return;
+            }
+
+            if (difference(newProviders, oldProviders).length) {
+              queueNotif({
+                notifType: NotifType.CONFIRM,
+                attrs: {
+                  content: 'Integration added successfully.',
+                },
+              });
+            }
+          })
+          .catch((err) =>
+            queueNotif({
+              notifType: NotifType.ERROR,
+              attrs: {
+                content: `Failed to add integration: ${err.message}`,
+              },
+            })
+          );
+
+      return openAuthWindow(providerId, { onDidCloseWindow });
+    };
+
     return {
-      openAuthWindow,
+      authWindowHandler,
       deleteIntegration,
     };
   },
