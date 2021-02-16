@@ -1,13 +1,15 @@
 import { inject } from '@vue/composition-api';
 
 import { ConfigKey } from '@/plugins/config';
-import openWindow, { WindowFeatures } from '@/modules/auth/utils/openWindow';
-import useCurrentUser from './useCurrentUser';
-import { EnvironmentConfig } from '@/plugins/config/config';
+import openWindow, { WindowFeatures, OpenWindowOptions } from '@/modules/auth/utils/openWindow';
+import type { EnvironmentConfig } from '@/plugins/config/config';
 
 interface UseOpenAuthWindow {
   openWindow: typeof openWindow;
-  openAuthWindow: (provider: AuthProviders) => void;
+  openAuthWindow: (
+    provider: AuthProviders,
+    options?: { params?: Record<string, string> } & Pick<OpenWindowOptions, 'onDidCloseWindow'>
+  ) => void;
 }
 
 enum AuthProviders {
@@ -34,13 +36,11 @@ const getAuthUrl = (urlTemplate: string, provider: AuthProviders) =>
 const useOpenAuthWindow = (): UseOpenAuthWindow => {
   const config = inject<EnvironmentConfig>(ConfigKey);
 
-  const { refetch: refetchUser } = useCurrentUser();
-
   const openAuthWindow = (
     provider: AuthProviders,
-    options: { params?: Record<string, string> } = {}
+    options: { params?: Record<string, string> } & Pick<OpenWindowOptions, 'onDidCloseWindow'> = {}
   ): void => {
-    const { params = {} } = options;
+    const { params = {}, onDidCloseWindow } = options;
 
     const authUrl = getAuthUrl(config?.LOGIN_URL ?? '', provider);
 
@@ -52,7 +52,7 @@ const useOpenAuthWindow = (): UseOpenAuthWindow => {
     openWindow(urlHelper.toString(), {
       name: `moovin-groovin-login-${provider}`,
       windowFeatures: defaultWindowFeats,
-      onDidCloseWindow: refetchUser,
+      onDidCloseWindow,
     });
   };
 

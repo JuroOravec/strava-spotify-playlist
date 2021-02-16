@@ -73,4 +73,4 @@ const openWindow = (url: string, options: OpenWindowOptions = {}): void => {
 };
 
 export default openWindow;
-export type { WindowFeatures };
+export type { WindowFeatures, OpenWindowOptions };

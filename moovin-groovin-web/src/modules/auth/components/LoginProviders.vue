@@ -7,7 +7,7 @@
         class="LoginProviders__login"
         :class="'LoginProviders__login--' + loginProvider.provider"
         link
-        @click="openAuthWindow(loginProvider.provider)"
+        @click="openAuthWindow(loginProvider.provider, { onDidCloseWindow: refetch })"
       >
         <v-list-item-title>{{ loginProvider.title }}</v-list-item-title>
       </v-list-item>
@@ -18,6 +18,7 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
 
+import useCurrentUser from '../composables/useCurrentUser';
 import useOpenAuthWindow, { AuthProviders } from '../composables/useOpenAuthWindow';
 
 const loginProviders = [
@@ -35,9 +36,12 @@ const LoginProviders = defineComponent({
   name: 'LoginProviders',
   setup() {
     const { openAuthWindow } = useOpenAuthWindow();
+    const { refetch } = useCurrentUser();
+
     return {
       loginProviders,
       openAuthWindow,
+      refetch,
     };
   },
 });
