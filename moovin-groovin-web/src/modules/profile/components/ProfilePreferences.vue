@@ -75,10 +75,9 @@
               <template #checkbox-label-detail>
                 Specify what should go into the playlist description. Description is trimmed to 300
                 characters after formatting.
+                <TemplateHintDialog />
               </template>
             </ProfileFormTextarea>
-
-            <TemplateHint class="pt-4" />
           </v-col>
         </ProfileCard>
 
@@ -102,10 +101,9 @@
               <template #checkbox-label> Customize activity description </template>
               <template #checkbox-label-detail>
                 Specify what should go into the activity description.
+                <TemplateHintDialog />
               </template>
             </ProfileFormTextarea>
-
-            <TemplateHint class="pt-4" />
           </v-col>
         </ProfileCard>
 
@@ -140,7 +138,7 @@ import ConfirmDialogGuard from '@/modules/utils/components/ConfirmDialogGuard.vu
 import SaveDialogSmall from '@/modules/utils/components/SaveDialogSmall.vue';
 import useCurrentUserConfig, { UserConfig } from '../composables/useCurrentUserConfig';
 import ProfileCard from './ProfileCard.vue';
-import TemplateHint from './TemplateHint.vue';
+import TemplateHintDialog from './TemplateHintDialog.vue';
 import ProfileFormCheckbox from './ProfileFormCheckbox.vue';
 import ProfileFormTextarea from './ProfileFormTextarea.vue';
 
@@ -150,7 +148,7 @@ const ProfilePreferences = defineComponent({
     ProfileCard,
     ProfileFormCheckbox,
     ProfileFormTextarea,
-    TemplateHint,
+    TemplateHintDialog,
     ConfirmDialogGuard,
   },
   setup() {
