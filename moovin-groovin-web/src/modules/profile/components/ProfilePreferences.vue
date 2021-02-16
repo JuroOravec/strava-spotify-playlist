@@ -10,16 +10,29 @@
     <v-row class="ProfilePreferences">
       <v-col>
         <ProfileCard>
+          <ProfileFormSubmit
+            :submit-disabled="!formIsValid || !hasUnconfirmedChanges || updateInProgress"
+            :discard-disabled="!hasUnconfirmedChanges || updateInProgress"
+            :submit-is-loading="updateInProgress"
+            @submit="onSubmit"
+            @discard="onDiscard"
+          />
+        </ProfileCard>
+
+        <ProfileCard>
           <template slot="title">Playlist</template>
           <v-col class="d-flex flex-column">
             <ProfileFormCheckbox
               :input-value="configFormData.playlistPublic"
+              :disabled="updateInProgress"
               @change="(playlistPublic) => updateFormData({ playlistPublic })"
             >
               <template #label> Set new playlists as Public </template>
               <template #label-detail>
                 What is a
-                <a href="https://support.spotify.com/us/article/set-playlist-privacy/"
+                <a
+                  href="https://support.spotify.com/us/article/set-playlist-privacy/"
+                  target="_blank"
                   >public playlist</a
                 >?
               </template>
@@ -27,12 +40,15 @@
 
             <ProfileFormCheckbox
               :input-value="configFormData.playlistCollaborative"
+              :disabled="updateInProgress"
               @change="(playlistCollaborative) => updateFormData({ playlistCollaborative })"
             >
               <template #label> Set new playlists as Collaborative </template>
               <template #label-detail>
                 What is a
-                <a href="https://support.spotify.com/us/article/create-playlists-with-your-friends/"
+                <a
+                  href="https://support.spotify.com/us/article/create-playlists-with-your-friends/"
+                  target="_blank"
                   >collaborative playlist</a
                 >?
               </template>
@@ -40,6 +56,7 @@
 
             <ProfileFormCheckbox
               :input-value="configFormData.playlistAutoCreate"
+              :disabled="updateInProgress"
               @change="(playlistAutoCreate) => updateFormData({ playlistAutoCreate })"
             >
               <template #label> Automatically create playlist after activity </template>
@@ -52,6 +69,7 @@
               :value="configFormData.playlistTitleTemplate"
               :default-value="config && config.playlistTitleTemplate"
               :error-messages="formDataErrors.playlistTitleTemplate"
+              :disabled="updateInProgress"
               @input="(playlistTitleTemplate) => updateFormData({ playlistTitleTemplate })"
               @cancel="resetFormData(['playlistTitleTemplate'])"
             >
@@ -59,6 +77,7 @@
               <template #checkbox-label-detail>
                 Specify what should go into the playlist title. Title is trimmed to 100 characters
                 after formatting.
+                <TemplateHintDialog />
               </template>
             </ProfileFormTextarea>
 
@@ -66,6 +85,7 @@
               :value="configFormData.playlistDescriptionTemplate"
               :default-value="config && config.playlistDescriptionTemplate"
               :error-messages="formDataErrors.playlistDescriptionTemplate"
+              :disabled="updateInProgress"
               @input="
                 (playlistDescriptionTemplate) => updateFormData({ playlistDescriptionTemplate })
               "
@@ -90,6 +110,7 @@
               :value="configFormData.activityDescriptionTemplate"
               :default-value="config && config.activityDescriptionTemplate"
               :error-messages="formDataErrors.activityDescriptionTemplate"
+              :disabled="updateInProgress"
               @input="
                 (activityDescriptionTemplate) => updateFormData({ activityDescriptionTemplate })
               "
@@ -108,20 +129,14 @@
         </ProfileCard>
 
         <ProfileCard>
-          <v-col cols="auto">
-            <v-btn
-              color="primary"
-              :disabled="!formIsValid || !hasUnconfirmedChanges"
-              @click="onSubmit"
-            >
-              <slot name="action"> Save changes </slot>
-            </v-btn>
-          </v-col>
-          <v-col cols="auto">
-            <v-btn color="primary" outlined :disabled="!hasUnconfirmedChanges" @click="onDiscard">
-              <slot name="action"> Discard changes </slot>
-            </v-btn>
-          </v-col>
+          <ProfileFormSubmit
+            :submit-disabled="!formIsValid || !hasUnconfirmedChanges || updateInProgress"
+            :discard-disabled="!hasUnconfirmedChanges || updateInProgress"
+            :submit-is-loading="updateInProgress"
+            :disabled="updateInProgress"
+            @submit="onSubmit"
+            @discard="onDiscard"
+          />
         </ProfileCard>
       </v-col>
     </v-row>
@@ -129,7 +144,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, unref, watch, computed } from '@vue/composition-api';
+import { defineComponent, unref, watch, computed } from '@vue/composition-api';
 
 import validateTemplate from '@moovin-groovin/shared/src/lib/TemplateFormatter/utils/validateTemplate';
 import useFormData from '@/modules/utils/composables/useFormData';
@@ -141,6 +156,7 @@ import ProfileCard from './ProfileCard.vue';
 import TemplateHintDialog from './TemplateHintDialog.vue';
 import ProfileFormCheckbox from './ProfileFormCheckbox.vue';
 import ProfileFormTextarea from './ProfileFormTextarea.vue';
+import ProfileFormSubmit from './ProfileFormSubmit.vue';
 
 const ProfilePreferences = defineComponent({
   name: 'ProfilePreferences',
@@ -148,15 +164,19 @@ const ProfilePreferences = defineComponent({
     ProfileCard,
     ProfileFormCheckbox,
     ProfileFormTextarea,
+    ProfileFormSubmit,
     TemplateHintDialog,
     ConfirmDialogGuard,
   },
   setup() {
-    const { config, updateConfig, loading } = useCurrentUserConfig();
+    const {
+      config,
+      updateConfig,
+      loading,
+      loadingUpdate: updateInProgress,
+    } = useCurrentUserConfig();
 
-    const waitForConfigRefetch = ref(false);
-
-    const loadingOrWaiting = computed(() => unref(loading) || unref(waitForConfigRefetch));
+    const loadingOrWaiting = computed(() => unref(loading));
 
     const {
       formData: configFormData,
@@ -190,10 +210,8 @@ const ProfilePreferences = defineComponent({
         activityDescriptionEnabled: Boolean(formData.activityDescriptionEnabled),
       };
 
-      waitForConfigRefetch.value = true;
       updateConfig({ userConfigInput: formData }).then(() => {
         updateFormData(normFormData);
-        waitForConfigRefetch.value = false;
       });
     };
 
@@ -207,6 +225,7 @@ const ProfilePreferences = defineComponent({
       onSubmit,
       onDiscard,
       hasUnconfirmedChanges,
+      updateInProgress,
       loadingOrWaiting,
       SaveDialogSmall,
       formDataErrors,
@@ -223,6 +242,9 @@ export default ProfilePreferences;
 .ProfilePreferences {
   .ProfileFormCheckbox:nth-child(1) .v-input--checkbox {
     margin-top: 0 !important;
+  }
+  .ProfileFormTextarea .v-textarea {
+    @extend .pt-2;
   }
 }
 </style>

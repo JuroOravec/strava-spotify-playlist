@@ -16,7 +16,7 @@ interface UseListeners {
     events: TEvent[],
     onEvent: T
   ) => Record<TEvent, EventCallback>;
-  prefixEvents: <T extends string>(events: T[], prefix: string) => Record<T, EventCallback>;
+  reemitPrefixedEvents: <T extends string>(events: T[], prefix: string) => Record<T, EventCallback>;
 }
 
 const useListeners = (input: { emit: (event: string, ...args: any[]) => void }): UseListeners => {
@@ -54,7 +54,7 @@ const useListeners = (input: { emit: (event: string, ...args: any[]) => void }):
     return interceptors;
   };
 
-  const prefixEvents = <T extends string>(
+  const reemitPrefixedEvents = <T extends string>(
     events: T[],
     prefix: string
   ): Record<T, EventCallback> => {
@@ -76,7 +76,7 @@ const useListeners = (input: { emit: (event: string, ...args: any[]) => void }):
   return {
     interceptEvent,
     interceptEvents,
-    prefixEvents,
+    reemitPrefixedEvents,
   };
 };
 

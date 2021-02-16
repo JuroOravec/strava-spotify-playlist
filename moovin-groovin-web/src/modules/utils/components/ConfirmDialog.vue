@@ -48,9 +48,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, unref, ref, toRefs, watch, computed } from '@vue/composition-api';
+import { defineComponent, unref, toRefs, watch, computed } from '@vue/composition-api';
 
-import makeSetter from '@/modules/utils/utils/vue/makeSetter';
+import useRefRich from '@/modules/utils-reactivity/composables/useRefRich';
 
 /** Wrapper around v-dialog that handles open/close logic */
 const ConfirmDialog = defineComponent({
@@ -63,8 +63,7 @@ const ConfirmDialog = defineComponent({
   setup(props, { emit }) {
     const { value, contentClass } = toRefs(props);
 
-    const internalValue: Ref<boolean> = ref(unref(value));
-    const setInternalValue = makeSetter(internalValue);
+    const { ref: internalValue, setter: setInternalValue } = useRefRich({ value });
 
     watch(value, setInternalValue);
     watch(internalValue, (newVal) => emit('input', newVal));

@@ -45,5 +45,9 @@ export default ProfileFormCheckbox;
     margin: 0;
     align-items: start;
   }
+
+  .v-input--checkbox .v-label {
+    user-select: text;
+  }
 }
 </style>
