@@ -3,24 +3,12 @@
     class="ProfileFormTextarea"
     :class="{
       'ProfileFormTextarea--no-checkbox': !checkbox,
-      'ProfileFormTextarea--disabled': checkbox && !checkboxInputValue,
+      'ProfileFormTextarea--preview': isPreviewTab,
     }"
+    :disabled="!checkbox || disabled || checkboxAttrs.disabled"
+    v-bind="checkboxAttrs"
     :input-value="checkboxInputValue"
-    v-on="
-      prefixEvents(
-        [
-          'change',
-          'click',
-          'click:append',
-          'click:prepend',
-          'mousedown',
-          'mouseup',
-          'update:error',
-          'update:indeterminate',
-        ],
-        'checkbox-'
-      )
-    "
+    v-on="checkboxListeners"
   >
     <template #label>
       <slot name="checkbox-label" />
@@ -28,6 +16,11 @@
     <template #label-detail>
       <slot name="checkbox-label-detail" />
     </template>
+
+    <v-tabs v-model="tabValue">
+      <v-tab v-for="tab in tabs" :key="tab.value"> {{ tab.text }} </v-tab>
+    </v-tabs>
+
     <v-textarea
       rows="3"
       auto-grow
@@ -35,8 +28,9 @@
       counter
       persistent-hint
       :validate-on-blur="true"
-      :disabled="checkbox && !checkboxInputValue"
-      :value="value"
+      :disabled="disabled || (checkbox && !checkboxInputValue)"
+      :readonly="isPreviewTab"
+      :value="isPreviewTab ? preview : value"
       class="ProfileFormTextarea__textarea"
       v-bind="$attrs"
       v-on="{
@@ -44,7 +38,7 @@
         input: onTextareaInput,
       }"
     >
-      <template v-if="textareaIsDirty" #append>
+      <template v-if="textareaIsDirty && !isPreviewTab" #append>
         <v-btn icon x-small @click="$emit('cancel')">
           <v-icon>cancel</v-icon>
         </v-btn>
@@ -62,10 +56,35 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, toRefs, unref, watch, Ref } from '@vue/composition-api';
+import {
+  computed,
+  defineComponent,
+  ref,
+  toRefs,
+  unref,
+  watch,
+  Ref,
+  getCurrentInstance,
+} from '@vue/composition-api';
 
+import validateTemplate from '@moovin-groovin/shared/src/lib/TemplateFormatter/utils/validateTemplate';
 import useListeners from '@/modules/utils/composables/useListeners';
+import pickPrefixed from '@/modules/utils/utils/pickPrefixed';
 import ProfileFormCheckbox from './ProfileFormCheckbox.vue';
+import useRefRich from '@/modules/utils-reactivity/composables/useRefRich';
+
+const tabs = [
+  {
+    text: 'Template',
+    value: 'template',
+    textareaDisabled: false,
+  },
+  {
+    text: 'Preview',
+    value: 'preview',
+    textareaDisabled: true,
+  },
+];
 
 const ProfileFormTextarea = defineComponent({
   name: 'ProfileFormTextarea',
@@ -74,15 +93,50 @@ const ProfileFormTextarea = defineComponent({
   },
   inheritAttrs: false,
   props: {
-    checkbox: { type: Boolean, default: false },
-    checkboxInputValue: { type: Boolean, default: false },
-    value: { type: String, default: undefined },
-    defaultValue: { type: String, default: undefined },
+    checkbox: { type: Boolean, required: false, default: false },
+    checkboxInputValue: { type: Boolean, required: false, default: false },
+    value: { type: String, required: false, default: undefined },
+    defaultValue: { type: String, required: false, default: undefined },
+    disabled: { type: Boolean, required: false, default: false },
   },
   setup(props, { emit }) {
     const { value, defaultValue } = toRefs(props);
 
     const textareaValue: Ref<string | undefined> = ref();
+    const tabValue: Ref<any | undefined> = ref();
+    const { ref: preview, setter: setPreview } = useRefRich({ value: '' });
+
+    const instance = getCurrentInstance();
+    const { interceptEvent, reemitPrefixedEvents } = useListeners({ emit });
+
+    const checkboxAttrs = computed(() => pickPrefixed(instance?.proxy.$attrs ?? {}, 'checkbox-'));
+    const checkboxListeners = reemitPrefixedEvents(
+      [
+        'change',
+        'click',
+        'click:append',
+        'click:prepend',
+        'mousedown',
+        'mouseup',
+        'update:error',
+        'update:indeterminate',
+      ],
+      'checkbox-'
+    );
+
+    ///////////////////////////////////////////////////////////
+    // Generate preview
+    ///////////////////////////////////////////////////////////
+
+    const isPreviewTab = computed((): boolean => tabs[unref(tabValue)]?.value === 'preview');
+    watch(isPreviewTab, async (newIsPreviewTab) => {
+      if (!newIsPreviewTab || !unref(value)) {
+        setPreview('');
+        return;
+      }
+      const { result } = await validateTemplate(unref(value));
+      setPreview(result || '');
+    });
 
     ///////////////////////////////////////////////////////////
     // Detect when textarea value differs from default value
@@ -96,8 +150,6 @@ const ProfileFormTextarea = defineComponent({
       { immediate: true }
     );
 
-    const { interceptEvent, prefixEvents } = useListeners({ emit });
-
     const onTextareaInput = interceptEvent('input', (_, __, newValue?: string) => {
       textareaValue.value = newValue;
     });
@@ -109,7 +161,12 @@ const ProfileFormTextarea = defineComponent({
     return {
       onTextareaInput,
       textareaIsDirty,
-      prefixEvents,
+      checkboxAttrs,
+      checkboxListeners,
+      tabValue,
+      tabs,
+      isPreviewTab,
+      preview,
     };
   },
 });
@@ -120,7 +177,8 @@ export default ProfileFormTextarea;
 <style lang="scss">
 @import '~@/plugins/vuetify/vuetify';
 .ProfileFormTextarea {
-  &__textarea {
+  &__textarea,
+  .v-tabs {
     @extend .pl-8;
   }
 
@@ -143,9 +201,22 @@ export default ProfileFormTextarea;
     display: initial;
   }
 
-  &--no-checkbox {
-    .ProfileFormTextarea__textarea {
-      padding: 0 !important;
+  & > .v-input--checkbox .v-messages {
+    min-height: unset;
+  }
+
+  .v-tabs .v-tabs-bar {
+    height: 36px;
+
+    .v-tab {
+      font-size: 12px;
+    }
+  }
+
+  &#{&}--no-checkbox {
+    .ProfileFormTextarea__textarea,
+    .v-tabs {
+      @extend .pl-0;
     }
 
     .v-input--selection-controls__input {
@@ -154,6 +225,20 @@ export default ProfileFormTextarea;
 
     .ProfileFormCheckbox__label-detail {
       padding-left: 0 !important;
+    }
+  }
+
+  &#{&}--preview {
+    .v-textarea .v-input__slot {
+      &,
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.03) !important;
+      }
+
+      &:after,
+      &:before {
+        display: none;
+      }
     }
   }
 }
