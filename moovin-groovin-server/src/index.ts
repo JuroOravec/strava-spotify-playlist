@@ -19,6 +19,8 @@
 import { Pool } from 'pg';
 import { v5 as uuidV5 } from 'uuid';
 import isNil from 'lodash/isNil';
+import * as Sentry from '@sentry/node';
+import * as Tracing from '@sentry/tracing';
 
 import './lib/env';
 import createServerContextManager from './lib/manageServerContext';
@@ -124,7 +126,21 @@ const main = async () => {
     initializePassport: true,
   });
 
-  const errorHandlerModule = createErrorHandlerModule();
+  const errorHandlerModule = createErrorHandlerModule({
+    sentry: (ctx) => ({
+      dsn: process.env.SENTRY_DSN,
+      integrations: [
+        new Sentry.Integrations.Http({ tracing: true }),
+        new Tracing.Integrations.Express({
+          app: ctx.app,
+        }),
+      ],
+      tracesSampleRate: 0.7,
+    }),
+    sentryRequestHandler: {
+      ip: true,
+    },
+  });
 
   const graphqlModule = createGraphqlModule({
     apolloConfig: (ctx: ModuleContext<AppServerModules>) => [

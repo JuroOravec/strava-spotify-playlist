@@ -18,6 +18,9 @@
   },
   "dependencies": {
     "@moovin-groovin/shared": "^1.0.0",
+    "@sentry/node": "^6.1.0",
+    "@sentry/tracing": "^6.1.0",
+    "@sentry/vue": "^6.1.0",
     "@types/better-queue": "^3.8.2",
     "@types/connect-pg-simple": "^4.2.2",
     "@types/express-session": "^1.17.3",
