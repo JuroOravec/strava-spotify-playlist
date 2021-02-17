@@ -1,5 +1,7 @@
 // TODO: docs - Document the tutorial on how to do proper authentication on endpoints
 // TODO: docs - Document monorepo https://medium.com/@NiGhTTraX/how-to-set-up-a-typescript-monorepo-with-lerna-c6acda7d4559
+// TODO: docs - Document reading stats for cloudfront https://console.aws.amazon.com/cloudfront/v2/home#/monitoring/E36OZZ9WTFU0V1
+// TODO: docs - Document Sentry
 
 // TODO: nice to have - make data module prop private to that module
 //                    - and move the store implementations and caches to private data
@@ -15,6 +17,7 @@
 // TODO: nice to have - Flyway DB migrations (see https://flywaydb.org/)
 // TODO: nice to have - Build server with Webpack so we can import shared files directly instead of through top-level import
 // TODO: nice to have - Update the security policy to allow only ports 80, 443, 3000
+// TODO: nice to have - In-app analytics (both FE and BE) - https://github.com/Open-Web-Analytics/Open-Web-Analytics/wiki/Tracker or mixpanel?
 
 import { Pool } from 'pg';
 import { v5 as uuidV5 } from 'uuid';
