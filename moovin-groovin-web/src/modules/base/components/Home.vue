@@ -16,10 +16,14 @@
       <li>Go for a run or bike. Start a Strava activity and put on your fave songs on Spotify!</li>
       <li>When done, save your activity.</li>
       <li>
-        Take a nice shower, drink a glass of water and relax. New playlist will be created in 20-30
-        mins.
+        Take a nice shower, drink a glass of water and relax. In 20-30 mins, a new playlist will be
+        created for you:
       </li>
     </ol>
+
+    <div class="pt-12 pb-4">
+      <v-img src="../assets/example-spotify.png" :max-width="900" class="mx-auto"/>
+    </div>
 
     <h3 class="text-h5 pt-12 pb-4">How it works</h3>
 
