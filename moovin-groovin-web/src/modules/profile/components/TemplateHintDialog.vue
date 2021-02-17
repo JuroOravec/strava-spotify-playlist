@@ -55,7 +55,7 @@
               will be formatted like so.
             </p>
             <v-img
-              src="../assets/template-tutorial-spotify-after--detail.png"
+              src="../assets/template-tutorial-customize-spotify-after.png"
               class="elevation-5"
             />
             <p class="py-8 ma-0">
@@ -65,7 +65,7 @@
               >.
             </p>
             <v-img
-              src="../assets/template-tutorial-spotify-before--detail.png"
+              src="../assets/template-tutorial-customize-spotify-before.png"
               class="elevation-5"
             />
 
