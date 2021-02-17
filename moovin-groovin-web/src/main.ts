@@ -8,9 +8,11 @@ import installRouteGuard from './plugins/routeGuard';
 import installVuetify from './plugins/vuetify';
 import installApollo from './plugins/apollo';
 import installConfig from './plugins/config';
+import installSentry from './plugins/sentry';
 import createRoutes from './modules/install/routes';
 import App from './modules/install/components/App.vue';
 
+installSentry(Vue);
 if (process.env.NODE_ENV === 'production') {
   installServiceWorker({
     baseUrl: process.env.BASE_URL,

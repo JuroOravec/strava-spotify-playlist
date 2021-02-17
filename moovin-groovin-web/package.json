@@ -14,8 +14,10 @@
     "typegen:ts": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
-    "@moovin-groovin/shared": "^1.0.0",
     "@apollo/client": "^3.3.7",
+    "@moovin-groovin/shared": "^1.0.0",
+    "@sentry/tracing": "^6.1.0",
+    "@sentry/vue": "^6.1.0",
     "@types/handlebars": "^4.1.0",
     "@vue/apollo-composable": "^4.0.0-alpha.12",
     "@vue/composition-api": "^1.0.0-rc.1",
