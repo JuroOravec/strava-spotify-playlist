@@ -18,6 +18,17 @@
           Juro Oravec
         </a>
       </v-col>
+      <v-col cols="auto" class="px-0"> ∙ </v-col>
+      <v-col cols="auto">
+        <a
+          href="http://buymeacoffee.com/jurooravec"
+          target="_blank"
+          rel="noopener"
+          class="AppFooter__link"
+        >
+          Buy me a coffee
+        </a>
+      </v-col>
     </v-row>
   </v-footer>
 </template>
