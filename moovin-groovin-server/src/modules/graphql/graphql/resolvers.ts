@@ -1,15 +1,13 @@
-import type { IResolvers } from 'apollo-server-express';
-
 import type { ServerModule } from '../../../lib/ServerModule';
-import type { GqlQuery, GqlMutation } from '../../../types/graphql';
+import type { GqlResolvers } from '../../../types/graphql';
 
-function createRootGraphqlResolvers(this: ServerModule): IResolvers {
-  const resolvers: IResolvers = {
+function createRootGraphqlResolvers(this: ServerModule): GqlResolvers {
+  const resolvers: GqlResolvers = {
     Query: {
-      hello: (): GqlQuery['hello'] => 'Hello from MoovinGroovin!',
+      hello: () => 'Hello from MoovinGroovin!',
     },
     Mutation: {
-      hello: (): GqlMutation['hello'] => 'Hello from MoovinGroovin!',
+      hello: () => 'Hello from MoovinGroovin!',
     },
   };
 
