@@ -48,7 +48,7 @@ generates:
       namingConvention: keep
       withCompositionFunctions: true
 
-  # Generate composables from the operations (queries) we define in client
+  # Generate object of type-safe name of queries and mutations
   src/plugins/apollo/operations.ts:
     schema:
       - src/plugins/apollo/schema.json
