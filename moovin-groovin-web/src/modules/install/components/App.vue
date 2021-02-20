@@ -49,7 +49,6 @@ export default App;
 </script>
 
 <style lang="scss">
-@import '~@/plugins/vuetify/vuetify.scss';
 @import '~../styles/main.scss';
 
 .App {

@@ -238,7 +238,7 @@ export default ProfilePreferences;
 </script>
 
 <style lang="scss">
-@import '@/plugins/vuetify/vuetify';
+@import '~vuetify/src/styles/main';
 .ProfilePreferences {
   .ProfileFormCheckbox:nth-child(1) .v-input--checkbox {
     margin-top: 0 !important;

@@ -75,7 +75,7 @@ export default Appbar;
 </script>
 
 <style lang="scss">
-@import '@/plugins/vuetify/vuetify';
+@import '~vuetify/src/styles/main';
 .Appbar {
   &__nav {
     &-item {

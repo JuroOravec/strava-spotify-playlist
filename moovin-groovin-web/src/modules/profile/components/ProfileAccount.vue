@@ -62,7 +62,7 @@ export default ProfileAccount;
 </script>
 
 <style lang="scss">
-@import '@/plugins/vuetify/vuetify';
+@import '~vuetify/src/styles/main';
 .ProfileAccount {
   &__item {
     & + & {

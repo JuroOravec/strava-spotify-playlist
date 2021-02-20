@@ -28,10 +28,10 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        prependData: '',
+        prependData: "@import '~vuetify/src/styles/styles' ",
       },
       scss: {
-        prependData: '',
+        prependData: "@import '~vuetify/src/styles/styles';",
       },
     },
   },

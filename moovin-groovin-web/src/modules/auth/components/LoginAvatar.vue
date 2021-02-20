@@ -62,7 +62,7 @@ export default LoginAvatar;
 </script>
 
 <style lang="scss">
-@import '@/plugins/vuetify/vuetify';
+@import '~vuetify/src/styles/main';
 $name: LoginAvatar;
 
 .#{$name} {

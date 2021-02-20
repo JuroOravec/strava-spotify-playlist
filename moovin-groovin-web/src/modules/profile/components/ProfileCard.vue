@@ -28,7 +28,7 @@ export default ProfileCard;
 </script>
 
 <style lang="scss">
-@import '@/plugins/vuetify/vuetify';
+@import '~vuetify/src/styles/main';
 .ProfileCard {
   @extend .elevation-3, .pa-3;
 

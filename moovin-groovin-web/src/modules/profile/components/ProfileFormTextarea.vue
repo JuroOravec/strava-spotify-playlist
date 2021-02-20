@@ -175,7 +175,7 @@ export default ProfileFormTextarea;
 </script>
 
 <style lang="scss">
-@import '~@/plugins/vuetify/vuetify';
+@import '~vuetify/src/styles/main';
 .ProfileFormTextarea {
   &__textarea,
   .v-tabs {

@@ -86,7 +86,7 @@ export default ConfirmDialogSmall;
 </script>
 
 <style lang="scss">
-@import '@/plugins/vuetify/vuetify';
+@import '~vuetify/src/styles/main';
 
 .ConfirmDialogSmall {
   &__dialog,

@@ -26,7 +26,7 @@ export default ProfileFormCheckbox;
 </script>
 
 <style lang="scss">
-@import '@/plugins/vuetify/vuetify';
+@import '~vuetify/src/styles/main';
 .ProfileFormCheckbox {
   &__label {
     @extend .text-body-1;
