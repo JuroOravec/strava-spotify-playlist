@@ -40,7 +40,7 @@ const analytics = installAnalytics(Vue, {
     transformMixpanelPlugin(),
     mixpanelPlugin({
       token: '5af96c1bb8eecb3ee188e6c0711f6a9e',
-      api_host: 'http://analytics.moovingroovin.com',
+      api_host: 'https://api-eu.mixpanel.com',
     }),
   ],
 });
