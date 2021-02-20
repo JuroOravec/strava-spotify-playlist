@@ -1,17 +1,21 @@
 import reduce from 'lodash/reduce';
 
-type EventCallback = (...args: any[]) => void;
-type InterceptCallback<TEvent extends string = string> = (
+type EventCallback<TArgs extends any[] = any[]> = (...args: TArgs) => void;
+type InterceptCallback<TEvent extends string = string, TArgs extends any[] = any[]> = (
   event: TEvent,
   cancelEvent: () => void,
-  ...args: any[]
+  ...args: TArgs
 ) => void;
 
 interface UseListeners {
-  interceptEvent: <T extends InterceptCallback<TEvent>, TEvent extends string>(
+  interceptEvent: <
+    TArgs extends any[],
+    TEvent extends string,
+    T extends InterceptCallback<TEvent, TArgs>
+  >(
     event: TEvent,
     onEvent: T
-  ) => EventCallback;
+  ) => EventCallback<TArgs>;
   interceptEvents: <T extends InterceptCallback<TEvent>, TEvent extends string>(
     events: TEvent[],
     onEvent: T
@@ -22,11 +26,15 @@ interface UseListeners {
 const useListeners = (input: { emit: (event: string, ...args: any[]) => void }): UseListeners => {
   const { emit } = input;
 
-  const interceptEvent = <T extends InterceptCallback<TEvent>, TEvent extends string>(
+  const interceptEvent = <
+    TArgs extends any[],
+    TEvent extends string,
+    T extends InterceptCallback<TEvent, TArgs>
+  >(
     event: TEvent,
     onEvent: T
-  ): EventCallback => {
-    const interceptor = ((...args: any[]) => {
+  ): EventCallback<TArgs> => {
+    const interceptor = (...args: TArgs) => {
       let hasCancelledEvent = false;
       const cancelEvent = () => {
         hasCancelledEvent = true;
@@ -35,7 +43,7 @@ const useListeners = (input: { emit: (event: string, ...args: any[]) => void }):
       onEvent(event, cancelEvent, ...args);
 
       if (!hasCancelledEvent) emit(event, ...args);
-    }) as T;
+    };
     return interceptor;
   };
 
