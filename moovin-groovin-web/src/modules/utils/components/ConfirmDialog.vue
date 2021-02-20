@@ -6,7 +6,8 @@
     v-bind="$attrs"
     v-on="{
       ...$listeners,
-      input: setInternalValue,
+      input: onInput,
+      'click:outside': onClickOutside,
     }"
   >
     <template #activator="activatorProps">
@@ -23,17 +24,16 @@
             <slot name="dialog-text" />
           </v-col>
         </v-row>
-        <v-row>
+        <v-row class="ConfirmDialog__actions">
           <slot name="actions" v-bind="{ confirm, cancel }">
-            <v-col>
+            <v-col class="ConfirmDialog__action col-auto">
               <slot name="confirm-action" v-bind="{ confirm }">
                 <v-btn color="primary" dark @click="confirm">
                   <slot name="confirm-text">Confirm</slot>
                 </v-btn>
               </slot>
             </v-col>
-            <v-spacer />
-            <v-col>
+            <v-col class="ConfirmDialog__action col-auto">
               <slot name="cancel-action" v-bind="{ cancel }">
                 <v-btn color="primary" dark @click="cancel">
                   <slot name="cancel-text">Cancel</slot>
@@ -51,6 +51,7 @@
 import { defineComponent, unref, toRefs, watch, computed } from '@vue/composition-api';
 
 import useRefRich from '@/modules/utils-reactivity/composables/useRefRich';
+import useListeners from '../composables/useListeners';
 
 /** Wrapper around v-dialog that handles open/close logic */
 const ConfirmDialog = defineComponent({
@@ -65,6 +66,8 @@ const ConfirmDialog = defineComponent({
 
     const { ref: internalValue, setter: setInternalValue } = useRefRich({ value });
 
+    const { interceptEvent } = useListeners({ emit });
+
     watch(value, setInternalValue);
     watch(internalValue, (newVal) => emit('input', newVal));
 
@@ -77,17 +80,36 @@ const ConfirmDialog = defineComponent({
       setInternalValue(false);
     };
 
+    const onInput = interceptEvent('input', (event, _, newVal: boolean) =>
+      setInternalValue(newVal)
+    );
+
+    const onClickOutside = interceptEvent('click:outside', cancel);
+
     const usedContentClass = computed((): string => `${unref(contentClass)} ConfirmDialog__dialog`);
 
     return {
       confirm,
       cancel,
       internalValue,
-      setInternalValue,
       usedContentClass,
+      onInput,
+      onClickOutside,
     };
   },
 });
 
 export default ConfirmDialog;
 </script>
+
+<style lang="scss">
+.ConfirmDialog {
+  &__actions {
+    padding-top: $spacer * 3;
+    padding-bottom: $spacer * 3;
+  }
+  &__action {
+    text-align: center;
+  }
+}
+</style>

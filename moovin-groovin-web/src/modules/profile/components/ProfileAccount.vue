@@ -2,6 +2,17 @@
   <v-row>
     <v-col>
       <ProfileCard>
+        <template slot="title">Membership</template>
+        <v-col>
+          <v-row>
+            <v-col cols="auto">
+              <MembershipOfferDialog />
+            </v-col>
+          </v-row>
+        </v-col>
+      </ProfileCard>
+
+      <ProfileCard>
         <template slot="title">Danger Zone</template>
         <v-col>
           <v-row>
@@ -42,12 +53,14 @@ import useCurrentUser from '@/modules/auth/composables/useCurrentUser';
 import ConfirmDialogSmall from '@/modules/utils/components/ConfirmDialogSmall.vue';
 import ProfileCard from './ProfileCard.vue';
 import WarningIrreversible from './WarningIrreversible.vue';
+import MembershipOfferDialog from './MembershipOfferDialog.vue';
 
 const ProfileAccount = defineComponent({
   name: 'ProfileAccount',
   components: {
     ProfileCard,
     ConfirmDialogSmall,
+    MembershipOfferDialog,
     WarningIrreversible,
   },
   setup() {
