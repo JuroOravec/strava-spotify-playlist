@@ -4,7 +4,7 @@ import logger from '../../lib/logger';
 import {
   assertContext,
   ServerModule,
-  ServerModules,
+  AnyServerModules,
   Services,
 } from '../../lib/ServerModule';
 import type { StoreTokenData } from './data';
@@ -69,7 +69,7 @@ type ThisModule = ServerModule<
   StoreTokenServices,
   any,
   StoreTokenData,
-  ServerModules,
+  AnyServerModules,
   StoreTokenEmits
 >;
 

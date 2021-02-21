@@ -1,10 +1,5 @@
-import type { ServerModules } from '../../../lib/ServerModule';
 import type { ServerModuleName } from '../../../types';
-import type { OAuthStravaModule } from '../../oauthStrava';
-import type { StravaModule } from '../../strava';
-import type { StoreTokenModule } from '../../storeToken';
-import type { StravaSpotifyModule } from '../../stravaSpotify';
-import type { HostModule } from '../../host';
+import type AppServerModules from '../../../types/AppServerModules';
 
 export * as webhookEvents from './webhookEvents';
 
@@ -16,10 +11,12 @@ export interface StravaPushSub {
   created_at: string;
   updated_at: string;
 }
-export interface StravaWebhookDeps extends ServerModules {
-  [ServerModuleName.HOST]: HostModule;
-  [ServerModuleName.OAUTH_STRAVA]: OAuthStravaModule;
-  [ServerModuleName.STRAVA]: StravaModule;
-  [ServerModuleName.STORE_TOKEN]: StoreTokenModule;
-  [ServerModuleName.STRAVA_SPOTIFY]: StravaSpotifyModule;
-}
+
+export type StravaWebhookDeps = Pick<
+  AppServerModules,
+  | ServerModuleName.HOST
+  | ServerModuleName.OAUTH_STRAVA
+  | ServerModuleName.STRAVA
+  | ServerModuleName.STORE_TOKEN
+  | ServerModuleName.STRAVA_SPOTIFY
+>;

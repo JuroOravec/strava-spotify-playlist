@@ -18,16 +18,16 @@ import getProps from '../utils/props';
 import logger from './logger';
 
 type AnyServerModule = ServerModule<any, any, any, any>;
-type ServerModules = Record<string, AnyServerModule>;
+type AnyServerModules = Record<string, AnyServerModule>;
 
-interface ModuleContext<TModules extends ServerModules = ServerModules> {
+interface ModuleContext<TModules extends AnyServerModules = AnyServerModules> {
   app: Application;
   server?: http.Server;
   addContextProp: (key: string, val: unknown) => void;
   modules: TModules;
 }
 
-type Installer<T extends ServerModules = ServerModules> = (
+type Installer<T extends AnyServerModules = AnyServerModules> = (
   ctx: ModuleContext<T>
 ) => void;
 type Closer = () => void | Promise<any>;
@@ -71,7 +71,7 @@ interface ServerModuleOptions<
   TServices extends Services = Services,
   THandlers extends Handlers = Handlers,
   TData extends Data = Data,
-  TModules extends ServerModules = ServerModules
+  TModules extends AnyServerModules = AnyServerModules
 > {
   /** Unique identifier for the module. */
   name: string;
@@ -158,7 +158,7 @@ class ServerModule<
   TServices extends Services = Services,
   THandlers extends Handlers = Handlers,
   TData extends Data = Data,
-  TModules extends ServerModules = ServerModules,
+  TModules extends AnyServerModules = AnyServerModules,
   TEventEmits extends EventEmits = EventEmits
 > {
   /** Unique identifier for the module. */
@@ -317,7 +317,7 @@ export type {
   Services,
   Handlers,
   Data,
-  ServerModules,
+  AnyServerModules,
   RouterCreator,
   OAuthCreator,
   OpenApiCreator,

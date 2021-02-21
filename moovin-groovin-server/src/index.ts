@@ -29,79 +29,31 @@ import './lib/env';
 import createServerContextManager from './lib/manageServerContext';
 import type { ModuleContext } from './lib/ServerModule';
 import { isProduction, isMainProcess } from './utils/env';
-import createBaseModule, { BaseModule } from './modules/base';
-import createSessionModule, { SessionModule } from './modules/session';
-import createOpenApiModule, { OpenApiModule } from './modules/openapi';
-import createRouterModule, { RouterModule } from './modules/router';
-import createGraphqlModule, { GraphqlModule } from './modules/graphql';
-import createStoreConfigModule, {
-  StoreConfigModule,
-} from './modules/storeConfig';
-import createStoreTokenModule, { StoreTokenModule } from './modules/storeToken';
-import createStoreUserModule, { StoreUserModule } from './modules/storeUser';
-import createStoreSessionModule, {
-  StoreSessionModule,
-} from './modules/storeSession';
-import createStoreTrackModule, { StoreTrackModule } from './modules/storeTrack';
-import createStorePlaylistModule, {
-  StorePlaylistModule,
-} from './modules/storePlaylist';
-import createOAuthModule, { OAuthModule } from './modules/oauth';
-import createOAuthGoogleModule, {
-  OAuthGoogleModule,
-} from './modules/oauthGoogle';
-import createOAuthFacebookModule, {
-  OAuthFacebookModule,
-} from './modules/oauthFacebook';
-import createOAuthSpotifyModule, {
-  OAuthSpotifyModule,
-} from './modules/oauthSpotify';
-import createStravaModule, { StravaModule } from './modules/strava';
-import createOAuthStravaModule, {
-  OAuthStravaModule,
-} from './modules/oauthStrava';
-import createSpotifyModule, { SpotifyModule } from './modules/spotify';
-import createSpotifyHistoryModule, {
-  SpotifyHistoryModule,
-} from './modules/spotifyHistory';
-import createStravaWebhookModule, {
-  StravaWebhookModule,
-} from './modules/stravaWebhook';
-import createStravaSpotifyModule, {
-  StravaSpotifyModule,
-} from './modules/stravaSpotify';
-import createErrorHandlerModule, {
-  ErrorHandlerModule,
-} from './modules/errorHandler';
-import createHostModule, { HostModule } from './modules/host';
+import createBaseModule from './modules/base';
+import createSessionModule from './modules/session';
+import createOpenApiModule from './modules/openapi';
+import createRouterModule from './modules/router';
+import createGraphqlModule from './modules/graphql';
+import createStoreConfigModule from './modules/storeConfig';
+import createStoreTokenModule from './modules/storeToken';
+import createStoreUserModule from './modules/storeUser';
+import createStoreSessionModule from './modules/storeSession';
+import createStoreTrackModule from './modules/storeTrack';
+import createStorePlaylistModule from './modules/storePlaylist';
+import createOAuthModule from './modules/oauth';
+import createOAuthGoogleModule from './modules/oauthGoogle';
+import createOAuthFacebookModule from './modules/oauthFacebook';
+import createOAuthSpotifyModule from './modules/oauthSpotify';
+import createStravaModule from './modules/strava';
+import createOAuthStravaModule from './modules/oauthStrava';
+import createSpotifyModule from './modules/spotify';
+import createSpotifyHistoryModule from './modules/spotifyHistory';
+import createStravaWebhookModule from './modules/stravaWebhook';
+import createStravaSpotifyModule from './modules/stravaSpotify';
+import createErrorHandlerModule from './modules/errorHandler';
+import createHostModule from './modules/host';
 import type { OAuthInputFn } from './modules/oauth/types';
-import type { ServerModuleName } from './types';
-
-type AppServerModules = {
-  [ServerModuleName.BASE]: BaseModule;
-  [ServerModuleName.ERR_HANDLER]: ErrorHandlerModule;
-  [ServerModuleName.HOST]: HostModule;
-  [ServerModuleName.GRAPHQL]: GraphqlModule;
-  [ServerModuleName.OAUTH]: OAuthModule;
-  [ServerModuleName.OAUTH_GOOGLE]: OAuthGoogleModule;
-  [ServerModuleName.OAUTH_FACEBOOK]: OAuthFacebookModule;
-  [ServerModuleName.OAUTH_SPOTIFY]: OAuthSpotifyModule;
-  [ServerModuleName.OAUTH_STRAVA]: OAuthStravaModule;
-  [ServerModuleName.OPENAPI]: OpenApiModule;
-  [ServerModuleName.ROUTER]: RouterModule;
-  [ServerModuleName.SESSION]: SessionModule;
-  [ServerModuleName.SPOTIFY]: SpotifyModule;
-  [ServerModuleName.SPOTIFY_HISTORY]: SpotifyHistoryModule;
-  [ServerModuleName.STORE_PLAYLIST]: StorePlaylistModule;
-  [ServerModuleName.STORE_CONFIG]: StoreConfigModule;
-  [ServerModuleName.STORE_TOKEN]: StoreTokenModule;
-  [ServerModuleName.STORE_TRACK]: StoreTrackModule;
-  [ServerModuleName.STORE_USER]: StoreUserModule;
-  [ServerModuleName.STORE_SESSION]: StoreSessionModule;
-  [ServerModuleName.STRAVA]: StravaModule;
-  [ServerModuleName.STRAVA_WEBHOOK]: StravaWebhookModule;
-  [ServerModuleName.STRAVA_SPOTIFY]: StravaSpotifyModule;
-};
+import type AppServerModules from './types/AppServerModules';
 
 const port = parseInt(process.env.PORT || '3000');
 

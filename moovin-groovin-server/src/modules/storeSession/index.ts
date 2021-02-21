@@ -1,6 +1,6 @@
 import ServerModule, {
   Handlers,
-  ServerModules,
+  AnyServerModules,
   Services,
 } from '../../lib/ServerModule';
 import { ServerModuleName } from '../../types';
@@ -15,7 +15,7 @@ type StoreSessionModule = ServerModule<
   Services,
   Handlers,
   StoreSessionData,
-  ServerModules,
+  AnyServerModules,
   StoreSessionEmits
 >;
 

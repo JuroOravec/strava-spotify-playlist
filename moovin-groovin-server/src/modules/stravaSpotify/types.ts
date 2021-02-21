@@ -1,25 +1,19 @@
 import type { OptionalPromise } from '@moovin-groovin/shared';
-import type { ServerModules } from '../../lib/ServerModule';
+import type AppServerModules from '../../types/AppServerModules';
 import type { ServerModuleName } from '../../types';
-import type { StravaModule } from '../strava';
-import type { SpotifyModule } from '../spotify';
-import type { SpotifyHistoryModule } from '../spotifyHistory';
-import type { StoreConfigModule } from '../storeConfig';
-import type { StorePlaylistModule } from '../storePlaylist';
-import type { StoreUserModule } from '../storeUser';
-import type { StoreTokenModule } from '../storeToken';
 import type { UserTrackModel } from '../storeTrack/types';
 import type { DetailedActivity } from '../strava/types';
 
-export interface StravaSpotifyDeps extends ServerModules {
-  [ServerModuleName.STORE_CONFIG]: StoreConfigModule;
-  [ServerModuleName.STORE_TOKEN]: StoreTokenModule;
-  [ServerModuleName.STORE_USER]: StoreUserModule;
-  [ServerModuleName.STORE_PLAYLIST]: StorePlaylistModule;
-  [ServerModuleName.STRAVA]: StravaModule;
-  [ServerModuleName.SPOTIFY]: SpotifyModule;
-  [ServerModuleName.SPOTIFY_HISTORY]: SpotifyHistoryModule;
-}
+export type StravaSpotifyDeps = Pick<
+  AppServerModules,
+  | ServerModuleName.STORE_CONFIG
+  | ServerModuleName.STORE_TOKEN
+  | ServerModuleName.STORE_USER
+  | ServerModuleName.STORE_PLAYLIST
+  | ServerModuleName.STRAVA
+  | ServerModuleName.SPOTIFY
+  | ServerModuleName.SPOTIFY_HISTORY
+>;
 
 export interface ActivityInput {
   activityId: string;

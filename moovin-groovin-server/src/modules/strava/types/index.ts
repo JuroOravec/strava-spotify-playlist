@@ -1,8 +1,7 @@
-import { Strava } from 'strava-v3';
+import type { Strava } from 'strava-v3';
 
-import type { ServerModules } from '../../../lib/ServerModule';
+import type AppServerModules from '../../../types/AppServerModules';
 import type { ServerModuleName } from '../../../types';
-import type { OAuthStravaModule } from '../../oauthStrava';
 
 export * from './models';
 
@@ -11,6 +10,4 @@ export type StravaClient = Omit<
   'pushSubscriptions' | 'oauth' | 'client' | 'config'
 >;
 
-export interface StravaDeps extends ServerModules {
-  [ServerModuleName.OAUTH_STRAVA]: OAuthStravaModule;
-}
+export type StravaDeps = Pick<AppServerModules, ServerModuleName.OAUTH_STRAVA>;

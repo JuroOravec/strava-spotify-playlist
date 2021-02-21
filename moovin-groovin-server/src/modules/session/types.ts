@@ -1,13 +1,11 @@
-import type { ServerModules } from '../../lib/ServerModule';
+import type AppServerModules from '../../types/AppServerModules';
 import type { ServerModuleName } from '../../types';
-import type { StoreSessionModule } from '../storeSession';
-import type { StoreUserModule } from '../storeUser';
 import type { UserModel } from '../storeUser/types';
 
-export interface SessionDeps extends ServerModules {
-  [ServerModuleName.STORE_SESSION]: StoreSessionModule;
-  [ServerModuleName.STORE_USER]: StoreUserModule;
-}
+export type SessionDeps = Pick<
+  AppServerModules,
+  ServerModuleName.STORE_SESSION | ServerModuleName.STORE_USER
+>;
 
 // Set req.user to  the type that we resolve our user to
 declare global {

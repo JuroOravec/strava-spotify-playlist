@@ -7,7 +7,7 @@ import ServerModule, {
   Installer,
   ModuleContext,
   Services,
-} from 'src/lib/ServerModule';
+} from '../../lib/ServerModule';
 import logger from '../../lib/logger';
 import { isDevelopment } from '../../utils/env';
 import { ErrorHandlerData } from './data';

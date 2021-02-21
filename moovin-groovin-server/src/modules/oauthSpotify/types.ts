@@ -1,7 +1,4 @@
-import { ServerModuleName } from '../../types';
-import type { ServerModules } from '../../lib/ServerModule';
-import type { SpotifyModule } from '../spotify';
+import type { ServerModuleName } from '../../types';
+import type AppServerModules from '../../types/AppServerModules';
 
-export interface OAuthStravaDeps extends ServerModules {
-  [ServerModuleName.SPOTIFY]: SpotifyModule;
-}
+export type OAuthStravaDeps = Pick<AppServerModules, ServerModuleName.SPOTIFY>;

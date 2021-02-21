@@ -1,6 +1,5 @@
-import type { ServerModules } from '../../lib/ServerModule';
+import type AppServerModules from '../../types/AppServerModules';
 import type { ServerModuleName } from '../../types';
-import type { StoreUserModule } from '../storeUser';
 import type { UserModel } from '../storeUser/types';
 
 /** User preferences */
@@ -40,6 +39,7 @@ export interface ConfigStore {
 
 export type UserConfig = Omit<UserConfigModel, 'internalUserId'>;
 
-export interface StoreConfigDeps extends ServerModules {
-  [ServerModuleName.STORE_USER]: StoreUserModule;
-}
+export type StoreConfigDeps = Pick<
+  AppServerModules,
+  ServerModuleName.STORE_USER
+>;

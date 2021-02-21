@@ -1,4 +1,7 @@
-import ServerModule, { Handlers, ServerModules } from '../../lib/ServerModule';
+import ServerModule, {
+  Handlers,
+  AnyServerModules,
+} from '../../lib/ServerModule';
 import { ServerModuleName } from '../../types';
 import createCloser from './close';
 import createInstaller from './install';
@@ -12,7 +15,7 @@ type StoreTokenModule = ServerModule<
   StoreTokenServices,
   Handlers,
   StoreTokenData,
-  ServerModules,
+  AnyServerModules,
   StoreTokenEmits
 >;
 

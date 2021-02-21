@@ -1,15 +1,13 @@
 import type { RequestHandler } from 'express';
 
+import type AppServerModules from '../../types/AppServerModules';
 import type {
   OAuthCreator,
-  ServerModules,
+  AnyServerModules,
   ModuleContext,
 } from '../../lib/ServerModule';
 import type { ServerModuleName } from '../../types';
-import type { HostModule } from '../host';
-import type { StoreTokenModule } from '../storeToken';
 import type { AuthToken } from '../storeToken/types';
-import type { StoreUserModule } from '../storeUser';
 import type { UserModel } from '../storeUser/types';
 
 export type OAuthOptions = {
@@ -24,15 +22,16 @@ export type OAuthOptions = {
 
 export type OAuthInput = OAuthOptions | OAuthOptions[];
 
-export type OAuthInputFn<TModules extends ServerModules = ServerModules> = (
-  ctx: ModuleContext<TModules>
-) => OAuthInput;
+export type OAuthInputFn<
+  TModules extends AnyServerModules = AnyServerModules
+> = (ctx: ModuleContext<TModules>) => OAuthInput;
 
-export interface OAuthDeps extends ServerModules {
-  [ServerModuleName.HOST]: HostModule;
-  [ServerModuleName.STORE_USER]: StoreUserModule;
-  [ServerModuleName.STORE_TOKEN]: StoreTokenModule;
-}
+export type OAuthDeps = Pick<
+  AppServerModules,
+  | ServerModuleName.HOST
+  | ServerModuleName.STORE_USER
+  | ServerModuleName.STORE_TOKEN
+>;
 
 export interface PassportUser {
   user: Omit<UserModel, 'internalUserId'> & {

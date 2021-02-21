@@ -7,11 +7,11 @@ import {
   assertContext,
   Handlers,
 } from '../../../lib/ServerModule';
+import logger from '../../../lib/logger';
 import type { GqlResolvers, GqlUserConfig } from '../../../types/graphql';
 import type { StoreConfigData } from '../data';
 import type { StoreConfigServices } from '../services';
 import type { StoreConfigDeps, UserConfig } from '../types';
-import logger from 'src/lib/logger';
 
 type ConfigTemplates = Pick<
   GqlUserConfig,

@@ -1,11 +1,9 @@
-import type { ServerModules } from '../../lib/ServerModule';
 import type { ServerModuleName } from '../../types';
-import type { StoreTokenModule } from '../storeToken';
-import type { SpotifyModule } from '../spotify';
-import type { StoreTrackModule } from '../storeTrack';
+import type AppServerModules from '../../types/AppServerModules';
 
-export interface SpotifyHistoryDeps extends ServerModules {
-  [ServerModuleName.STORE_TOKEN]: StoreTokenModule;
-  [ServerModuleName.STORE_TRACK]: StoreTrackModule;
-  [ServerModuleName.SPOTIFY]: SpotifyModule;
-}
+export type SpotifyHistoryDeps = Pick<
+  AppServerModules,
+  | ServerModuleName.STORE_TOKEN
+  | ServerModuleName.STORE_TRACK
+  | ServerModuleName.SPOTIFY
+>;

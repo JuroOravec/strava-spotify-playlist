@@ -4,7 +4,7 @@ import type { OptionalArray } from '@moovin-groovin/shared';
 import type {
   AnyServerModule,
   ModuleContext,
-  ServerModules,
+  AnyServerModules,
 } from '../../lib/ServerModule';
 
 export type RouterWithOptions<T extends Router | AnyServerModule = Router> = {
@@ -20,6 +20,6 @@ export type RouterInputSimple =
   | RouterWithOptions<AnyServerModule>;
 export type RouterInput = OptionalArray<RouterInputSimple>;
 export type RouterInputFn<
-  TModules extends ServerModules = ServerModules,
+  TModules extends AnyServerModules = AnyServerModules,
   TInput extends RouterInput = RouterInput
 > = (ctx: ModuleContext<TModules>) => TInput;

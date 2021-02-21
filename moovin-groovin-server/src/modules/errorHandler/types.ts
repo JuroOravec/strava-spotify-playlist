@@ -1,9 +1,9 @@
 import type { NodeOptions } from '@sentry/node';
 
-import type { ModuleContext, ServerModules } from '../../lib/ServerModule';
+import type { ModuleContext, AnyServerModules } from '../../lib/ServerModule';
 
 export type SentryInput = NodeOptions;
 export type SentryInputFn<
-  TModules extends ServerModules = ServerModules,
+  TModules extends AnyServerModules = AnyServerModules,
   TInput extends SentryInput = SentryInput
 > = (ctx: ModuleContext<TModules>) => TInput;
