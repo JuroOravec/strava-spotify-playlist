@@ -2,6 +2,7 @@ export type SetRequiredFields<T, TFields extends keyof T> = Partial<T> &
   Required<Pick<T, TFields>>;
 
 export enum ServerModuleName {
+  ANALYTICS = 'analytics',
   BASE = 'base',
   ERR_HANDLER = 'errorHandler',
   HOST = 'host',

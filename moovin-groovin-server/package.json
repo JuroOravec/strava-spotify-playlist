@@ -36,6 +36,7 @@
     "@types/spotify-web-api-node": "^4.0.2",
     "@types/tmp": "^0.2.0",
     "@types/uuid": "^8.3.0",
+    "analytics": "^0.7.3",
     "apollo-server-express": "^2.19.2",
     "async-exit-hook": "^2.0.1",
     "better-queue": "^3.8.10",

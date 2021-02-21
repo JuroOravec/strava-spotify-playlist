@@ -53,9 +53,11 @@ import createStravaSpotifyModule from './modules/stravaSpotify';
 import createErrorHandlerModule from './modules/errorHandler';
 import createHostModule from './modules/host';
 import type { OAuthInputFn } from './modules/oauth/types';
+import createAnalyticsModule from './modules/analytics';
 import type AppServerModules from './types/AppServerModules';
 
 const port = parseInt(process.env.PORT || '3000');
+const appName = 'MoovinGroovin';
 
 const main = async () => {
   // ///////////////////////////
@@ -106,6 +108,15 @@ const main = async () => {
     schemaConfig: {
       inheritResolversFromInterfaces: true,
       allowUndefinedInResolve: false,
+    },
+  });
+
+  const analyticsModule = createAnalyticsModule({
+    analyticsOptions: {
+      app: appName,
+      version: '1.0.0',
+      debug: !isProduction(),
+      plugins: [],
     },
   });
 
@@ -295,7 +306,7 @@ const main = async () => {
   });
 
   const stravaSpotifyModule = createStravaSpotifyModule({
-    appNamePublic: 'MoovinGroovin',
+    appNamePublic: appName,
   });
 
   // ///////////////////////////
@@ -305,7 +316,7 @@ const main = async () => {
   const { createServerContext } = createServerContextManager();
 
   const serverContext = createServerContext({
-    name: 'MoovinGroovin',
+    name: appName,
     // Note: The order of modules determines their install order
     modules: [
       storeUserModule,
@@ -332,6 +343,7 @@ const main = async () => {
       graphqlModule,
       routerModule,
       errorHandlerModule,
+      analyticsModule,
     ],
   });
   await serverContext.install();
