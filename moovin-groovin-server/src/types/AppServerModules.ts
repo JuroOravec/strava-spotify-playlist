@@ -1,8 +1,11 @@
+import type { AnalyticsModule } from 'src/modules/analytics';
 import type { BaseModule } from '../modules/base';
+import type { ErrorHandlerModule } from '../modules/errorHandler';
+import type { GraphqlModule } from '../modules/graphql';
+import type { HostModule } from '../modules/host';
 import type { SessionModule } from '../modules/session';
 import type { OpenApiModule } from '../modules/openapi';
 import type { RouterModule } from '../modules/router';
-import type { GraphqlModule } from '../modules/graphql';
 import type { StoreConfigModule } from '../modules/storeConfig';
 import type { StoreTokenModule } from '../modules/storeToken';
 import type { StoreUserModule } from '../modules/storeUser';
@@ -13,17 +16,16 @@ import type { OAuthModule } from '../modules/oauth';
 import type { OAuthGoogleModule } from '../modules/oauthGoogle';
 import type { OAuthFacebookModule } from '../modules/oauthFacebook';
 import type { OAuthSpotifyModule } from '../modules/oauthSpotify';
-import type { StravaModule } from '../modules/strava';
 import type { OAuthStravaModule } from '../modules/oauthStrava';
+import type { StravaModule } from '../modules/strava';
 import type { SpotifyModule } from '../modules/spotify';
 import type { SpotifyHistoryModule } from '../modules/spotifyHistory';
 import type { StravaWebhookModule } from '../modules/stravaWebhook';
 import type { StravaSpotifyModule } from '../modules/stravaSpotify';
-import type { ErrorHandlerModule } from '../modules/errorHandler';
-import type { HostModule } from '../modules/host';
 import type { ServerModuleName } from '.';
 
 type AppServerModules = {
+  [ServerModuleName.ANALYTICS]: AnalyticsModule;
   [ServerModuleName.BASE]: BaseModule;
   [ServerModuleName.ERR_HANDLER]: ErrorHandlerModule;
   [ServerModuleName.HOST]: HostModule;

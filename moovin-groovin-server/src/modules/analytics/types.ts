@@ -23,3 +23,42 @@ export interface AnalyticsPluginContext<
   payload: P;
   plugins: TPlugins;
 }
+
+export interface IdentifyTraits {
+  $avatar?: string;
+  $email?: string;
+  $first_name?: string;
+  $last_name?: string;
+  $name?: string;
+}
+/**
+ * Interface for `payload` property of `indentify` plugin hook.
+ *
+ * Values in `traits` object are what we passed to `analytics.identify`.
+ * Other values are defined by `analytics` package.
+ */
+export interface IdentifyPayload {
+  userId?: string;
+  traits: IdentifyTraits;
+}
+
+/**
+ * Interface for `payload` property of `track` plugin hook.
+ *
+ * Values in `properties` object are a union of what we passed to `analytics.track`
+ * and what is included out-of-the-box.
+ *
+ * Other values are defined by `analytics` package.
+ */
+export interface TrackPayload<T extends any = any> {
+  anonymousId: string;
+  userId: string;
+  event: string;
+  meta: {
+    timestamp: number;
+    callback: () => any;
+  };
+  options: any;
+  properties: T;
+  type: string;
+}

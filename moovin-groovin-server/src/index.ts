@@ -29,6 +29,8 @@ import './lib/env';
 import createServerContextManager from './lib/manageServerContext';
 import type { ModuleContext } from './lib/ServerModule';
 import { isProduction, isMainProcess } from './utils/env';
+import createAnalyticsModule from './modules/analytics';
+import { mixpanelPlugin } from './modules/analytics/plugins';
 import createBaseModule from './modules/base';
 import createSessionModule from './modules/session';
 import createOpenApiModule from './modules/openapi';
@@ -53,7 +55,6 @@ import createStravaSpotifyModule from './modules/stravaSpotify';
 import createErrorHandlerModule from './modules/errorHandler';
 import createHostModule from './modules/host';
 import type { OAuthInputFn } from './modules/oauth/types';
-import createAnalyticsModule from './modules/analytics';
 import type AppServerModules from './types/AppServerModules';
 
 const port = parseInt(process.env.PORT || '3000');
@@ -85,7 +86,7 @@ const main = async () => {
 
   const errorHandlerModule = createErrorHandlerModule({
     sentry: (ctx) => ({
-      dsn: process.env.SENTRY_DSN,
+      dsn: process.env.ANALYTICS_SENTRY_DSN,
       integrations: [
         new Sentry.Integrations.Http({ tracing: true }),
         new Tracing.Integrations.Express({
@@ -116,7 +117,13 @@ const main = async () => {
       app: appName,
       version: '1.0.0',
       debug: !isProduction(),
-      plugins: [],
+      plugins: [
+        mixpanelPlugin({
+          token: process.env.ANALYTICS_MIXPANEL_TOKEN ?? '',
+          api_host: process.env.ANALYTICS_MIXPANEL_HOST,
+          debug: !isProduction(),
+        }),
+      ],
     },
   });
 
@@ -237,13 +244,13 @@ const main = async () => {
 
   // Create a single pool connection shared by the store modules
   const pool = new Pool({
-    host: process.env.PG_DB_HOST,
-    port: process.env.PG_DB_PORT
-      ? Number.parseInt(process.env.PG_DB_PORT)
+    host: process.env.DB_PG_HOST,
+    port: process.env.DB_PG_PORT
+      ? Number.parseInt(process.env.DB_PG_PORT)
       : undefined,
-    user: process.env.PG_DB_USER,
-    password: process.env.PG_DB_PASSWORD,
-    database: process.env.PG_DB_DATABASE,
+    user: process.env.DB_PG_USER,
+    password: process.env.DB_PG_PASSWORD,
+    database: process.env.DB_PG_DATABASE,
     parseInputDatesAsUTC: true,
     application_name: 'moovin-groovin-server',
   });

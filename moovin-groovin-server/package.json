@@ -17,6 +17,7 @@
     "typegen": "graphql-codegen -- --config codegen.yml"
   },
   "dependencies": {
+    "@analytics/mixpanel": "^0.3.1",
     "@moovin-groovin/shared": "^1.0.0",
     "@sentry/node": "^6.1.0",
     "@sentry/tracing": "^6.1.0",
@@ -26,6 +27,7 @@
     "@types/express-session": "^1.17.3",
     "@types/localtunnel": "^2.0.0",
     "@types/lodash": "^4.14.165",
+    "@types/mixpanel": "^2.14.2",
     "@types/passport": "^1.0.5",
     "@types/passport-facebook": "^2.1.10",
     "@types/passport-google-oauth": "^1.0.41",
@@ -54,6 +56,7 @@
     "js-yaml": "^3.14.1",
     "localtunnel": "^2.0.0",
     "lodash": "^4.17.20",
+    "mixpanel": "^0.13.0",
     "node-cache": "^5.1.2",
     "npm": "^6.14.10",
     "passport": "^0.4.1",
