@@ -18,6 +18,12 @@
 // TODO: nice to have - Build server with Webpack so we can import shared files directly instead of through top-level import
 // TODO: nice to have - Update the security policy to allow only ports 80, 443, 3000
 // TODO: nice to have - In-app analytics (both FE and BE) - https://github.com/Open-Web-Analytics/Open-Web-Analytics/wiki/Tracker or mixpanel?
+// TODO: nice to have - Use proxy with https for analytics endpoint to avoid ad blockers (https://analytics.moovingroovin.com)
+// TODO: nice to have - Use proxy with https for sentry endpoints to avoid ad blockers (https://telemetry.moovingroovin.com)
+//                       - https://docs.aws.amazon.com/AmazonS3/latest/userguide/website-hosting-custom-domain-walkthrough.html
+//                       - https://aws.amazon.com/premiumsupport/knowledge-center/redirect-domain-route-53/
+//                       - https://stackoverflow.com/questions/62540038/how-to-forward-my-domain-registered-with-aws-route53-to-google-my-business
+//                       - https://stackoverflow.com/questions/45333803/redirect-to-domain-from-subdomain-aws-route53
 
 import { Pool } from 'pg';
 import { v5 as uuidV5 } from 'uuid';

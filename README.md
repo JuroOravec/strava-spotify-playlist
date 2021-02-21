@@ -240,3 +240,22 @@ Following articles sum it up perfectly:
 For next time, it might be useful to give this one a go:
 
 - [Reddit: I built a GitHub Action that deploys static sites to Cloudfront](https://www.reddit.com/r/aws/comments/ja1k9g/i_built_a_github_action_that_deploys_static_sites/)
+
+## Donating
+
+Frontend is using [BuyMeACoffee](https://www.buymeacoffee.com) for the option to add donate buttons.
+
+[See the dashboard](https://www.buymeacoffee.com/dashboard).
+
+## Analytics
+
+Frontend and backend use [Mixpanel](https://mixpanel.com/) for usage analytics with `analytics` npm package as an event bus
+for analytics-related events.
+
+[See the dashboard](https://eu.mixpanel.com/report/2313715/view/2859695/insights).
+
+## Error monitoring
+
+Frontend and backend use [Sentry](https://sentry.io/) for capturing errors.
+
+[See the dashboard](https://sentry.io/organizations/juro-oravec/issues/?project=5641806).
