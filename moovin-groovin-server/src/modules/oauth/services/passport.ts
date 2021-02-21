@@ -7,6 +7,7 @@ import ServerModule, {
   Handlers,
   Services,
 } from '../../../lib/ServerModule';
+import type { IdentifyTraits } from '../../analytics/types';
 import type { UserModel } from '../../storeUser/types';
 import type { AuthToken, UserTokenMeta } from '../../storeToken/types';
 import type { OAuthDeps } from '../types';
@@ -57,12 +58,26 @@ const createOAuthPassportServices = (): OAuthPassportServices => {
         }));
 
     if (!user) {
+      const internalUserId = genUuid();
       user = {
         ...userInfo,
-        internalUserId: genUuid(),
+        internalUserId,
         loginProvider: token.providerId,
       };
       await createUser({ ...user, tokens: [token] });
+
+      const analytics = this.context.modules.analytics.services.getAnalytics();
+      if (analytics) {
+        // See https://help.mixpanel.com/hc/en-us/articles/115004708186-Profile-Properties#list-properties
+        const traits: IdentifyTraits = {
+          $avatar: userInfo.photo,
+          $email: userInfo.email,
+          $first_name: userInfo.nameGiven,
+          $last_name: userInfo.nameFamily,
+          $name: userInfo.nameDisplay,
+        };
+        await analytics.identify(internalUserId, traits);
+      }
     }
 
     return user;

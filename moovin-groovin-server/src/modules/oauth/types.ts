@@ -31,6 +31,7 @@ export type OAuthDeps = Pick<
   | ServerModuleName.HOST
   | ServerModuleName.STORE_USER
   | ServerModuleName.STORE_TOKEN
+  | ServerModuleName.ANALYTICS
 >;
 
 export interface PassportUser {

@@ -42,17 +42,8 @@ const App = defineComponent({
     });
 
     onLogin(() => {
-      const { userId, email, photo, nameDisplay, nameFamily, nameGiven } = unref(user) ?? {};
-      if (userId) {
-        // See https://help.mixpanel.com/hc/en-us/articles/115004708186-Profile-Properties#list-properties
-        analytics?.identify(userId, {
-          $avatar: photo,
-          $email: email,
-          $first_name: nameGiven,
-          $last_name: nameFamily,
-          $name: nameDisplay,
-        });
-      }
+      const { userId } = unref(user) ?? {};
+      if (userId) analytics?.identify(userId);
     });
 
     onLogout(() => {
