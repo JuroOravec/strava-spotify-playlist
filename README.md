@@ -259,3 +259,32 @@ for analytics-related events.
 Frontend and backend use [Sentry](https://sentry.io/) for capturing errors.
 
 [See the dashboard](https://sentry.io/organizations/juro-oravec/issues/?project=5641806).
+
+## Newsletter
+
+Newsletter is provided by MailerLite.
+
+The in-app signup form is based on a form created in MailerLite (e.g. <https://app.mailerlite.com/forms/view/3612901#embed-code>), from which the form HTML was taken and adapted to work in Vue.
+
+Singup process is double opt-in flow.
+
+[See the dashboard](https://app.mailerlite.com/dashboard).
+
+## Receiving emails
+
+To be able to sign up for MailerLite, I had to have an email with the same domain as where the app is (moovingroovin.com).
+
+To avoid paying for a mail server or running one myself on an EC2, a flow using [SES and SNS](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/configure-sns-notifications.html) is used:
+
+Sender -> send to name@mydomain.com -> SES triggers SNS topic with email content -> SNS processes the topic and sends email to subscribers of that topic (personal email) -> Me
+
+1. A [topic in Amazon Simple Notification Service](https://eu-west-1.console.aws.amazon.com/sns/v3/home?region=eu-west-1#/topics) is created. This topic sends UTF-8 encoded emails to its subscribers.
+   - I want to receive emails to my personal email, so I've subscribed to this email with it.
+   - [How to subscribe to SNS](https://docs.aws.amazon.com/sns/latest/dg/sns-email-notifications.html)
+   - [On email options](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email-action-sns.html)
+
+2. A [rule set is configured on Amazon Simple Email Service](https://eu-west-1.console.aws.amazon.com/ses/home?region=eu-west-1#receipt-rules:) to receive emails on particular addresses (e.g. no-reply@mydomain.com and juro@mydomain.com). This ruleset triggers SNS topic defined in previous step when an email is received.
+   - [How to](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/receiving-email.html?icmpid=docs_ses_console)
+   - [Another guide](https://medium.com/responsetap-engineering/easily-create-email-addresses-for-your-route53-custom-domain-589d099dd0f2)
+
+NOTE: SES mail receiving is available only on the Ireland region in EU.
