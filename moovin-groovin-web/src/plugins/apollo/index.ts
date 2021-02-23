@@ -5,25 +5,31 @@ import VueApollo from 'vue-apollo';
 import type { ApolloClient } from 'apollo-client';
 
 import type { EnvironmentConfig } from '../config/config';
-import createApolloClients, { VueApolloClients } from './clients';
+import createApolloClients, { ApolloClientsOptions, VueApolloClients } from './clients';
 
 interface ApolloPlugin {
   clients: VueApolloClients;
   provider: VueApollo;
 }
 
-const installApollo = (vueClass: VueConstructor, config: EnvironmentConfig): ApolloPlugin => {
+const installApollo = (
+  vueClass: VueConstructor,
+  config: EnvironmentConfig,
+  options: ApolloClientsOptions = {}
+): ApolloPlugin => {
+  const { onError = (error) => console.error('[VueApollo]', error) } = options;
+
   vueClass.use(VueApollo);
 
   // Note: VueApollo is using types from 'apollo-client' while we use '@apollo/client/core'
   // so we have to cast them.
-  const apolloClients = createApolloClients(config);
+  const apolloClients = createApolloClients(config, { ...options, onError });
   const castedApolloClients = (apolloClients as unknown) as Record<string, ApolloClient<any>>;
 
   const apolloProvider = new VueApollo({
     clients: castedApolloClients,
     defaultClient: castedApolloClients.default,
-    errorHandler: (error) => console.error('[VueApollo: error]', error),
+    errorHandler: onError,
   });
 
   vueClass.mixin({

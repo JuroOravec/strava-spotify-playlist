@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import * as Sentry from '@sentry/vue';
 
 import packageJson from '../package.json';
 import installServiceWorker from './plugins/serviceWorker';
@@ -31,7 +32,12 @@ const router = installRouter(Vue, {
   routes: createRoutes(),
 });
 installRouteGuard(Vue);
-const { provider: apolloProvider } = installApollo(Vue, currentConfig);
+const { provider: apolloProvider } = installApollo(Vue, currentConfig, {
+  onError: (err) => {
+    Sentry.captureException(err);
+    console.error(err);
+  },
+});
 const analytics = installAnalytics(Vue, {
   app: 'MoovinGroovin',
   version: packageJson.version,

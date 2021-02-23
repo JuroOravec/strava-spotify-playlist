@@ -14,7 +14,16 @@ interface VueApolloClients {
   default: ApolloClient<any>;
 }
 
-const createApolloClients = (config: EnvironmentConfig): VueApolloClients => {
+interface ApolloClientsOptions {
+  onError?: (err: Error) => void;
+}
+
+const createApolloClients = (
+  config: EnvironmentConfig,
+  options: ApolloClientsOptions = {}
+): VueApolloClients => {
+  const { onError: onApolloError = console.error } = options;
+
   const serverHttpLink = createHttpLink({
     uri: config.GRAPHQL_URL,
     credentials: 'include',
@@ -24,9 +33,9 @@ const createApolloClients = (config: EnvironmentConfig): VueApolloClients => {
     const { graphQLErrors = [], networkError = null } = errorResponse;
     graphQLErrors
       .filter((error) => error?.extensions?.code !== 'UNAUTHENTICATED')
-      .forEach((error) => console.error(error));
+      .forEach((error) => onApolloError(error));
 
-    if (networkError) console.error(networkError);
+    if (networkError) onApolloError(networkError);
   });
 
   const defaultOptions: DefaultOptions = {
@@ -73,4 +82,4 @@ const createApolloClients = (config: EnvironmentConfig): VueApolloClients => {
 };
 
 export default createApolloClients;
-export type { VueApolloClients };
+export type { VueApolloClients, ApolloClientsOptions };
