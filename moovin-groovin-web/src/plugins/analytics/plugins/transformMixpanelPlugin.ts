@@ -1,42 +1,20 @@
-import type VueRouter from 'vue-router';
 import mixpanel from 'mixpanel-browser';
 import type { AnalyticsPlugin } from 'analytics';
 
 import type { MixpanelPluginConfig } from './mixpanelPlugin';
-import type { AnalyticsPluginContext, ContextPlugin } from '../types';
+import type {
+  AnalyticsPluginContext,
+  ContextPlugin,
+  IdentifyPayload,
+  PagePayload,
+  TrackPayload,
+} from '../types';
 
 interface Plugins {
   mixpanel: ContextPlugin<MixpanelPluginConfig>;
 }
 
 type PluginContext<TPayload extends any = any> = AnalyticsPluginContext<TPayload, null, Plugins>;
-
-/**
- * Interface for `payload` property of `page` hook.
- *
- * Values in `properties` object are a union of what we passed to `analytics.page`
- * and what is included out-of-the-box.
- *
- * Other values are defined by `analytics` package.
- */
-type PagePayload = {
-  properties: {
-    /** Resolved route. Custom property passed to `analytics.page` */
-    to?: ReturnType<VueRouter['resolve']>;
-  };
-};
-
-/**
- * Interface for `payload` property of `indentify` hook.
- *
- * Values in `traits` object are what we passed to `analytics.identify`.
- * Other values are defined by `analytics` package.
- */
-interface IdentifyPayload {
-  userId?: string;
-  // TODO
-  traits: Partial<any>;
-}
 
 /**
  * Plugin that transforms the data from the client to Mixpanel.
