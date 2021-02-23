@@ -31,6 +31,7 @@ export interface IdentifyTraits {
   $last_name?: string;
   $name?: string;
 }
+
 /**
  * Interface for `payload` property of `indentify` plugin hook.
  *

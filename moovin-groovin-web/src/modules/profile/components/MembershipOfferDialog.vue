@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="MembershipOfferDialog__wrapper">
     <ConfirmDialog
       v-bind="$attrs"
       content-class="MembershipOfferDialog"
@@ -10,9 +10,11 @@
       }"
     >
       <template #activator="{ on, attrs }">
-        <v-btn color="primary" v-bind="attrs" v-on="on">
-          <slot name="action"> Become Premium Member </slot>
-        </v-btn>
+        <slot name="activator" v-bind="{ on, attrs }">
+          <v-btn color="primary" v-bind="attrs" v-on="on">
+            <slot name="action"> Become Premium Member </slot>
+          </v-btn>
+        </slot>
       </template>
       <template #dialog-text class="MembershipOfferDialog__body">
         <v-row>
