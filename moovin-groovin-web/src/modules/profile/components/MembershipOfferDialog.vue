@@ -42,9 +42,10 @@
               <v-card-subtitle> (£5 / mo) </v-card-subtitle>
               <v-card-text>
                 <ul>
-                  <li>Music vs Performance analytics</li>
-                  <li>Tailored Spotify playlists</li>
                   <li>Save activities from past 30 days</li>
+                  <li>Music vs Performance analytics</li>
+                  <li>Track songs on map</li>
+                  <li>Tailored Spotify playlists</li>
                 </ul>
               </v-card-text>
             </v-card>
