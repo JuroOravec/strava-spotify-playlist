@@ -15,6 +15,8 @@ interface UseValidators<T extends object> {
   errors: ComputedRef<Readonly<Partial<{ [K in keyof T]: (string | false)[] }>>>;
   /** Whether data is valid per prop */
   valids: ComputedRef<Readonly<Partial<{ [K in keyof T]: boolean }>>>;
+  /** Trigger validation */
+  validate: () => Promise<void>;
 }
 
 type Validator<T = any> = (value: T) => OptionalPromise<boolean | undefined | null | string>;
@@ -47,11 +49,11 @@ const useValidators = <T extends object>(
 
   // To enable the use of async validators, we assign errors via watch
   // instead of computed
-  watch(normalizedValidators, async (newNormalizedValidators) => {
+  const validate = async () => {
     const dataErrorEntries = await Promise.all(
       Object.entries(unref(dataRef) || {}).map(
         async ([key, value]): Promise<[string, (string | false)[]]> => {
-          const propValidators = newNormalizedValidators[key as keyof T] as Validator[];
+          const propValidators = unref(normalizedValidators)[key as keyof T] as Validator[];
           const validatedProps = await Promise.all(
             propValidators.map((validator) => validator(value))
           );
@@ -62,7 +64,11 @@ const useValidators = <T extends object>(
       )
     );
     errors.value = fromPairs(dataErrorEntries) as any;
-  });
+  };
+
+  // To enable the use of async validators, we assign errors via watch
+  // instead of computed
+  watch(normalizedValidators, validate);
 
   const valids = computed(
     (): Partial<{ [K in keyof T]: boolean }> => {
@@ -84,6 +90,7 @@ const useValidators = <T extends object>(
     isValid,
     errors,
     valids,
+    validate,
   };
 };
 
