@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="3">
+    <v-col class="col-sm-4 col-md-3">
       <ProfileMenu />
     </v-col>
 

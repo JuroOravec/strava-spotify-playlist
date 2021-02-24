@@ -13,6 +13,7 @@
             link
             :to="section.to"
             class="ProfileMenu__item"
+            :class="{ 'px-3': $vuetify.breakpoint.smAndDown }"
             v-on="section.listeners"
           >
             <v-list-item-content>
@@ -143,6 +144,9 @@ export default ProfileMenu;
   }
   .v-list-item + .v-list-item {
     border-top: 1px solid lightgrey;
+  }
+  .v-navigation-drawer {
+    width: 100% !important;
   }
 }
 </style>

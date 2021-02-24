@@ -1,6 +1,6 @@
 <template>
   <div class="Home">
-    <h1 class="text-h2 font-weight-bold pt-16 pb-10">MoovinGroovin</h1>
+    <h1 class="text-h3 text-sm-h2 font-weight-bold py-10">MoovinGroovin</h1>
     <h2 class="text-h4 pb-10">
       Run wild with your sport music selection. <br />
       We will save it for you.
@@ -28,7 +28,7 @@
     <h3 class="text-h5 pt-12 pb-4">How it works</h3>
 
     <p>MoovinGroovin integrates with your Strava and Spotify accounts.</p>
-    <p>
+    <p class="pb-8">
       When you finish an activity, MoovinGroovin receives a message from Strava. MoovinGroovin then
       asks Spotify for songs played at that time. New Spotify playlist is then created from those
       songs.

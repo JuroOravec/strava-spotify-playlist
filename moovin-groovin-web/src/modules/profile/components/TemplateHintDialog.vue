@@ -108,6 +108,14 @@
             </p>
           </v-col>
         </v-row>
+        <v-row class="pb-4">
+          <v-col class="text-center">
+            <v-btn color="primary" @click="setDialogIsOpen(false)"> Got it! </v-btn>
+          </v-col>
+        </v-row>
+        <v-btn icon class="TemplateHintDialog__dialog-close" @click="setDialogIsOpen(false)"
+          ><v-icon>close</v-icon></v-btn
+        >
       </v-card>
     </slot>
   </v-dialog>
@@ -209,6 +217,11 @@ export default TemplateHintDialog;
 .TemplateHintDialog {
   &__dialog {
     max-width: 850px;
+  }
+  &__dialog-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
   }
   &__activator {
     margin-top: $spacer;

@@ -2,7 +2,11 @@
   <v-app-bar class="Appbar" app color="primary" dark flat>
     <v-container class="py-0 fill-height">
       <v-row class="fill-height" justify="space-between" align="center">
-        <v-col cols="auto" class="Appbar__title fill-height">
+        <v-col
+          cols="auto"
+          class="Appbar__title fill-height"
+          :class="{ 'px-0': $vuetify.breakpoint.xsOnly }"
+        >
           <router-link to="/" class="fill-height">
             <v-app-bar-title class="title fill-height d-flex align-center">
               MoovinGroovin
@@ -12,7 +16,11 @@
 
         <v-spacer></v-spacer>
 
-        <v-col cols="auto" class="Appbar__nav fill-height">
+        <v-col
+          cols="auto"
+          class="Appbar__nav fill-height"
+          :class="{ 'px-0': $vuetify.breakpoint.xsOnly }"
+        >
           <router-link
             v-for="link in links"
             :key="'appbar-item-' + link.to.name"
@@ -25,7 +33,7 @@
           </router-link>
         </v-col>
 
-        <v-col cols="auto" class="fill-height">
+        <v-col cols="auto" class="fill-height" :class="{ 'px-0': $vuetify.breakpoint.xsOnly }">
           <LoginMenu />
         </v-col>
       </v-row>
@@ -93,9 +101,10 @@ export default Appbar;
     color: white;
   }
   .col {
-    @extend .py-0;
     display: flex;
     align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
   }
 
   .v-toolbar__content {

@@ -2,7 +2,12 @@
   <div class="MembershipOfferDialog__wrapper">
     <ConfirmDialog
       v-bind="$attrs"
-      content-class="MembershipOfferDialog"
+      :content-class="
+        [
+          'MembershipOfferDialog',
+          $vuetify.breakpoint.mdAndUp ? 'MembershipOfferDialog--md' : '',
+        ].join(' ')
+      "
       v-on="{
         ...$listeners,
         confirm: onConfirm,
@@ -27,7 +32,10 @@
           </v-col>
         </v-row>
         <v-row class="pb-3 px-5">
-          <v-col class="MembershipOfferDialog__option col-12 col-sm-auto pa-sm-4 mb-4">
+          <v-col
+            class="MembershipOfferDialog__option col-12 col-sm-auto mb-4"
+            :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'pa-4': $vuetify.breakpoint.smAndUp }"
+          >
             <v-card>
               <v-card-title> Basic account </v-card-title>
               <v-card-subtitle> FREE (current) </v-card-subtitle>
@@ -38,7 +46,10 @@
               </v-card-text>
             </v-card>
           </v-col>
-          <v-col class="MembershipOfferDialog__option col-12 col-sm-auto pa-sm-4 mb-4">
+          <v-col
+            class="MembershipOfferDialog__option col-12 col-sm-auto mb-4"
+            :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'pa-4': $vuetify.breakpoint.smAndUp }"
+          >
             <v-card>
               <v-card-title> Premium account </v-card-title>
               <v-card-subtitle> (£5 / mo) </v-card-subtitle>
@@ -109,7 +120,10 @@ export default MembershipOfferDialog;
 <style lang="scss">
 .MembershipOfferDialog {
   max-width: 700px;
-  overflow: visible;
+
+  &--md {
+    overflow: visible;
+  }
 
   &__title {
     text-align: center;
@@ -142,12 +156,9 @@ export default MembershipOfferDialog;
     }
   }
 
-  .row {
+  .ConfirmDialog__actions {
     justify-content: center;
     text-align: center;
-  }
-
-  .ConfirmDialog__action {
   }
 }
 </style>
