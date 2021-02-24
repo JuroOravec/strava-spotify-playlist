@@ -26,20 +26,23 @@
         </v-row>
         <v-row class="ConfirmDialog__actions">
           <slot name="actions" v-bind="{ confirm, cancel }">
-            <v-col class="ConfirmDialog__action col-auto">
+            <v-spacer />
+            <v-col class="col-auto">
               <slot name="confirm-action" v-bind="{ confirm }">
                 <v-btn color="primary" dark @click="confirm">
                   <slot name="confirm-text">Confirm</slot>
                 </v-btn>
               </slot>
             </v-col>
-            <v-col class="ConfirmDialog__action col-auto">
+            <v-spacer />
+            <v-col class="col-auto">
               <slot name="cancel-action" v-bind="{ cancel }">
-                <v-btn color="primary" dark @click="cancel">
+                <v-btn color="primary" outlined @click="cancel">
                   <slot name="cancel-text">Cancel</slot>
                 </v-btn>
               </slot>
             </v-col>
+            <v-spacer />
           </slot>
         </v-row>
       </v-card>
@@ -104,11 +107,10 @@ export default ConfirmDialog;
 
 <style lang="scss">
 .ConfirmDialog {
+  height: 400px;
   &__actions {
     padding-top: $spacer * 3;
     padding-bottom: $spacer * 3;
-  }
-  &__action {
     text-align: center;
   }
 }

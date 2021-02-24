@@ -6,6 +6,7 @@
         <AuthGuard>
           <router-view name="default" />
           <NotifSnackbar />
+          <ConsentAlert />
         </AuthGuard>
       </v-container>
     </v-main>
@@ -18,6 +19,7 @@ import { defineComponent, getCurrentInstance, unref } from '@vue/composition-api
 
 import AuthGuard from '@/modules/auth/components/AuthGuard.vue';
 import useCurrentUser from '@/modules/auth/composables/useCurrentUser';
+import ConsentAlert from '@/modules/utils/components/ConsentAlert.vue';
 import NotifSnackbar from '@/modules/utils/components/NotifSnackbar.vue';
 import NotifSnackbarConfirm from '@/modules/utils/components/NotifSnackbarConfirm.vue';
 import NotifSnackbarError from '@/modules/utils/components/NotifSnackbarError.vue';
@@ -29,6 +31,7 @@ const App = defineComponent({
   components: {
     AuthGuard,
     NotifSnackbar,
+    ConsentAlert,
   },
   setup() {
     const instance = getCurrentInstance();
