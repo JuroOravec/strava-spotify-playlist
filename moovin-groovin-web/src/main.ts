@@ -1,4 +1,6 @@
 import Vue from 'vue';
+// @ts-ignore
+import VueImg from 'v-img';
 import * as Sentry from '@sentry/vue';
 
 import packageJson from '../package.json';
@@ -50,6 +52,8 @@ const analytics = installAnalytics(Vue, {
     }),
   ],
 });
+
+Vue.use(VueImg);
 
 new Vue({
   name: 'VueApp',
