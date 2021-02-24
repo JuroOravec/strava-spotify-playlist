@@ -22,7 +22,12 @@
     </ol>
 
     <div class="pt-12 pb-4">
-      <v-img src="../assets/example-spotify.png" :max-width="900" class="mx-auto"/>
+      <v-img
+        v-img="{ src: require('../assets/example-spotify.png') }"
+        src="../assets/example-spotify.png"
+        :max-width="900"
+        class="mx-auto"
+      />
     </div>
 
     <h3 class="text-h5 pt-12 pb-4">How it works</h3>

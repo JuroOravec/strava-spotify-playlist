@@ -45,7 +45,10 @@
               >, like so <code v-pre>{{ activity.duration }}</code
               >.
             </p>
-            <v-img src="../assets/template-tutorial-customize-playlist.png" />
+            <v-img
+              v-img="{ src: require('../assets/template-tutorial-customize-playlist.png') }"
+              src="../assets/template-tutorial-customize-playlist.png"
+            />
             <p class="py-5">
               The above
               <span class="font-weight-bold"
@@ -55,6 +58,7 @@
               will be formatted like so.
             </p>
             <v-img
+              v-img="{ src: require('../assets/template-tutorial-customize-spotify-after.png') }"
               src="../assets/template-tutorial-customize-spotify-after.png"
               class="elevation-5"
             />
@@ -65,6 +69,7 @@
               >.
             </p>
             <v-img
+              v-img="{ src: require('../assets/template-tutorial-customize-spotify-before.png') }"
               src="../assets/template-tutorial-customize-spotify-before.png"
               class="elevation-5"
             />
