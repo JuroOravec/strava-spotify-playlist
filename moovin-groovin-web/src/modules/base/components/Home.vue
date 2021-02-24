@@ -17,7 +17,7 @@
       <li>When done, save your activity.</li>
       <li>
         Take a nice shower, drink a glass of water and relax. In 20-30 mins, a new playlist will be
-        created for you:
+        created for you with the songs you listened to during the activity:
       </li>
     </ol>
 
