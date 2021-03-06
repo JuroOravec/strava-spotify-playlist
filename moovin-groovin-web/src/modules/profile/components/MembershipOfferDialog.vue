@@ -29,6 +29,9 @@
                 Find the music that takes your performance to the next level
               </h3>
             </v-card-title>
+            <v-card-subtitle>
+              <h3 class="text-h5 pt-2 px-2">MoovinGroovin is still in alpha development.</h3>
+            </v-card-subtitle>
           </v-col>
         </v-row>
         <v-row class="pb-3 px-5">
@@ -37,8 +40,8 @@
             :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'pa-4': $vuetify.breakpoint.smAndUp }"
           >
             <v-card>
-              <v-card-title> Basic account </v-card-title>
-              <v-card-subtitle> FREE (current) </v-card-subtitle>
+              <v-card-title> Basic </v-card-title>
+              <v-card-subtitle> (current) </v-card-subtitle>
               <v-card-text>
                 <ul>
                   <li>Save activities from past 24 hours</li>
@@ -51,8 +54,8 @@
             :class="{ 'px-0': $vuetify.breakpoint.xsOnly, 'pa-4': $vuetify.breakpoint.smAndUp }"
           >
             <v-card>
-              <v-card-title> Premium account </v-card-title>
-              <v-card-subtitle> (£5 / mo) </v-card-subtitle>
+              <v-card-title> Early access </v-card-title>
+              <v-card-subtitle> $5 one time payment </v-card-subtitle>
               <v-card-text>
                 <ul>
                   <li>Save activities from past 30 days</li>
@@ -65,7 +68,7 @@
           </v-col>
         </v-row>
       </template>
-      <template #confirm-text><span class="text-body-1">Buy membership</span></template>
+      <template #confirm-text><span class="text-body-1">Request early access</span></template>
       <template #cancel-action="{ cancel }">
         <v-btn color="primary" outlined @click="cancel"> Cancel </v-btn>
       </template>
