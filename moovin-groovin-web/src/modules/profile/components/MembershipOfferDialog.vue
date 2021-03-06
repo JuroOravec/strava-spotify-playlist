@@ -29,8 +29,8 @@
                 Find the music that takes your performance to the next level
               </h3>
             </v-card-title>
-            <v-card-subtitle>
-              <h3 class="text-h5 pt-2 px-2">MoovinGroovin is still in alpha development.</h3>
+            <v-card-subtitle class="pb-0">
+              <h3 class="text-body-1 pt-2 px-2">MoovinGroovin is still in alpha development.</h3>
             </v-card-subtitle>
           </v-col>
         </v-row>
