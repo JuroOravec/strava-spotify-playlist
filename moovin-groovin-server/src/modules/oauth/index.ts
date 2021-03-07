@@ -4,6 +4,7 @@ import createInstaller from './install';
 import createCloser from './close';
 import createRouter from './router';
 import createOpenApiSpec from './openapi';
+import createGraphql from './graphql';
 import createServices, { OAuthServices } from './services';
 import type { OAuthData, OAuthExternalData } from './data';
 
@@ -24,6 +25,7 @@ const createOAuthModule = (options: OAuthModuleOptions): OAuthModule => {
     router: createRouter(),
     services: createServices(),
     openapi: createOpenApiSpec(),
+    graphql: createGraphql(),
     data: {
       ...options,
       providers,

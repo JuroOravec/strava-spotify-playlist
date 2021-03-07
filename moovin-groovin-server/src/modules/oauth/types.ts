@@ -13,7 +13,7 @@ import type { UserModel } from '../storeUser/types';
 export type OAuthOptions = {
   providerId: string;
   /** Whether the provider can be used to log user in */
-  isLoginProvider?: boolean;
+  isAuthProvider?: boolean;
   oauth: OAuthCreator;
   loginHandler: RequestHandler;
   callbackHandler: RequestHandler;

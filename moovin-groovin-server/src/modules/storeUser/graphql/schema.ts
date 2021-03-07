@@ -16,7 +16,7 @@ function createStoreUserGraphqlSchema(
 
     extend type Mutation {
       deleteCurrentUser: User!
-      deleteCurrentUserProviders(providerIds: [String!]!): [UserProvider]!
+      deleteCurrentUserProviders(providerIds: [String!]!): [Provider]!
       logoutCurrentUser: User!
     }
 
@@ -27,12 +27,7 @@ function createStoreUserGraphqlSchema(
       nameGiven: String
       nameDisplay: String
       photo: String
-      providers: [UserProvider!]!
-    }
-
-    # Provider for user auth (=== third party integrations)
-    type UserProvider {
-      providerId: String!
+      providers: [Provider!]!
     }
   `;
 }

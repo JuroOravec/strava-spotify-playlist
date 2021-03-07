@@ -10,12 +10,12 @@ import {
   assertContext,
 } from '../../lib/ServerModule';
 import type { OAuthData } from './data';
-import type { OAuthInput } from './types';
+import type { OAuthDeps, OAuthInput } from './types';
 import { resolveProviderCallbackUrl } from './utils/providerUrl';
 
 const createOAuthInstaller = (): Installer => {
   const install: Installer = async function install(
-    this: ServerModule<Services, Handlers, OAuthData>,
+    this: ServerModule<Services, Handlers, OAuthData, OAuthDeps>,
     ctx: ModuleContext
   ) {
     const { app } = ctx;
