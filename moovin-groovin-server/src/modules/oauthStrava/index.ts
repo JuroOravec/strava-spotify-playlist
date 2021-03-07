@@ -1,7 +1,11 @@
 import strava from 'strava-v3';
 
 import ServerModule from '../../lib/ServerModule';
-import { ServerModuleName, SetRequiredFields } from '../../types';
+import {
+  ActivityProvider,
+  ServerModuleName,
+  SetRequiredFields,
+} from '../../types';
 import createOAuthHandlers, { OAuthHandlers } from '../oauth/handlers';
 import createOAuthServices, {
   OAuthAccessTokenServices,
@@ -26,7 +30,7 @@ const doRefreshAccessToken = async function doRefreshAccessToken(
 ) {
   const refreshedToken = await strava.oauth.refreshToken(refreshToken);
   return {
-    providerId: 'strava',
+    providerId: ActivityProvider.STRAVA,
     accessToken: refreshedToken.access_token,
     refreshToken: refreshedToken.refresh_token,
     expiresAt: refreshedToken.expires_at,
@@ -40,8 +44,10 @@ const createOAuthStravaModule = (
 
   return new ServerModule({
     name: ServerModuleName.OAUTH_STRAVA,
-    handlers: createOAuthHandlers('strava'),
-    services: createOAuthServices('strava', { doRefreshAccessToken }),
+    handlers: createOAuthHandlers(ActivityProvider.STRAVA),
+    services: createOAuthServices(ActivityProvider.STRAVA, {
+      doRefreshAccessToken,
+    }),
     oauth: createOAuth(),
     data: {
       ...options,

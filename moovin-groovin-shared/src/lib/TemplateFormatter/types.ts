@@ -6,6 +6,9 @@ export interface TemplateFormatter {
   close: () => OptionalPromise<void>;
   format: (
     template: string,
-    context: object
+    context: object,
+    options?: {
+      textLimit?: number;
+    }
   ) => OptionalPromise<string>;
 }

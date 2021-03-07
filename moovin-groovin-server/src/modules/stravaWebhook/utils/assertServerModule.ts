@@ -1,7 +1,7 @@
-import { ModuleContext } from '../../../lib/ServerModule';
+import type { ModuleContext, ServerModule } from '../../../lib/ServerModule';
 
 function assertServerModule(
-  context: ModuleContext,
+  context: ModuleContext<Record<string, ServerModule>>,
   module: string
 ): asserts context {
   if (!context || !context.modules[module]) {

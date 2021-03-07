@@ -1,4 +1,4 @@
-import type { AnalyticsModule } from 'src/modules/analytics';
+import type { AnalyticsModule } from '../modules/analytics';
 import type { BaseModule } from '../modules/base';
 import type { ErrorHandlerModule } from '../modules/errorHandler';
 import type { GraphqlModule } from '../modules/graphql';
@@ -17,15 +17,18 @@ import type { OAuthGoogleModule } from '../modules/oauthGoogle';
 import type { OAuthFacebookModule } from '../modules/oauthFacebook';
 import type { OAuthSpotifyModule } from '../modules/oauthSpotify';
 import type { OAuthStravaModule } from '../modules/oauthStrava';
-import type { StravaModule } from '../modules/strava';
-import type { SpotifyModule } from '../modules/spotify';
-import type { SpotifyHistoryModule } from '../modules/spotifyHistory';
+import type { ApiStravaModule } from '../modules/apiStrava';
+import type { ApiSpotifyModule } from '../modules/apiSpotify';
+import type { PlaylistSpotifyModule } from '../modules/playlistSpotify';
+import type { TrackHistoryModule } from '../modules/trackHistory';
 import type { StravaWebhookModule } from '../modules/stravaWebhook';
-import type { StravaSpotifyModule } from '../modules/stravaSpotify';
-import type { ServerModuleName } from '.';
+import type { PlaylistModule } from '../modules/playlist';
+import type { ServerModuleName } from './index';
 
 type AppServerModules = {
   [ServerModuleName.ANALYTICS]: AnalyticsModule;
+  [ServerModuleName.API_SPOTIFY]: ApiSpotifyModule;
+  [ServerModuleName.API_STRAVA]: ApiStravaModule;
   [ServerModuleName.BASE]: BaseModule;
   [ServerModuleName.ERR_HANDLER]: ErrorHandlerModule;
   [ServerModuleName.HOST]: HostModule;
@@ -36,19 +39,18 @@ type AppServerModules = {
   [ServerModuleName.OAUTH_SPOTIFY]: OAuthSpotifyModule;
   [ServerModuleName.OAUTH_STRAVA]: OAuthStravaModule;
   [ServerModuleName.OPENAPI]: OpenApiModule;
+  [ServerModuleName.PLAYLIST]: PlaylistModule;
+  [ServerModuleName.PLAYLIST_SPOTIFY]: PlaylistSpotifyModule;
   [ServerModuleName.ROUTER]: RouterModule;
   [ServerModuleName.SESSION]: SessionModule;
-  [ServerModuleName.SPOTIFY]: SpotifyModule;
-  [ServerModuleName.SPOTIFY_HISTORY]: SpotifyHistoryModule;
+  [ServerModuleName.TRACK_HISTORY]: TrackHistoryModule;
   [ServerModuleName.STORE_PLAYLIST]: StorePlaylistModule;
   [ServerModuleName.STORE_CONFIG]: StoreConfigModule;
   [ServerModuleName.STORE_TOKEN]: StoreTokenModule;
   [ServerModuleName.STORE_TRACK]: StoreTrackModule;
   [ServerModuleName.STORE_USER]: StoreUserModule;
   [ServerModuleName.STORE_SESSION]: StoreSessionModule;
-  [ServerModuleName.STRAVA]: StravaModule;
   [ServerModuleName.STRAVA_WEBHOOK]: StravaWebhookModule;
-  [ServerModuleName.STRAVA_SPOTIFY]: StravaSpotifyModule;
 };
 
 export default AppServerModules;

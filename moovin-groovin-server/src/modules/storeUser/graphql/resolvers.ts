@@ -1,5 +1,7 @@
 import { AuthenticationError, ApolloError } from 'apollo-server-express';
-import { isNil } from 'lodash';
+import type { Request } from 'express';
+import isNil from 'lodash/isNil';
+import includes from 'lodash/includes';
 
 import { safeInvoke } from '@moovin-groovin/shared';
 import {
@@ -7,7 +9,12 @@ import {
   assertContext,
   Handlers,
 } from '../../../lib/ServerModule';
-import type { GqlResolvers, GqlUser } from '../../../types/graphql';
+import { AuthProvider } from '../../../types';
+import type {
+  GqlResolvers,
+  GqlUser,
+  GqlProvider,
+} from '../../../types/graphql';
 import type { StoreUserData } from '../data';
 import type { StoreUserServices } from '../services';
 import type { StoreUserDeps } from '../types';
@@ -23,17 +30,30 @@ const transformUserToGqlUser = (
   photo: user.photo ?? null,
 });
 
+const authProviderIds = Object.values(AuthProvider);
+
+const getCurrentUser = (
+  req: Request,
+  transformer: (req: Request) => Express.User
+) => {
+  const { result: user } = safeInvoke(
+    () => transformer(req),
+    (err) => {
+      throw new AuthenticationError(err.message);
+    }
+  );
+  return user;
+};
+
 function createStoreUserGraphqlResolvers(
   this: ServerModule<StoreUserServices, Handlers, StoreUserData, StoreUserDeps>
 ): GqlResolvers {
   return {
     Query: {
       getCurrentUser: async (parent, args, context) => {
-        const { result: user } = safeInvoke(
-          () => this.services.getCurrentAuthenticatedUser(context.req),
-          (err) => {
-            throw new AuthenticationError(err.message);
-          }
+        const user = getCurrentUser(
+          context.req,
+          this.services.getCurrentAuthenticatedUser
         );
         return transformUserToGqlUser(user);
       },
@@ -41,14 +61,20 @@ function createStoreUserGraphqlResolvers(
 
     Mutation: {
       deleteCurrentUser: async (parent, args, context) => {
-        const user = this.services.getCurrentAuthenticatedUser(context.req);
+        const user = getCurrentUser(
+          context.req,
+          this.services.getCurrentAuthenticatedUser
+        );
         await this.services.deleteUser(user.internalUserId);
         context.req.logout();
         return transformUserToGqlUser(user);
       },
 
       deleteCurrentUserProviders: async (parent, { providerIds }, context) => {
-        const user = this.services.getCurrentAuthenticatedUser(context.req);
+        const user = getCurrentUser(
+          context.req,
+          this.services.getCurrentAuthenticatedUser
+        );
 
         assertContext(this.context);
         const {
@@ -56,15 +82,22 @@ function createStoreUserGraphqlResolvers(
           getTokensByUser,
         } = this.context.modules.storeToken.services;
         const removedTokens = await deleteTokensByUsersAndProviders(
-          providerIds.map((providerId) => ({
-            internalUserId: user.internalUserId,
-            providerId,
-          }))
+          providerIds
+            .filter((providerId) => !includes(authProviderIds, providerId))
+            .map((providerId) => ({
+              internalUserId: user.internalUserId,
+              providerId,
+            }))
         );
+
         // Log user out if there are no more tokens
-        // TODO: Search only for the login providers
         const remainingTokens = await getTokensByUser(user.internalUserId);
-        if (!remainingTokens?.length) {
+        const authTokens =
+          remainingTokens?.filter((t) =>
+            includes(authProviderIds, t?.providerId)
+          ) ?? [];
+
+        if (!authTokens.length) {
           context.req.logout();
         }
 
@@ -72,19 +105,24 @@ function createStoreUserGraphqlResolvers(
       },
 
       logoutCurrentUser: async (parent, args, context) => {
-        const user = this.services.getCurrentAuthenticatedUser(context.req);
+        const user = getCurrentUser(
+          context.req,
+          this.services.getCurrentAuthenticatedUser
+        );
         context.req.logout();
         return transformUserToGqlUser(user);
       },
     },
 
     User: {
-      providers: async (user) => {
+      providers: async (user): Promise<Pick<GqlProvider, 'providerId'>[]> => {
+        assertContext(this.context);
+        const { getTokensByUser } = this.context.modules.storeToken.services;
+
         if (isNil(user?.userId)) {
           throw new ApolloError('Cannot find "userId".');
         }
-        assertContext(this.context);
-        const { getTokensByUser } = this.context.modules.storeToken.services;
+
         const providers = await getTokensByUser(user.userId);
         return providers ?? [];
       },

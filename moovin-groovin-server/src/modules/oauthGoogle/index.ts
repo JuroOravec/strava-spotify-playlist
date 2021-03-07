@@ -16,7 +16,7 @@ const createOAuthGoogleModule = (
 ): OAuthGoogleModule => {
   return new ServerModule({
     name: ServerModuleName.OAUTH_GOOGLE,
-    handlers: createCredentialsHandlers('google', {
+    handlers: createCredentialsHandlers(ServerModuleName.OAUTH_GOOGLE, {
       scope: [
         'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile',

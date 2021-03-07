@@ -1,3 +1,4 @@
+import { ActivityProvider } from '../../../types';
 import {
   ServerModule,
   Handlers,
@@ -6,7 +7,7 @@ import {
 } from '../../../lib/ServerModule';
 import logger from '../../../lib/logger';
 import unixTimestamp from '../../../utils/unixTimestamp';
-import type { DetailedActivity } from '../../strava/types';
+import type { DetailedActivity } from '../../apiStrava/types';
 import type { StravaWebhookDeps } from '../types';
 import type { StravaWebhookData } from '../data';
 
@@ -43,13 +44,14 @@ const createStravaWebhookAthleteServices = (): StravaWebhookAthleteServices => {
     stravaUserId: string
   ): Promise<void> {
     assertContext(this.context);
+    const { deleteToken } = this.context.modules.storeToken.services;
 
     // Remove the user's Strava auth token. Other resources bound to that token
     // are removed too.
-    this.context.modules.storeToken.services.deleteToken({
-      providerId: 'strava',
+    deleteToken({
+      providerId: ActivityProvider.STRAVA,
       providerUserId: stravaUserId.toString(),
-    });
+    }).catch((e: Error) => logger.error(e));
   }
 
   /** Process new activity and emit it to the app */
@@ -60,13 +62,16 @@ const createStravaWebhookAthleteServices = (): StravaWebhookAthleteServices => {
     options: RegisterAthleteActivityOptions = {}
   ): Promise<void> {
     assertContext(this.context);
+    const { getClientForAthlete } = this.context.modules.apiStrava.services;
+    const {
+      createPlaylistsFromActivity,
+    } = this.context.modules.playlist.services;
 
     const {
       startTime: overridenStartTime,
       endTime: overridenEndTime,
     } = options;
 
-    const { getClientForAthlete } = this.context.modules.strava.services;
     const stravaClient = await getClientForAthlete(stravaUserId);
 
     const {
@@ -84,20 +89,26 @@ const createStravaWebhookAthleteServices = (): StravaWebhookAthleteServices => {
     const startTime = overridenStartTime ?? unixTimestamp(start_date);
     const endTime = overridenEndTime ?? startTime + elapsed_time;
 
-    const {
-      setupPlaylistForActivity,
-    } = this.context.modules.stravaSpotify.services;
-    await setupPlaylistForActivity({
-      stravaUserId,
+    await createPlaylistsFromActivity({
+      activityProviderId: ActivityProvider.STRAVA,
+      activityUserId: stravaUserId,
       activity: {
+        activityProviderId: ActivityProvider.STRAVA,
         activityId,
         activityType,
         startTime,
         endTime,
         title,
         description,
+        // NOTE: It _seems_ Strava doesn't have limit for activity description.
+        // Limit of 12k chars should cover a tracklist for an activity of 10 hours.
+        descriptionLimit: 12000,
       },
-    });
+      playlist: {
+        descriptionLimit: 300,
+        titleLimit: 100,
+      },
+    }).catch((e: Error) => logger.error(e));
   }
 
   /** Process new activity and emit it to the app */
@@ -107,14 +118,15 @@ const createStravaWebhookAthleteServices = (): StravaWebhookAthleteServices => {
     activityId: string
   ): Promise<void> {
     assertContext(this.context);
-
     const {
-      deletePlaylistForActivity,
-    } = this.context.modules.stravaSpotify.services;
-    await deletePlaylistForActivity({
-      stravaUserId,
+      deletePlaylistsByActivity,
+    } = this.context.modules.playlist.services;
+
+    await deletePlaylistsByActivity({
+      activityProviderId: ActivityProvider.STRAVA,
+      activityUserId: stravaUserId,
       activityId,
-    });
+    }).catch((e: Error) => logger.error(e));
   }
 
   return {

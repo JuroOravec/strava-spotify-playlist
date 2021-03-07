@@ -3,6 +3,8 @@ export type SetRequiredFields<T, TFields extends keyof T> = Partial<T> &
 
 export enum ServerModuleName {
   ANALYTICS = 'analytics',
+  API_SPOTIFY = 'apiSpotify',
+  API_STRAVA = 'apiStrava',
   BASE = 'base',
   ERR_HANDLER = 'errorHandler',
   HOST = 'host',
@@ -13,17 +15,29 @@ export enum ServerModuleName {
   OAUTH_SPOTIFY = 'oauthSpotify',
   OAUTH_STRAVA = 'oauthStrava',
   OPENAPI = 'openapi',
+  PLAYLIST = 'playlist',
+  PLAYLIST_SPOTIFY = 'playlistSpotify',
   ROUTER = 'router',
   SESSION = 'session',
-  SPOTIFY = 'spotify',
-  SPOTIFY_HISTORY = 'spotifyHistory',
   STORE_CONFIG = 'storeConfig',
   STORE_TOKEN = 'storeToken',
   STORE_USER = 'storeUser',
   STORE_SESSION = 'storeSession',
   STORE_TRACK = 'storeTrack',
   STORE_PLAYLIST = 'storePlaylist',
-  STRAVA = 'strava',
   STRAVA_WEBHOOK = 'stravaWebhook',
-  STRAVA_SPOTIFY = 'stravaSpotify',
+  TRACK_HISTORY = 'trackHistory',
+}
+
+export enum AuthProvider {
+  FACEBOOK = 'facebook',
+  GOOGLE = 'google',
+}
+
+export enum PlaylistProvider {
+  SPOTIFY = 'spotify',
+}
+
+export enum ActivityProvider {
+  STRAVA = 'strava',
 }

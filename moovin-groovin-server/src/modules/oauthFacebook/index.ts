@@ -1,5 +1,5 @@
 import ServerModule, { Services } from '../../lib/ServerModule';
-import { ServerModuleName, SetRequiredFields } from '../../types';
+import { AuthProvider, ServerModuleName, SetRequiredFields } from '../../types';
 import createOAuthHandlers, { OAuthHandlers } from '../oauth/handlers';
 import createOAuth from './oauth';
 import type { OAuthFacebookData, OAuthFacebookExternalData } from './data';
@@ -20,7 +20,7 @@ const createOAuthFacebookModule = (
 ): OAuthFacebookModule => {
   return new ServerModule({
     name: ServerModuleName.OAUTH_FACEBOOK,
-    handlers: createOAuthHandlers('facebook', {
+    handlers: createOAuthHandlers(AuthProvider.FACEBOOK, {
       scope: ['email'],
     }),
     oauth: createOAuth(),

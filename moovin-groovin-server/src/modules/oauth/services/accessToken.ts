@@ -1,4 +1,3 @@
-import logger from '../../../lib/logger';
 import ServerModule, {
   assertContext,
   Data,
@@ -28,10 +27,13 @@ type ThisModule = ServerModule<
 
 function assertToken(
   token: UserTokenModel | null,
+  providerId: string,
   userId: string
 ): asserts token {
   if (!token) {
-    throw Error(`Failed to get access token for Spotify user ID "${userId}"`);
+    throw Error(
+      `Failed to get access token for ${providerId} user ID "${userId}"`
+    );
   }
 }
 
@@ -54,8 +56,7 @@ const createOAuthAccessTokenServices = (
     const { getToken, upsertToken } = this.context.modules.storeToken.services;
 
     const token = await getToken({ providerUserId, providerId });
-    assertToken(token, providerUserId);
-
+    assertToken(token, providerId, providerUserId);
     const newToken = await doRefreshAccessToken.call(this, token.refreshToken);
 
     await upsertToken({
@@ -77,7 +78,7 @@ const createOAuthAccessTokenServices = (
     const { getToken } = this.context?.modules.storeToken.services;
 
     const token = await getToken({ providerUserId, providerId });
-    assertToken(token, providerUserId);
+    assertToken(token, providerId, providerUserId);
 
     const { accessToken, expiresAt } = token;
 

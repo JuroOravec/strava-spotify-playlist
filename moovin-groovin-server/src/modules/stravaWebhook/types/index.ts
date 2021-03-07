@@ -14,9 +14,9 @@ export interface StravaPushSub {
 
 export type StravaWebhookDeps = Pick<
   AppServerModules,
+  | ServerModuleName.API_STRAVA
   | ServerModuleName.HOST
   | ServerModuleName.OAUTH_STRAVA
-  | ServerModuleName.STRAVA
   | ServerModuleName.STORE_TOKEN
-  | ServerModuleName.STRAVA_SPOTIFY
+  | ServerModuleName.PLAYLIST
 >;

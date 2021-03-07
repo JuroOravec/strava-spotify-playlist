@@ -1,6 +1,6 @@
 import type { RefreshTokenResponse } from 'strava-v3';
 
-import type { SummaryAthlete } from '../strava/types/models';
+import type { SummaryAthlete } from '../apiStrava/types/models';
 
 export type TokenDataResponse = RefreshTokenResponse & {
   athlete?: SummaryAthlete;
