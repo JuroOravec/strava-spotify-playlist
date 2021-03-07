@@ -21,7 +21,6 @@ interface UserMetaResponse {
 }
 
 interface UserStoreSQLQueries extends PGQueries {
-  createUserTable: [[], QueryResultRow];
   deleteUsers: [
     OptionalReadonly<[UserResponse['internal_user_id']]>[],
     UserMetaResponse

@@ -58,7 +58,6 @@ class PGConfigStore
   implements ConfigStore {
   async doInstall(): Promise<void> {
     this.queries = await getQueries();
-    await this.query('createUserConfigTable');
   }
 
   async get(internalUserIds: string[]): Promise<(UserConfigModel | null)[]> {

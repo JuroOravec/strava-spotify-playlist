@@ -21,7 +21,6 @@ interface UserConfigMetaResponse {
 }
 
 interface ConfigStoreSQLQueries extends PGQueries {
-  createUserConfigTable: [[], QueryResultRow];
   getUserConfigs: [
     OptionalReadonly<[UserConfigResponse['internal_user_id']]>[],
     UserConfigResponse

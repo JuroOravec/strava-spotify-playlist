@@ -52,7 +52,6 @@ const isUserTokenResponse = (
 class PGTokenStore extends PGStore<TokenStoreSQLQueries> implements TokenStore {
   async doInstall(): Promise<void> {
     this.queries = await getQueries();
-    await this.query('createUserTokenTable');
   }
 
   async delete(

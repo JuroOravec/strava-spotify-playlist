@@ -49,7 +49,6 @@ const isUserResponse = (
 class PGUserStore extends PGStore<UserStoreSQLQueries> implements UserStore {
   async doInstall(): Promise<void> {
     this.queries = await getQueries();
-    await this.query('createUserTable');
   }
 
   async delete(internalUserIds: string[]): Promise<(UserMeta | null)[]> {

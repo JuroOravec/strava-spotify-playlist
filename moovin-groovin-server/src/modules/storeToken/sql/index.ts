@@ -22,7 +22,6 @@ interface UserTokenMetaResponse {
 }
 
 interface TokenStoreSQLQueries extends PGQueries {
-  createUserTokenTable: [[], QueryResultRow];
   deleteTokens: [
     OptionalReadonly<
       [UserTokenResponse['provider_user_id'], UserTokenResponse['provider_id']]
