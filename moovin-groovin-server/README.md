@@ -1,6 +1,6 @@
 # moovin-groovin-server
 
-Server for integrating Strava API with Spotify API
+Server for integrating Strava API with Music Streaming APIs
 
 ## Quick Start
 

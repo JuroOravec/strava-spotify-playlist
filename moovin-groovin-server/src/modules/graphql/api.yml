@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: moovin-groovin (graphql)
-  description: Server for integrating Strava API with Spotify API (Graphql endpoints)
+  description: Server for integrating Strava API with Music Streaming APIs (Graphql endpoints)
   version: 1.0.0
 paths:
   /graphql:

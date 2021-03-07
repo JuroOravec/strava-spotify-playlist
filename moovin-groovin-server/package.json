@@ -1,7 +1,7 @@
 {
   "name": "@moovin-groovin/server",
   "version": "1.0.0",
-  "description": "Server for integrating Strava API with Spotify API",
+  "description": "Server for integrating Strava API with Music Streaming APIs",
   "author": "Juro Oravec <juraj.oravec.josefson@gmail.com> (https://github.com/jurooravec)",
   "main": "dist/index",
   "types": "dist/index",
