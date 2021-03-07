@@ -3,6 +3,7 @@ import { ServerModuleName } from '../../types';
 import createCloser from './close';
 import createInstaller from './install';
 import createServices, { StorePlaylistServices } from './services';
+import createGraphql from './graphql';
 import type { StorePlaylistData, StorePlaylistExternalData } from './data';
 
 type StorePlaylistModuleOptions = Partial<StorePlaylistExternalData>;
@@ -23,6 +24,7 @@ const createStorePlaylistModule = (
     install: createInstaller(),
     close: createCloser(),
     services: createServices(),
+    graphql: createGraphql(),
     data: {
       ...options,
       clientConfig,
