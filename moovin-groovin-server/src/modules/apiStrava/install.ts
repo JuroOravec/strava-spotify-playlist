@@ -2,11 +2,11 @@ import { Handlers, Services } from '../../lib/ServerModule';
 import strava, { AuthenticationConfig } from 'strava-v3';
 
 import type { ServerModule, Installer } from '../../lib/ServerModule';
-import type { StravaData } from './data';
+import type { ApiStravaData } from './data';
 
-const createStravaInstaller = (): Installer => {
+const createApiStravaInstaller = (): Installer => {
   const install: Installer = function install(
-    this: ServerModule<Services, Handlers, StravaData>
+    this: ServerModule<Services, Handlers, ApiStravaData>
   ): void {
     strava.config(this.data as AuthenticationConfig);
   };
@@ -14,4 +14,4 @@ const createStravaInstaller = (): Installer => {
   return install;
 };
 
-export default createStravaInstaller;
+export default createApiStravaInstaller;

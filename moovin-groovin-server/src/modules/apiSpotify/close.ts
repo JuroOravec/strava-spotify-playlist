@@ -4,11 +4,11 @@ import type {
   Services,
   Closer,
 } from '../../lib/ServerModule';
-import type { SpotifyData } from './data';
+import type { ApiSpotifyData } from './data';
 
-const createSpotifyCloser = (): Closer => {
+const createApiSpotifyCloser = (): Closer => {
   const close: Closer = function close(
-    this: ServerModule<Services, Handlers, SpotifyData>
+    this: ServerModule<Services, Handlers, ApiSpotifyData>
   ): void {
     this.data.spotify?.resetCredentials();
   };
@@ -16,4 +16,4 @@ const createSpotifyCloser = (): Closer => {
   return close;
 };
 
-export default createSpotifyCloser;
+export default createApiSpotifyCloser;

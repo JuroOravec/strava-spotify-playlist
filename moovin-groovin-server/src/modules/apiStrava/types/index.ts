@@ -10,4 +10,7 @@ export type StravaClient = Omit<
   'pushSubscriptions' | 'oauth' | 'client' | 'config'
 >;
 
-export type StravaDeps = Pick<AppServerModules, ServerModuleName.OAUTH_STRAVA>;
+export type ApiStravaDeps = Pick<
+  AppServerModules,
+  ServerModuleName.OAUTH_STRAVA
+>;

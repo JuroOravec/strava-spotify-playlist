@@ -24,6 +24,7 @@
 //                       - https://aws.amazon.com/premiumsupport/knowledge-center/redirect-domain-route-53/
 //                       - https://stackoverflow.com/questions/62540038/how-to-forward-my-domain-registered-with-aws-route53-to-google-my-business
 //                       - https://stackoverflow.com/questions/45333803/redirect-to-domain-from-subdomain-aws-route53
+// TODO: nice to have - Rename SafeInvoke to capture or captureError
 
 import { Pool } from 'pg';
 import { v5 as uuidV5 } from 'uuid';
@@ -52,16 +53,18 @@ import createOAuthModule from './modules/oauth';
 import createOAuthGoogleModule from './modules/oauthGoogle';
 import createOAuthFacebookModule from './modules/oauthFacebook';
 import createOAuthSpotifyModule from './modules/oauthSpotify';
-import createStravaModule from './modules/strava';
+import createApiStravaModule from './modules/apiStrava';
 import createOAuthStravaModule from './modules/oauthStrava';
-import createSpotifyModule from './modules/spotify';
-import createSpotifyHistoryModule from './modules/spotifyHistory';
+import createApiSpotifyModule from './modules/apiSpotify';
+import createTrackHistoryModule from './modules/trackHistory';
 import createStravaWebhookModule from './modules/stravaWebhook';
-import createStravaSpotifyModule from './modules/stravaSpotify';
+import createPlaylistSpotifyModule from './modules/playlistSpotify';
+import createPlaylistModule from './modules/playlist';
 import createErrorHandlerModule from './modules/errorHandler';
 import createHostModule from './modules/host';
 import type { OAuthInputFn } from './modules/oauth/types';
 import type AppServerModules from './types/AppServerModules';
+import { ActivityProvider, AuthProvider, PlaylistProvider } from './types';
 
 const port = parseInt(process.env.PORT || '3000');
 const appName = 'MoovinGroovin';
@@ -110,6 +113,8 @@ const main = async () => {
     apolloConfig: (ctx: ModuleContext<AppServerModules>) => [
       ctx.modules.storeUser,
       ctx.modules.storeConfig,
+      ctx.modules.storePlaylist,
+      ctx.modules.oauth,
       { debug: !isProduction() },
     ],
     schemaConfig: {
@@ -190,27 +195,27 @@ const main = async () => {
     initializePassport: false,
     providers: (({ modules }) => [
       {
-        providerId: 'spotify',
+        providerId: PlaylistProvider.SPOTIFY,
         oauth: modules.oauthSpotify.oauth,
         loginHandler: modules.oauthSpotify.handlers.authLogin,
         callbackHandler: modules.oauthSpotify.handlers.authCallback,
       },
       {
-        providerId: 'strava',
+        providerId: ActivityProvider.STRAVA,
         oauth: modules.oauthStrava.oauth,
         loginHandler: modules.oauthStrava.handlers.authLogin,
         callbackHandler: modules.oauthStrava.handlers.authCallback,
       },
       {
-        providerId: 'facebook',
-        isLoginProvider: true,
+        providerId: AuthProvider.FACEBOOK,
+        isAuthProvider: true,
         oauth: modules.oauthFacebook.oauth,
         loginHandler: modules.oauthFacebook.handlers.authLogin,
         callbackHandler: modules.oauthFacebook.handlers.authCallback,
       },
       {
-        providerId: 'google',
-        isLoginProvider: true,
+        providerId: AuthProvider.GOOGLE,
+        isAuthProvider: true,
         oauth: modules.oauthGoogle.oauth,
         loginHandler: modules.oauthGoogle.handlers.authLogin,
         callbackHandler: modules.oauthGoogle.handlers.authCallback,
@@ -286,13 +291,22 @@ const main = async () => {
   });
 
   // ///////////////////////////
-  // BUSINESS LOGIC
+  // EXTERNAL APIS
   // ///////////////////////////
 
-  const stravaModule = createStravaModule({
+  const apiSpotifyModule = createApiSpotifyModule({
+    clientId: process.env.OAUTH_SPOTIFY_CLIENT_ID || '',
+    clientSecret: process.env.OAUTH_SPOTIFY_CLIENT_SECRET || '',
+  });
+
+  const apiStravaModule = createApiStravaModule({
     client_id: process.env.OAUTH_STRAVA_CLIENT_ID || '',
     client_secret: process.env.OAUTH_STRAVA_CLIENT_SECRET || '',
   });
+
+  // ///////////////////////////
+  // BUSINESS LOGIC
+  // ///////////////////////////
 
   const stravaWebhookModule = createStravaWebhookModule({
     webhookCallbackUrl: `/api/v1/strava/webhook/callback`,
@@ -309,16 +323,13 @@ const main = async () => {
       : undefined,
   });
 
-  const spotifyModule = createSpotifyModule({
-    clientId: process.env.OAUTH_SPOTIFY_CLIENT_ID || '',
-    clientSecret: process.env.OAUTH_SPOTIFY_CLIENT_SECRET || '',
-  });
+  const playlistSpotifyModule = createPlaylistSpotifyModule();
 
-  const spotifyHistory = createSpotifyHistoryModule({
+  const trackHistory = createTrackHistoryModule({
     tickPeriod: 20 * 60 * 1000,
   });
 
-  const stravaSpotifyModule = createStravaSpotifyModule({
+  const playlistModule = createPlaylistModule({
     appNamePublic: appName,
   });
 
@@ -347,12 +358,13 @@ const main = async () => {
       oauthStravaModule,
       sessionModule,
       openApiModule,
-      spotifyModule,
-      // Manage spotify history only on main process
-      ...(isMainProcess() ? [spotifyHistory] : []),
-      stravaModule,
+      // Manage track history only on main process
+      ...(isMainProcess() ? [trackHistory] : []),
+      apiSpotifyModule,
+      apiStravaModule,
       stravaWebhookModule,
-      stravaSpotifyModule,
+      playlistSpotifyModule,
+      playlistModule,
       graphqlModule,
       routerModule,
       errorHandlerModule,

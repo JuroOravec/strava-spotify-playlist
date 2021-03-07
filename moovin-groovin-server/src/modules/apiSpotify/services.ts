@@ -3,16 +3,15 @@ import Queue from 'better-queue';
 import chunk from 'lodash/chunk';
 
 import { asyncSafeInvoke } from '@moovin-groovin/shared';
-import logger from '../../lib/logger';
 import ServerModule, {
   assertContext,
   Handlers,
   Services,
 } from '../../lib/ServerModule';
-import type { SpotifyData } from './data';
+import type { ApiSpotifyData } from './data';
 import type {
   RecentlyPlayedTracksOptions,
-  SpotifyDeps,
+  ApiSpotifyDeps,
   SpotifyTrack,
 } from './types';
 import assertSpotify from './utils/assertSpotify';
@@ -24,7 +23,7 @@ interface WithAccessTokenContext {
 
 interface BatchedAddTracksToPlaylistOptions {
   spotifyUserId: string;
-  spotifyPlaylistId: string;
+  playlistId: string;
   trackUris: string[];
 }
 
@@ -33,13 +32,13 @@ interface BatchedGetTracksOptions {
   trackIds: string[];
 }
 
-interface SpotifyServices extends Services {
+interface ApiSpotifyServices extends Services {
   withAccessToken: <T>(
-    providerUserId: string,
+    spotifyUserId: string,
     fn: (context: WithAccessTokenContext) => T | Promise<T>
   ) => Promise<T>;
   getRecentlyPlayedTracks: (
-    providerUserId: string,
+    spotifyUserId: string,
     options?: RecentlyPlayedTracksOptions
   ) => Promise<SpotifyTrack[]>;
   batchedAddTracksToPlaylist: (
@@ -51,10 +50,10 @@ interface SpotifyServices extends Services {
 }
 
 type ThisModule = ServerModule<
-  SpotifyServices,
+  ApiSpotifyServices,
   Handlers,
-  SpotifyData,
-  SpotifyDeps
+  ApiSpotifyData,
+  ApiSpotifyDeps
 >;
 
 interface SpotifyClientQueueTask {
@@ -78,10 +77,10 @@ const spotifyClientQueue = new Queue<SpotifyClientQueueTask, unknown>(
   }
 );
 
-const createSpotifyServices = (): SpotifyServices => {
+const createApiSpotifyServices = (): ApiSpotifyServices => {
   async function withAccessToken<T>(
     this: ThisModule,
-    providerUserId: string,
+    spotifyUserId: string,
     fn: (context: WithAccessTokenContext) => T | Promise<T>
   ): Promise<T> {
     assertContext(this.context);
@@ -89,7 +88,7 @@ const createSpotifyServices = (): SpotifyServices => {
     const spotifyClient = this.data.spotify;
 
     const { getAccessToken } = this.context.modules.oauthSpotify.services;
-    const accessToken = await getAccessToken(providerUserId);
+    const accessToken = await getAccessToken(spotifyUserId);
 
     return new Promise<T>((res, rej) => {
       spotifyClientQueue
@@ -108,11 +107,11 @@ const createSpotifyServices = (): SpotifyServices => {
    */
   async function getRecentlyPlayedTracks(
     this: ThisModule,
-    providerUserId: string,
+    spotifyUserId: string,
     options: RecentlyPlayedTracksOptions = {}
   ): Promise<SpotifyTrack[]> {
     return this.services.withAccessToken(
-      providerUserId,
+      spotifyUserId,
       async ({ spotifyClient }) => {
         const { limit = 50 } = options;
 
@@ -128,9 +127,9 @@ const createSpotifyServices = (): SpotifyServices => {
 
   async function batchedAddTracksToPlaylist(
     this: ThisModule,
-    options: BatchedAddTracksToPlaylistOptions
+    input: BatchedAddTracksToPlaylistOptions
   ): Promise<string[]> {
-    const { spotifyPlaylistId, trackUris, spotifyUserId } = options;
+    const { playlistId, trackUris, spotifyUserId } = input;
 
     // Note: addTracksToPlaylist endpoints accepts max of 100 tracks per request.
     const chunkedTrackUris = chunk(trackUris, 100);
@@ -142,7 +141,7 @@ const createSpotifyServices = (): SpotifyServices => {
           async (aggPromise, tracksChunk) => {
             const aggArr = await aggPromise;
             const response = await spotifyClient.addTracksToPlaylist(
-              spotifyPlaylistId,
+              playlistId,
               tracksChunk
             );
             aggArr.push(response.body.snapshot_id);
@@ -190,5 +189,5 @@ const createSpotifyServices = (): SpotifyServices => {
   };
 };
 
-export default createSpotifyServices;
-export type { SpotifyServices };
+export default createApiSpotifyServices;
+export type { ApiSpotifyServices };

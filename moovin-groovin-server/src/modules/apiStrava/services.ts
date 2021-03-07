@@ -1,28 +1,22 @@
 import strava from 'strava-v3';
 
-import {
-  ServerModule,
-  Handlers,
-  Services,
-  assertContext,
-} from '../../lib/ServerModule';
-import logger from '../../lib/logger';
-import type { StravaDeps } from './types';
-import type { StravaData } from './data';
+import { ServerModule, Handlers, assertContext } from '../../lib/ServerModule';
+import type { ApiStravaDeps } from './types';
+import type { ApiStravaData } from './data';
 import type { StravaClient } from './types';
 
-type StravaServices = {
+type ApiStravaServices = {
   getClientForAthlete: (stravaUserId: string) => Promise<StravaClient>;
-} & Services;
+};
 
 type ThisModule = ServerModule<
-  StravaServices,
+  ApiStravaServices,
   Handlers,
-  StravaData,
-  StravaDeps
+  ApiStravaData,
+  ApiStravaDeps
 >;
 
-const createStravaServices = (): StravaServices => {
+const createApiStravaServices = (): ApiStravaServices => {
   function getClient(accessToken: string): StravaClient {
     // @ts-ignore
     return new strava.client(accessToken);
@@ -44,5 +38,5 @@ const createStravaServices = (): StravaServices => {
   };
 };
 
-export default createStravaServices;
-export type { StravaServices };
+export default createApiStravaServices;
+export type { ApiStravaServices };

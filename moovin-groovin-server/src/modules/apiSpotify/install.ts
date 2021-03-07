@@ -6,11 +6,11 @@ import type {
   Handlers,
   Services,
 } from '../../lib/ServerModule';
-import type { SpotifyData } from './data';
+import type { ApiSpotifyData } from './data';
 
-const createSpotifyInstaller = (): Installer => {
+const createApiSpotifyInstaller = (): Installer => {
   const install: Installer = function install(
-    this: ServerModule<Services, Handlers, SpotifyData>
+    this: ServerModule<Services, Handlers, ApiSpotifyData>
   ): void {
     this.data.spotify = new Spotify({
       clientId: this.data.clientId,
@@ -21,4 +21,4 @@ const createSpotifyInstaller = (): Installer => {
   return install;
 };
 
-export default createSpotifyInstaller;
+export default createApiSpotifyInstaller;

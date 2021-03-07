@@ -18,7 +18,8 @@ import getProps from '../utils/props';
 import logger from './logger';
 
 type AnyServerModule = ServerModule<any, any, any, any>;
-type AnyServerModules = Record<string, AnyServerModule>;
+/* eslint-disable-next-line @typescript-eslint/ban-types */
+type AnyServerModules = object;
 
 interface ModuleContext<TModules extends AnyServerModules = AnyServerModules> {
   app: Application;
