@@ -1,11 +1,13 @@
+import { isNil } from 'lodash';
 import intersectionWith from 'lodash/intersectionWith';
 
 import alignResultWithInput from '../../../lib/PGStore/alignResultWithInput';
-import type {
+import {
   PlaylistStore,
   UserActivityPlaylistModel,
   UserActivityPlaylistInput,
   UserActivityPlaylistMeta,
+  UserActivityPlaylistUpdate,
 } from '../types';
 
 class LocalPlaylistStore implements PlaylistStore {
@@ -19,37 +21,90 @@ class LocalPlaylistStore implements PlaylistStore {
     return userPlaylistData.map(
       (userPlaylist): UserActivityPlaylistMeta => {
         const {
-          spotifyPlaylistId,
+          playlistProviderId,
+          playlistId,
           internalUserId,
           tracksAssigned,
         } = userPlaylist;
-        this.store.set(spotifyPlaylistId, {
+        this.store.set(`${playlistProviderId}__${playlistId}`, {
           ...userPlaylist,
           tracksAssigned: tracksAssigned ?? false,
         });
-        return { spotifyPlaylistId, internalUserId };
+        return { playlistProviderId, playlistId, internalUserId };
       }
     );
   }
 
   async updateTracksAssigned(
     data: {
-      spotifyPlaylistId: string;
+      playlistProviderId: string;
+      playlistId: string;
       tracksAssigned: boolean;
     }[]
   ): Promise<(UserActivityPlaylistMeta | null)[]> {
-    return data.map(({ spotifyPlaylistId, tracksAssigned }) => {
-      const playlist = this.store.get(spotifyPlaylistId);
+    return data.map(({ playlistProviderId, playlistId, tracksAssigned }) => {
+      const playlist = this.store.get(`${playlistProviderId}__${playlistId}`);
       if (!playlist) return null;
       playlist.tracksAssigned = tracksAssigned;
-      return { spotifyPlaylistId, internalUserId: playlist.internalUserId };
+
+      return {
+        playlistProviderId,
+        playlistId,
+        internalUserId: playlist.internalUserId,
+      };
+    });
+  }
+
+  async update(
+    data: UserActivityPlaylistUpdate[]
+  ): Promise<(UserActivityPlaylistMeta | null)[]> {
+    return data.map(
+      ({
+        playlistProviderId,
+        playlistId,
+        playlistName,
+        playlistUrl,
+        tracksAssigned,
+        activityName,
+        dateCreated,
+      }) => {
+        const playlist = this.store.get(`${playlistProviderId}__${playlistId}`);
+        if (!playlist) return null;
+
+        if (!isNil(playlistName)) playlist.playlistName = playlistName;
+        if (!isNil(playlistUrl)) playlist.playlistUrl = playlistUrl;
+        if (!isNil(activityName)) playlist.activityName = activityName;
+        if (!isNil(dateCreated)) playlist.dateCreated = dateCreated;
+        if (!isNil(tracksAssigned)) playlist.tracksAssigned = tracksAssigned;
+
+        return {
+          playlistProviderId,
+          playlistId,
+          internalUserId: playlist.internalUserId,
+        };
+      }
+    );
+  }
+
+  async getByUsers(
+    input: {
+      internalUserId: string;
+    }[]
+  ): Promise<(UserActivityPlaylistModel[] | null)[]> {
+    return input.map(({ internalUserId }) => {
+      const playlists = Array.from(this.store.values()).filter(
+        (storeVal) => storeVal.internalUserId === internalUserId
+      );
+
+      return playlists;
     });
   }
 
   async getByUserActivities(
     data: {
       internalUserId: string;
-      stravaActivityId: string;
+      activityProviderId: string;
+      activityId: string;
     }[]
   ): Promise<(UserActivityPlaylistModel | null)[]> {
     const playlists = intersectionWith(
@@ -57,12 +112,16 @@ class LocalPlaylistStore implements PlaylistStore {
       data,
       (storeVal, inputVal) =>
         storeVal.internalUserId === inputVal.internalUserId &&
-        storeVal.stravaActivityId === inputVal.stravaActivityId
+        storeVal.activityProviderId === inputVal.activityProviderId &&
+        storeVal.activityId === inputVal.activityId
     );
 
     const serializeKey = (
-      p: Pick<UserActivityPlaylistModel, 'internalUserId' | 'stravaActivityId'>
-    ) => `${p.internalUserId}__${p.stravaActivityId}`;
+      p: Pick<
+        UserActivityPlaylistModel,
+        'internalUserId' | 'activityId' | 'activityProviderId'
+      >
+    ) => `${p.internalUserId}__${p.activityProviderId}__${p.activityId}`;
 
     return alignResultWithInput({
       input: { value: data, alignBy: serializeKey },
@@ -74,7 +133,8 @@ class LocalPlaylistStore implements PlaylistStore {
   async deleteByUserActivities(
     data: {
       internalUserId: string;
-      stravaActivityId: string;
+      activityProviderId: string;
+      activityId: string;
     }[]
   ): Promise<(UserActivityPlaylistMeta | null)[]> {
     const playlists = intersectionWith(
@@ -82,26 +142,37 @@ class LocalPlaylistStore implements PlaylistStore {
       data,
       (storeVal, inputVal) =>
         storeVal.internalUserId === inputVal.internalUserId &&
-        storeVal.stravaActivityId === inputVal.stravaActivityId
+        storeVal.activityProviderId === inputVal.activityProviderId &&
+        storeVal.activityId === inputVal.activityId
     ).map(
       ({
-        spotifyPlaylistId,
+        playlistProviderId,
+        playlistId,
         internalUserId,
-        stravaActivityId,
+        activityProviderId,
+        activityId,
       }): UserActivityPlaylistMeta &
-        Pick<UserActivityPlaylistModel, 'stravaActivityId'> => {
-        this.store.delete(spotifyPlaylistId);
+        Pick<
+          UserActivityPlaylistModel,
+          'activityProviderId' | 'activityId'
+        > => {
+        this.store.delete(`${playlistProviderId}__${playlistId}`);
         return {
           internalUserId,
-          stravaActivityId,
-          spotifyPlaylistId,
+          playlistProviderId,
+          playlistId,
+          activityProviderId,
+          activityId,
         };
       }
     );
 
     const serializeKey = (
-      p: Pick<UserActivityPlaylistModel, 'internalUserId' | 'stravaActivityId'>
-    ) => `${p.internalUserId}__${p.stravaActivityId}`;
+      p: Pick<
+        UserActivityPlaylistModel,
+        'internalUserId' | 'activityProviderId' | 'activityId'
+      >
+    ) => `${p.internalUserId}__${p.activityProviderId}__${p.activityId}`;
 
     return alignResultWithInput({
       input: { value: data, alignBy: serializeKey },
@@ -111,7 +182,8 @@ class LocalPlaylistStore implements PlaylistStore {
       val
         ? {
             internalUserId: val.internalUserId,
-            spotifyPlaylistId: val.spotifyPlaylistId,
+            playlistProviderId: val.playlistProviderId,
+            playlistId: val.playlistId,
           }
         : val
     );

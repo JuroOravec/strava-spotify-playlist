@@ -1,5 +1,4 @@
-import logger from '../../lib/logger';
-import type { ServerModule, Services } from '../../lib/ServerModule';
+import type { Handlers, ServerModule, Services } from '../../lib/ServerModule';
 import type {
   UserActivityPlaylistModel,
   UserActivityPlaylistInput,
@@ -15,39 +14,57 @@ interface StorePlaylistServices extends Services {
   insertUserPlaylists: (
     userActivityPlaylists: UserActivityPlaylistInput[]
   ) => Promise<(UserActivityPlaylistMeta | null)[]>;
-  getUserPlaylistByUserAndActivity: (
-    internalUserId: string,
-    stravaActivityId: string
-  ) => Promise<UserActivityPlaylistModel | null>;
+  getUserPlaylistsByUser: (input: {
+    internalUserId: string;
+  }) => Promise<UserActivityPlaylistModel[] | null>;
+  getUserPlaylistsByUsers: (
+    data: {
+      internalUserId: string;
+    }[]
+  ) => Promise<(UserActivityPlaylistModel[] | null)[]>;
+  getUserPlaylistByUserAndActivity: (input: {
+    internalUserId: string;
+    activityProviderId: string;
+    activityId: string;
+  }) => Promise<UserActivityPlaylistModel | null>;
   getUserPlaylistsByUsersAndActivities: (
     data: {
       internalUserId: string;
-      stravaActivityId: string;
+      activityProviderId: string;
+      activityId: string;
     }[]
   ) => Promise<(UserActivityPlaylistModel | null)[]>;
-  deleteUserPlaylistByUserActivity: (data: {
+  deleteUserPlaylistsByUserActivity: (data: {
     internalUserId: string;
-    stravaActivityId: string;
+    activityProviderId: string;
+    activityId: string;
   }) => Promise<UserActivityPlaylistMeta | null>;
   deleteUserPlaylistsByUserActivities: (
     data: {
       internalUserId: string;
-      stravaActivityId: string;
+      activityProviderId: string;
+      activityId: string;
     }[]
   ) => Promise<(UserActivityPlaylistMeta | null)[]>;
-  updateUserPlaylistTracksAssigned: (
-    spotifyPlaylistId: string,
-    tracksAssigned: boolean
-  ) => Promise<UserActivityPlaylistMeta | null>;
+  updateUserPlaylistTracksAssigned: (input: {
+    playlistProviderId: string;
+    playlistId: string;
+    tracksAssigned: boolean;
+  }) => Promise<UserActivityPlaylistMeta | null>;
   updateUserPlaylistsTracksAssigned: (
     data: {
-      spotifyPlaylistId: string;
+      playlistProviderId: string;
+      playlistId: string;
       tracksAssigned: boolean;
     }[]
   ) => Promise<(UserActivityPlaylistMeta | null)[]>;
 }
 
-type ThisModule = ServerModule<StorePlaylistServices, any, StorePlaylistData>;
+type ThisModule = ServerModule<
+  StorePlaylistServices,
+  Handlers,
+  StorePlaylistData
+>;
 
 const createStorePlaylistServices = (): StorePlaylistServices => {
   async function insertUserPlaylist(
@@ -69,16 +86,39 @@ const createStorePlaylistServices = (): StorePlaylistServices => {
     return await this.data.playlistStore.insert(userActivityPlaylists);
   }
 
+  async function getUserPlaylistsByUser(
+    this: ThisModule,
+    input: {
+      internalUserId: string;
+    }
+  ): Promise<UserActivityPlaylistModel[] | null> {
+    const [playlist] = await this.services.getUserPlaylistsByUsers([input]);
+    return playlist;
+  }
+
+  async function getUserPlaylistsByUsers(
+    this: ThisModule,
+    data: {
+      internalUserId: string;
+    }[]
+  ): Promise<(UserActivityPlaylistModel[] | null)[]> {
+    if (!data.length) return [];
+    assertPlaylistStore(this.data.playlistStore);
+    const playlists = await this.data.playlistStore.getByUsers(data);
+    return playlists;
+  }
+
   async function getUserPlaylistByUserAndActivity(
     this: ThisModule,
-    internalUserId: string,
-    stravaActivityId: string
+    input: {
+      internalUserId: string;
+      activityProviderId: string;
+      activityId: string;
+    }
   ): Promise<UserActivityPlaylistModel | null> {
     const [
       playlist,
-    ] = await this.services.getUserPlaylistsByUsersAndActivities([
-      { internalUserId, stravaActivityId },
-    ]);
+    ] = await this.services.getUserPlaylistsByUsersAndActivities([input]);
     return playlist;
   }
 
@@ -86,7 +126,8 @@ const createStorePlaylistServices = (): StorePlaylistServices => {
     this: ThisModule,
     data: {
       internalUserId: string;
-      stravaActivityId: string;
+      activityProviderId: string;
+      activityId: string;
     }[]
   ): Promise<(UserActivityPlaylistModel | null)[]> {
     if (!data.length) return [];
@@ -95,11 +136,12 @@ const createStorePlaylistServices = (): StorePlaylistServices => {
     return playlists;
   }
 
-  async function deleteUserPlaylistByUserActivity(
+  async function deleteUserPlaylistsByUserActivity(
     this: ThisModule,
     data: {
       internalUserId: string;
-      stravaActivityId: string;
+      activityProviderId: string;
+      activityId: string;
     }
   ): Promise<UserActivityPlaylistMeta | null> {
     const [
@@ -112,7 +154,8 @@ const createStorePlaylistServices = (): StorePlaylistServices => {
     this: ThisModule,
     data: {
       internalUserId: string;
-      stravaActivityId: string;
+      activityProviderId: string;
+      activityId: string;
     }[]
   ): Promise<(UserActivityPlaylistMeta | null)[]> {
     if (!data.length) return [];
@@ -122,14 +165,14 @@ const createStorePlaylistServices = (): StorePlaylistServices => {
 
   async function updateUserPlaylistTracksAssigned(
     this: ThisModule,
-    spotifyPlaylistId: string,
-    tracksAssigned: boolean
+    input: {
+      playlistProviderId: string;
+      playlistId: string;
+      tracksAssigned: boolean;
+    }
   ): Promise<UserActivityPlaylistMeta | null> {
     const [playlist] = await this.services.updateUserPlaylistsTracksAssigned([
-      {
-        spotifyPlaylistId,
-        tracksAssigned,
-      },
+      input,
     ]);
     return playlist;
   }
@@ -137,7 +180,8 @@ const createStorePlaylistServices = (): StorePlaylistServices => {
   async function updateUserPlaylistsTracksAssigned(
     this: ThisModule,
     data: {
-      spotifyPlaylistId: string;
+      playlistProviderId: string;
+      playlistId: string;
       tracksAssigned: boolean;
     }[]
   ): Promise<(UserActivityPlaylistMeta | null)[]> {
@@ -149,9 +193,11 @@ const createStorePlaylistServices = (): StorePlaylistServices => {
   return {
     insertUserPlaylist,
     insertUserPlaylists,
+    getUserPlaylistsByUser,
+    getUserPlaylistsByUsers,
     getUserPlaylistByUserAndActivity,
     getUserPlaylistsByUsersAndActivities,
-    deleteUserPlaylistByUserActivity,
+    deleteUserPlaylistsByUserActivity,
     deleteUserPlaylistsByUserActivities,
     updateUserPlaylistTracksAssigned,
     updateUserPlaylistsTracksAssigned,

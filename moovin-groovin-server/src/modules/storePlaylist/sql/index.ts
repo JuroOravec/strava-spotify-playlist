@@ -11,33 +11,44 @@ import type {
 
 interface UserActivityPlaylistResponse {
   internal_user_id: UserModel['internalUserId'];
-  strava_activity_id: UserActivityPlaylistModel['stravaActivityId'];
-  spotify_playlist_id: UserActivityPlaylistModel['spotifyPlaylistId'];
-  spotify_playlist_uri: UserActivityPlaylistModel['spotifyPlaylistUri'];
+  activity_provider_id: UserActivityPlaylistModel['activityProviderId'];
+  activity_id: UserActivityPlaylistModel['activityId'];
+  activity_name: UserActivityPlaylistModel['activityName'];
+  playlist_provider_id: UserActivityPlaylistModel['playlistProviderId'];
+  playlist_id: UserActivityPlaylistModel['playlistId'];
+  playlist_url: UserActivityPlaylistModel['playlistUrl'];
+  playlist_name: UserActivityPlaylistModel['playlistName'];
+  date_created: UserActivityPlaylistModel['dateCreated'];
   tracks_assigned: UserActivityPlaylistModel['tracksAssigned'];
 }
 
 interface UserActivityPlaylistMetaResponse {
   internal_user_id: UserActivityPlaylistMeta['internalUserId'];
-  spotify_playlist_id: UserActivityPlaylistMeta['spotifyPlaylistId'];
+  playlist_provider_id: UserActivityPlaylistMeta['playlistProviderId'];
+  playlist_id: UserActivityPlaylistMeta['playlistId'];
 }
 
 interface PlaylistStoreSQLQueries extends PGQueries {
-  createUserActivityPlaylistTable: [[], QueryResultRow];
   deleteUserActivityPlaylistsByUserActivities: [
     OptionalReadonly<
       [
         UserActivityPlaylistResponse['internal_user_id'],
-        UserActivityPlaylistResponse['strava_activity_id']
+        UserActivityPlaylistResponse['activity_provider_id'],
+        UserActivityPlaylistResponse['activity_id']
       ]
     >[],
     UserActivityPlaylistMetaResponse
+  ];
+  getUserActivityPlaylistsByUsers: [
+    OptionalReadonly<[UserActivityPlaylistResponse['internal_user_id']]>[],
+    UserActivityPlaylistResponse | QueryResultRow
   ];
   getUserActivityPlaylistsByUserActivities: [
     OptionalReadonly<
       [
         UserActivityPlaylistResponse['internal_user_id'],
-        UserActivityPlaylistResponse['strava_activity_id']
+        UserActivityPlaylistResponse['activity_provider_id'],
+        UserActivityPlaylistResponse['activity_id']
       ]
     >[],
     UserActivityPlaylistResponse | QueryResultRow
@@ -46,9 +57,14 @@ interface PlaylistStoreSQLQueries extends PGQueries {
     Readonly<
       [
         UserActivityPlaylistResponse['internal_user_id'],
-        UserActivityPlaylistResponse['strava_activity_id'],
-        UserActivityPlaylistResponse['spotify_playlist_id'],
-        UserActivityPlaylistResponse['spotify_playlist_uri'],
+        UserActivityPlaylistResponse['activity_provider_id'],
+        UserActivityPlaylistResponse['activity_id'],
+        UserActivityPlaylistResponse['activity_name'] | undefined,
+        UserActivityPlaylistResponse['playlist_provider_id'],
+        UserActivityPlaylistResponse['playlist_id'],
+        UserActivityPlaylistResponse['playlist_name'] | undefined,
+        UserActivityPlaylistResponse['playlist_url'] | undefined,
+        UserActivityPlaylistResponse['date_created'] | undefined,
         UserActivityPlaylistResponse['tracks_assigned'] | undefined
       ]
     >[],
@@ -57,8 +73,13 @@ interface PlaylistStoreSQLQueries extends PGQueries {
   updateUserActivityPlaylistsTracksAssigned: [
     OptionalReadonly<
       [
-        UserActivityPlaylistResponse['spotify_playlist_id'],
-        UserActivityPlaylistResponse['tracks_assigned']
+        UserActivityPlaylistResponse['playlist_provider_id'],
+        UserActivityPlaylistResponse['playlist_id'],
+        UserActivityPlaylistResponse['activity_name'] | undefined,
+        UserActivityPlaylistResponse['playlist_name'] | undefined,
+        UserActivityPlaylistResponse['playlist_url'] | undefined,
+        UserActivityPlaylistResponse['date_created'] | undefined,
+        UserActivityPlaylistResponse['tracks_assigned'] | undefined
       ]
     >[],
     UserActivityPlaylistMetaResponse

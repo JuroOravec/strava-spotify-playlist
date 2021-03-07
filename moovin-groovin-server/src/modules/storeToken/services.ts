@@ -1,6 +1,5 @@
 import reduce from 'lodash/reduce';
 
-import logger from '../../lib/logger';
 import {
   assertContext,
   ServerModule,
@@ -62,7 +61,7 @@ interface StoreTokenServices extends Services {
   upsertTokens: (tokens: UserTokenModel[]) => Promise<(UserTokenMeta | null)[]>;
   resolveTokens: <T extends string>(
     input: ResolveTokensOptions<T>
-  ) => Promise<Record<T, UserTokenModel>>;
+  ) => Promise<Record<T, UserTokenModel | null>>;
 }
 
 type ThisModule = ServerModule<
@@ -229,14 +228,14 @@ const createTokenStoreServices = (): StoreTokenServices => {
   async function resolveTokens<T extends string>(
     this: ThisModule,
     options: ResolveTokensOptions<T>
-  ): Promise<Record<T, UserTokenModel>> {
+  ): Promise<Record<T, UserTokenModel | null>> {
     const { startProviderId, startProviderUserId, targetProviderIds } = options;
 
     if (!startProviderId) {
       throw Error(`Cannot resolve user. ${startProviderId}UserId is missing.`);
     }
 
-    // Find user's spotify access token using strava access token
+    // Find user's playlist access tokens using strava access token
     assertContext(this.context);
     const targetTokens = await this.services.getTokensByTokens(
       targetProviderIds.map((targetProviderId) => ({
@@ -249,18 +248,10 @@ const createTokenStoreServices = (): StoreTokenServices => {
     const targetTokensObject = reduce(
       targetTokens,
       (agg, token, i) => {
-        const { providerUserId } = token || {};
-
-        if (!token || !providerUserId) {
-          throw Error(
-            `Failed to find user's ${targetProviderIds[i]} access token.`
-          );
-        }
-
         agg[targetProviderIds[i]] = token;
         return agg;
       },
-      {} as Record<T, UserTokenModel>
+      {} as Record<T, UserTokenModel | null>
     );
 
     return targetTokensObject;

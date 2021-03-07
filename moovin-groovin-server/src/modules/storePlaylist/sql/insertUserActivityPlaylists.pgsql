@@ -1,13 +1,19 @@
 INSERT INTO 
   user_activity_playlist (
     internal_user_id,
-    strava_activity_id,
-    spotify_playlist_id,
-    spotify_playlist_uri,
+    activity_provider_id,
+    activity_id,
+    activity_name,
+    playlist_provider_id,
+    playlist_id,
+    playlist_name,
+    playlist_url,
+    date_created,
     tracks_assigned
   )
 VALUES
   %L
 RETURNING
   internal_user_id,
-  spotify_playlist_id;
+  playlist_provider_id,
+  playlist_id;
