@@ -1,7 +1,7 @@
 <template>
   <Page>
     <template slot="menu-left">
-      <ProfileMenu />
+      <DashboardMenu />
     </template>
   </Page>
 </template>
@@ -10,15 +10,15 @@
 import { defineComponent } from '@vue/composition-api';
 
 import Page from '@/modules/base/components/Page.vue';
-import ProfileMenu from './ProfileMenu.vue';
+import DashboardMenu from './DashboardMenu.vue';
 
-const ProfilePage = defineComponent({
-  name: 'ProfilePage',
+const DashboardPage = defineComponent({
+  name: 'DashboardPage',
   components: {
     Page,
-    ProfileMenu,
+    DashboardMenu,
   },
 });
 
-export default ProfilePage;
+export default DashboardPage;
 </script>
