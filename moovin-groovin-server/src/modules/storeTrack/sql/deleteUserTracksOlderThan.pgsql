@@ -5,5 +5,6 @@ WHERE
   start_time < %L
 RETURNING
   internal_user_id,
-  spotify_track_uri,
+  playlist_provider_id,
+  track_id,
   start_time;

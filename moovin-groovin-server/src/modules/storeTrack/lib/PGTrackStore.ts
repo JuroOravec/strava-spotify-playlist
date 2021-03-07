@@ -3,37 +3,27 @@ import uniqWith from 'lodash/uniqWith';
 import isNil from 'lodash/isNil';
 import groupBy from 'lodash/groupBy';
 
-import logger from '../../../lib/logger';
 import PGStore from '../../../lib/PGStore';
 import alignResultWithInput from '../../../lib/PGStore/alignResultWithInput';
 import unixTimestamp from '../../../utils/unixTimestamp';
 import type {
   UserTrackModel,
-  UserTrackMeta,
   TrackStore,
   UserTrackInput,
   UserTrackRangesInput,
 } from '../types';
-import {
-  getQueries,
-  TrackStoreSQLQueries,
-  UserTrackMetaResponse,
-  UserTrackResponse,
-} from '../sql';
-
-const transformUserTrackMetaResponse = (
-  userTrack: UserTrackMetaResponse
-): UserTrackMeta => ({
-  internalUserId: userTrack.internal_user_id,
-  spotifyTrackUri: userTrack.spotify_track_uri,
-  startTime: Number.parseInt(userTrack.start_time as any),
-});
+import { getQueries, TrackStoreSQLQueries, UserTrackResponse } from '../sql';
 
 const transformUserTrackResponse = (
   userTrack: UserTrackResponse
 ): UserTrackModel => ({
-  ...transformUserTrackMetaResponse(userTrack as UserTrackMetaResponse),
-  spotifyTrackId: userTrack.spotify_track_id,
+  internalUserId: userTrack.internal_user_id,
+  playlistProviderId: userTrack.playlist_provider_id,
+  trackId: userTrack.track_id,
+  startTime:
+    typeof userTrack.start_time === 'number'
+      ? userTrack.start_time
+      : Number.parseInt(userTrack.start_time),
 });
 
 const dedupeUserTrackInput = (
@@ -44,7 +34,8 @@ const dedupeUserTrackInput = (
     [...userTrackData].reverse(),
     (userTrackA, userTrackB) =>
       userTrackA.internalUserId === userTrackB.internalUserId &&
-      userTrackA.spotifyTrackId === userTrackB.spotifyTrackId &&
+      userTrackA.playlistProviderId === userTrackB.playlistProviderId &&
+      userTrackA.trackId === userTrackB.trackId &&
       userTrackA.startTime === userTrackB.startTime
   );
   return dedupedReversed.reverse();
@@ -54,7 +45,8 @@ const isUserTrackResponse = (
   token: UserTrackResponse | QueryResultRow
 ): token is UserTrackResponse =>
   !isNil(token?.internal_user_id) &&
-  !isNil(token?.spotify_track_id) &&
+  !isNil(token?.playlist_provider_id) &&
+  !isNil(token?.track_id) &&
   !isNil(token?.start_time);
 
 class PGTTrackStore
@@ -62,7 +54,6 @@ class PGTTrackStore
   implements TrackStore {
   async doInstall(): Promise<void> {
     this.queries = await getQueries();
-    await this.query('createUserTrackTable');
   }
 
   async getByRanges(
@@ -91,13 +82,13 @@ class PGTTrackStore
 
   async upsert(
     userTrackData: UserTrackModel[]
-  ): Promise<(UserTrackMeta | null)[]> {
+  ): Promise<(UserTrackModel | null)[]> {
     const values = dedupeUserTrackInput(userTrackData).map(
       (userTrack) =>
         [
           userTrack.internalUserId,
-          userTrack.spotifyTrackId,
-          userTrack.spotifyTrackUri,
+          userTrack.playlistProviderId,
+          userTrack.trackId,
           userTrack.startTime,
         ] as const
     );
@@ -105,11 +96,11 @@ class PGTTrackStore
     const { rows: ids } = await this.query(
       'upsertUserTracks',
       values,
-      transformUserTrackMetaResponse
+      transformUserTrackResponse
     );
 
-    const serializeKey = (d: UserTrackMeta) =>
-      `${d.internalUserId}__${d.spotifyTrackUri}__${d.startTime}`;
+    const serializeKey = (d: UserTrackModel) =>
+      `${d.internalUserId}__${d.playlistProviderId}__${d.trackId}__${d.startTime}`;
 
     return alignResultWithInput({
       input: { value: userTrackData, alignBy: serializeKey },
@@ -118,11 +109,11 @@ class PGTTrackStore
     });
   }
 
-  async deleteOlderThan(timestamp: number): Promise<UserTrackMeta[] | null> {
+  async deleteOlderThan(timestamp: number): Promise<UserTrackModel[] | null> {
     const { rows: userTracks } = await this.query(
       'deleteUserTracksOlderThan',
       [timestamp],
-      transformUserTrackMetaResponse
+      transformUserTrackResponse
     );
 
     return userTracks.length ? userTracks : null;

@@ -1,7 +1,7 @@
 SELECT
   input.internal_user_id,
-  user_track.spotify_track_id,
-  user_track.spotify_track_uri,
+  user_track.playlist_provider_id,
+  user_track.track_id,
   user_track.start_time
 FROM  
   (values

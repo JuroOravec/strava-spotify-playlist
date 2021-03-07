@@ -1,17 +1,12 @@
-import logger from '../../lib/logger';
-import type { ServerModule, Services } from '../../lib/ServerModule';
-import type {
-  UserTrackModel,
-  UserTrackMeta,
-  UserTrackRangesInput,
-} from './types';
+import type { Handlers, ServerModule, Services } from '../../lib/ServerModule';
+import type { UserTrackModel, UserTrackRangesInput } from './types';
 import type { StoreTrackData } from './data';
 import assertTrackStore from './utils/assertTrackStore';
 
 interface StoreTrackServices extends Services {
   upsertUserTracks: (
     userTracks: UserTrackModel[]
-  ) => Promise<(UserTrackMeta | null)[]>;
+  ) => Promise<(UserTrackModel | null)[]>;
   getUserTracksByRange: (
     input: UserTrackRangesInput
   ) => Promise<UserTrackModel[] | null>;
@@ -20,16 +15,16 @@ interface StoreTrackServices extends Services {
   ) => Promise<(UserTrackModel[] | null)[]>;
   deleteUserTracksOlderThan: (
     timestamp: number
-  ) => Promise<UserTrackMeta[] | null>;
+  ) => Promise<UserTrackModel[] | null>;
 }
 
-type ThisModule = ServerModule<StoreTrackServices, any, StoreTrackData>;
+type ThisModule = ServerModule<StoreTrackServices, Handlers, StoreTrackData>;
 
 const createStoreTrackServices = (): StoreTrackServices => {
   async function upsertUserTracks(
     this: ThisModule,
     userTracks: UserTrackModel[]
-  ): Promise<(UserTrackMeta | null)[]> {
+  ): Promise<(UserTrackModel | null)[]> {
     if (!userTracks.length) return [];
     assertTrackStore(this.data.trackStore);
     return this.data.trackStore.upsert(userTracks);
@@ -55,7 +50,7 @@ const createStoreTrackServices = (): StoreTrackServices => {
   async function deleteUserTracksOlderThan(
     this: ThisModule,
     timestamp: number
-  ): Promise<UserTrackMeta[] | null> {
+  ): Promise<UserTrackModel[] | null> {
     assertTrackStore(this.data.trackStore);
     return this.data.trackStore.deleteOlderThan(timestamp);
   }

@@ -2,18 +2,14 @@
 export interface UserTrackModel {
   /** User Id */
   internalUserId: string;
-  /** Spotify Track Id */
-  spotifyTrackId: string;
-  /** Spotify Track Uri */
-  spotifyTrackUri: string;
+  /** ID of service that provides playlist / tracks */
+  playlistProviderId: string;
+  /** Track Id */
+  trackId: string;
   /** Timestamp (ms) when the track started */
   startTime: number;
 }
 
-export type UserTrackMeta = Pick<
-  UserTrackModel,
-  'spotifyTrackUri' | 'internalUserId' | 'startTime'
->;
 export type UserTrackInput = UserTrackModel;
 
 export interface UserTrackRangesInput {
@@ -27,9 +23,9 @@ export interface TrackStore {
   close: () => Promise<void>;
   upsert: (
     userTrackData: UserTrackModel[]
-  ) => Promise<(UserTrackMeta | null)[]>;
+  ) => Promise<(UserTrackModel | null)[]>;
   getByRanges: (
     input: UserTrackRangesInput[]
   ) => Promise<(UserTrackModel[] | null)[]>;
-  deleteOlderThan: (timestamp: number) => Promise<UserTrackMeta[] | null>;
+  deleteOlderThan: (timestamp: number) => Promise<UserTrackModel[] | null>;
 }

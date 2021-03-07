@@ -3,7 +3,6 @@ import type {
   TrackStore,
   UserTrackModel,
   UserTrackInput,
-  UserTrackMeta,
   UserTrackRangesInput,
 } from '../types';
 
@@ -12,13 +11,18 @@ class LocalTrackStore implements TrackStore {
 
   async install(): Promise<void> {}
 
-  async upsert(userTrackData: UserTrackInput[]): Promise<UserTrackMeta[]> {
+  async upsert(userTrackData: UserTrackInput[]): Promise<UserTrackModel[]> {
     return userTrackData.map(
-      (userTrack): UserTrackMeta => {
-        const { internalUserId, startTime, spotifyTrackUri } = userTrack;
+      (userTrack): UserTrackModel => {
+        const {
+          internalUserId,
+          playlistProviderId,
+          trackId,
+          startTime,
+        } = userTrack;
         const key = this.trackKey(userTrack);
         this.store.set(key, { ...userTrack });
-        return { internalUserId, startTime, spotifyTrackUri };
+        return { internalUserId, startTime, playlistProviderId, trackId };
       }
     );
   }
@@ -39,23 +43,24 @@ class LocalTrackStore implements TrackStore {
     );
   }
 
-  async deleteOlderThan(timestamp: number): Promise<UserTrackMeta[]> {
+  async deleteOlderThan(timestamp: number): Promise<UserTrackModel[]> {
     return Array.from(this.store.entries()).reduce(
       (
         deletedUserTracks,
-        [key, { spotifyTrackUri, startTime, internalUserId }]
+        [key, { playlistProviderId, trackId, startTime, internalUserId }]
       ) => {
         if (startTime < timestamp) {
           this.store.delete(key);
           deletedUserTracks.push({
             internalUserId,
-            spotifyTrackUri,
+            playlistProviderId,
+            trackId,
             startTime,
           });
         }
         return deletedUserTracks;
       },
-      [] as UserTrackMeta[]
+      [] as UserTrackModel[]
     );
   }
 
@@ -63,8 +68,8 @@ class LocalTrackStore implements TrackStore {
     this.store.clear();
   }
 
-  trackKey(userTrack: UserTrackMeta): string {
-    return `${userTrack.internalUserId}__${userTrack.spotifyTrackUri}__${userTrack.startTime}`;
+  trackKey(userTrack: UserTrackModel): string {
+    return `${userTrack.internalUserId}__${userTrack.playlistProviderId}__${userTrack.trackId}__${userTrack.startTime}`;
   }
 }
 
