@@ -17,12 +17,16 @@ import type { AnyServerModules } from '../lib/ServerModule';
  */
 export interface ResolverContext<TModules extends AnyServerModules = AnyServerModules> {}
 
+import type { AuthProvider } from './src/types/index';
+import type { ActivityProvider } from './src/types/index';
+import type { PlaylistProvider } from './src/types/index';
 import type { GraphQLResolveInfo } from 'graphql';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
+export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -34,15 +38,17 @@ export type Scalars = {
 
 export type GqlQuery = {
   __typename?: 'Query';
+  getAllProviders: Array<GqlProvider>;
   getCurrentUser: GqlUser;
   getCurrentUserConfig: GqlUserConfig;
+  getCurrentUserPlaylists: Array<GqlPlaylist>;
   hello?: Maybe<Scalars['String']>;
 };
 
 export type GqlMutation = {
   __typename?: 'Mutation';
   deleteCurrentUser: GqlUser;
-  deleteCurrentUserProviders: Array<Maybe<GqlUserProvider>>;
+  deleteCurrentUserProviders: Array<Maybe<GqlProvider>>;
   hello?: Maybe<Scalars['String']>;
   logoutCurrentUser: GqlUser;
   updateCurrentUserConfig: GqlUserConfig;
@@ -57,6 +63,21 @@ export type GqlMutationDeleteCurrentUserProvidersArgs = {
 export type GqlMutationUpdateCurrentUserConfigArgs = {
   userConfigInput: GqlUserConfigInput;
 };
+
+export type GqlProvider = {
+  __typename?: 'Provider';
+  providerId: Scalars['String'];
+  name: Scalars['String'];
+  isAuthProvider: Scalars['Boolean'];
+  isActivityProvider: Scalars['Boolean'];
+  isPlaylistProvider: Scalars['Boolean'];
+};
+
+export { AuthProvider };
+
+export { PlaylistProvider };
+
+export { ActivityProvider };
 
 export type GqlUserConfig = {
   __typename?: 'UserConfig';
@@ -93,6 +114,19 @@ export type GqlUserConfigInput = {
   activityDescriptionTemplate?: Maybe<Scalars['String']>;
 };
 
+export type GqlPlaylist = {
+  __typename?: 'Playlist';
+  playlistProviderId: Scalars['String'];
+  playlistId: Scalars['String'];
+  playlistUrl?: Maybe<Scalars['String']>;
+  playlistName?: Maybe<Scalars['String']>;
+  activityProviderId: Scalars['String'];
+  activityId: Scalars['String'];
+  activityName?: Maybe<Scalars['String']>;
+  activityUrl?: Maybe<Scalars['String']>;
+  dateCreated?: Maybe<Scalars['Int']>;
+};
+
 export type GqlUser = {
   __typename?: 'User';
   userId: Scalars['String'];
@@ -101,12 +135,7 @@ export type GqlUser = {
   nameGiven?: Maybe<Scalars['String']>;
   nameDisplay?: Maybe<Scalars['String']>;
   photo?: Maybe<Scalars['String']>;
-  providers: Array<GqlUserProvider>;
-};
-
-export type GqlUserProvider = {
-  __typename?: 'UserProvider';
-  providerId: Scalars['String'];
+  providers: Array<GqlProvider>;
 };
 
 
@@ -190,11 +219,16 @@ export type GqlResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Partial<Scalars['String']>>;
   Mutation: ResolverTypeWrapper<{}>;
-  UserConfig: ResolverTypeWrapper<Partial<GqlUserConfig>>;
+  Provider: ResolverTypeWrapper<Partial<GqlProvider>>;
   Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>;
+  AuthProvider: ResolverTypeWrapper<Partial<AuthProvider>>;
+  PlaylistProvider: ResolverTypeWrapper<Partial<PlaylistProvider>>;
+  ActivityProvider: ResolverTypeWrapper<Partial<ActivityProvider>>;
+  UserConfig: ResolverTypeWrapper<Partial<GqlUserConfig>>;
   UserConfigInput: ResolverTypeWrapper<Partial<GqlUserConfigInput>>;
+  Playlist: ResolverTypeWrapper<Partial<GqlPlaylist>>;
+  Int: ResolverTypeWrapper<Partial<Scalars['Int']>>;
   User: ResolverTypeWrapper<Partial<GqlUser>>;
-  UserProvider: ResolverTypeWrapper<Partial<GqlUserProvider>>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -202,26 +236,45 @@ export type GqlResolversParentTypes = {
   Query: {};
   String: Partial<Scalars['String']>;
   Mutation: {};
-  UserConfig: Partial<GqlUserConfig>;
+  Provider: Partial<GqlProvider>;
   Boolean: Partial<Scalars['Boolean']>;
+  UserConfig: Partial<GqlUserConfig>;
   UserConfigInput: Partial<GqlUserConfigInput>;
+  Playlist: Partial<GqlPlaylist>;
+  Int: Partial<Scalars['Int']>;
   User: Partial<GqlUser>;
-  UserProvider: Partial<GqlUserProvider>;
 };
 
 export type GqlQueryResolvers<ContextType = ResolverContext, ParentType extends GqlResolversParentTypes['Query'] = GqlResolversParentTypes['Query']> = {
+  getAllProviders?: Resolver<Array<GqlResolversTypes['Provider']>, ParentType, ContextType>;
   getCurrentUser?: Resolver<GqlResolversTypes['User'], ParentType, ContextType>;
   getCurrentUserConfig?: Resolver<GqlResolversTypes['UserConfig'], ParentType, ContextType>;
+  getCurrentUserPlaylists?: Resolver<Array<GqlResolversTypes['Playlist']>, ParentType, ContextType>;
   hello?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
 };
 
 export type GqlMutationResolvers<ContextType = ResolverContext, ParentType extends GqlResolversParentTypes['Mutation'] = GqlResolversParentTypes['Mutation']> = {
   deleteCurrentUser?: Resolver<GqlResolversTypes['User'], ParentType, ContextType>;
-  deleteCurrentUserProviders?: Resolver<Array<Maybe<GqlResolversTypes['UserProvider']>>, ParentType, ContextType, RequireFields<GqlMutationDeleteCurrentUserProvidersArgs, 'providerIds'>>;
+  deleteCurrentUserProviders?: Resolver<Array<Maybe<GqlResolversTypes['Provider']>>, ParentType, ContextType, RequireFields<GqlMutationDeleteCurrentUserProvidersArgs, 'providerIds'>>;
   hello?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
   logoutCurrentUser?: Resolver<GqlResolversTypes['User'], ParentType, ContextType>;
   updateCurrentUserConfig?: Resolver<GqlResolversTypes['UserConfig'], ParentType, ContextType, RequireFields<GqlMutationUpdateCurrentUserConfigArgs, 'userConfigInput'>>;
 };
+
+export type GqlProviderResolvers<ContextType = ResolverContext, ParentType extends GqlResolversParentTypes['Provider'] = GqlResolversParentTypes['Provider']> = {
+  providerId?: Resolver<GqlResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<GqlResolversTypes['String'], ParentType, ContextType>;
+  isAuthProvider?: Resolver<GqlResolversTypes['Boolean'], ParentType, ContextType>;
+  isActivityProvider?: Resolver<GqlResolversTypes['Boolean'], ParentType, ContextType>;
+  isPlaylistProvider?: Resolver<GqlResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GqlAuthProviderResolvers = EnumResolverSignature<{ FACEBOOK?: any, GOOGLE?: any }, GqlResolversTypes['AuthProvider']>;
+
+export type GqlPlaylistProviderResolvers = EnumResolverSignature<{ SPOTIFY?: any, APPLE?: any }, GqlResolversTypes['PlaylistProvider']>;
+
+export type GqlActivityProviderResolvers = EnumResolverSignature<{ STRAVA?: any }, GqlResolversTypes['ActivityProvider']>;
 
 export type GqlUserConfigResolvers<ContextType = ResolverContext, ParentType extends GqlResolversParentTypes['UserConfig'] = GqlResolversParentTypes['UserConfig']> = {
   playlistCollaborative?: Resolver<GqlResolversTypes['Boolean'], ParentType, ContextType>;
@@ -234,6 +287,19 @@ export type GqlUserConfigResolvers<ContextType = ResolverContext, ParentType ext
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GqlPlaylistResolvers<ContextType = ResolverContext, ParentType extends GqlResolversParentTypes['Playlist'] = GqlResolversParentTypes['Playlist']> = {
+  playlistProviderId?: Resolver<GqlResolversTypes['String'], ParentType, ContextType>;
+  playlistId?: Resolver<GqlResolversTypes['String'], ParentType, ContextType>;
+  playlistUrl?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
+  playlistName?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
+  activityProviderId?: Resolver<GqlResolversTypes['String'], ParentType, ContextType>;
+  activityId?: Resolver<GqlResolversTypes['String'], ParentType, ContextType>;
+  activityName?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
+  activityUrl?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
+  dateCreated?: Resolver<Maybe<GqlResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type GqlUserResolvers<ContextType = ResolverContext, ParentType extends GqlResolversParentTypes['User'] = GqlResolversParentTypes['User']> = {
   userId?: Resolver<GqlResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
@@ -241,23 +307,22 @@ export type GqlUserResolvers<ContextType = ResolverContext, ParentType extends G
   nameGiven?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
   nameDisplay?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
   photo?: Resolver<Maybe<GqlResolversTypes['String']>, ParentType, ContextType>;
-  providers?: Resolver<Array<GqlResolversTypes['UserProvider']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type GqlUserProviderResolvers<ContextType = ResolverContext, ParentType extends GqlResolversParentTypes['UserProvider'] = GqlResolversParentTypes['UserProvider']> = {
-  providerId?: Resolver<GqlResolversTypes['String'], ParentType, ContextType>;
+  providers?: Resolver<Array<GqlResolversTypes['Provider']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type GqlResolvers<ContextType = ResolverContext> = {
   Query?: GqlQueryResolvers<ContextType>;
   Mutation?: GqlMutationResolvers<ContextType>;
+  Provider?: GqlProviderResolvers<ContextType>;
+  AuthProvider?: GqlAuthProviderResolvers;
+  PlaylistProvider?: GqlPlaylistProviderResolvers;
+  ActivityProvider?: GqlActivityProviderResolvers;
   UserConfig?: GqlUserConfigResolvers<ContextType>;
+  Playlist?: GqlPlaylistResolvers<ContextType>;
   User?: GqlUserResolvers<ContextType>;
-  UserProvider?: GqlUserProviderResolvers<ContextType>;
 };
 
 
 
-// Generated on 2021-02-07T15:49:25+00:00
+// Generated on 2021-03-07T14:13:09+00:00
