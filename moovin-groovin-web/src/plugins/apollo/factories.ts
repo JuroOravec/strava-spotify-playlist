@@ -16,15 +16,17 @@ type Scalars = {
 
 type Query = {
   __typename?: 'Query';
+  getAllProviders: Array<Provider>;
   getCurrentUser: User;
   getCurrentUserConfig: UserConfig;
+  getCurrentUserPlaylists: Array<Playlist>;
   hello: Maybe<Scalars['String']>;
 };
 
 type Mutation = {
   __typename?: 'Mutation';
   deleteCurrentUser: User;
-  deleteCurrentUserProviders: Array<Maybe<UserProvider>>;
+  deleteCurrentUserProviders: Array<Maybe<Provider>>;
   hello: Maybe<Scalars['String']>;
   logoutCurrentUser: User;
   updateCurrentUserConfig: UserConfig;
@@ -39,6 +41,26 @@ type MutationdeleteCurrentUserProvidersArgs = {
 type MutationupdateCurrentUserConfigArgs = {
   userConfigInput: UserConfigInput;
 };
+
+type Provider = {
+  __typename?: 'Provider';
+  providerId: Scalars['String'];
+  name: Scalars['String'];
+  isAuthProvider: Scalars['Boolean'];
+  isActivityProvider: Scalars['Boolean'];
+  isPlaylistProvider: Scalars['Boolean'];
+};
+
+type AuthProvider = 
+  | 'FACEBOOK'
+  | 'GOOGLE';
+
+type PlaylistProvider = 
+  | 'SPOTIFY'
+  | 'APPLE';
+
+type ActivityProvider = 
+  | 'STRAVA';
 
 type UserConfig = {
   __typename?: 'UserConfig';
@@ -75,6 +97,18 @@ type UserConfigInput = {
   activityDescriptionTemplate?: Maybe<Scalars['String']>;
 };
 
+type Playlist = {
+  __typename?: 'Playlist';
+  playlistProviderId: Scalars['String'];
+  playlistId: Scalars['String'];
+  playlistUrl: Maybe<Scalars['String']>;
+  playlistName: Maybe<Scalars['String']>;
+  activityProviderId: Scalars['String'];
+  activityName: Maybe<Scalars['String']>;
+  activityUrl: Maybe<Scalars['String']>;
+  dateCreated: Maybe<Scalars['Int']>;
+};
+
 type User = {
   __typename?: 'User';
   userId: Scalars['String'];
@@ -83,12 +117,7 @@ type User = {
   nameGiven: Maybe<Scalars['String']>;
   nameDisplay: Maybe<Scalars['String']>;
   photo: Maybe<Scalars['String']>;
-  providers: Array<UserProvider>;
-};
-
-type UserProvider = {
-  __typename?: 'UserProvider';
-  providerId: Scalars['String'];
+  providers: Array<Provider>;
 };
 
 type getCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
@@ -100,8 +129,8 @@ type getCurrentUserQuery = (
     { __typename?: 'User' }
     & Pick<User, 'userId' | 'email' | 'nameFamily' | 'nameGiven' | 'nameDisplay' | 'photo'>
     & { providers: Array<(
-      { __typename?: 'UserProvider' }
-      & Pick<UserProvider, 'providerId'>
+      { __typename?: 'Provider' }
+      & Pick<Provider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider'>
     )> }
   ) }
 );
@@ -125,8 +154,8 @@ type deleteCurrentUserIntegrationsMutationVariables = Exact<{
 type deleteCurrentUserIntegrationsMutation = (
   { __typename?: 'Mutation' }
   & { deleteCurrentUserProviders: Array<Maybe<(
-    { __typename?: 'UserProvider' }
-    & Pick<UserProvider, 'providerId'>
+    { __typename?: 'Provider' }
+    & Pick<Provider, 'providerId'>
   )>> }
 );
 
@@ -139,6 +168,28 @@ type logoutCurrentUserMutation = (
     { __typename?: 'User' }
     & Pick<User, 'userId'>
   ) }
+);
+
+type getAllProvidersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+type getAllProvidersQuery = (
+  { __typename?: 'Query' }
+  & { getAllProviders: Array<(
+    { __typename?: 'Provider' }
+    & Pick<Provider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider'>
+  )> }
+);
+
+type getCurrentUserPlaylistsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+type getCurrentUserPlaylistsQuery = (
+  { __typename?: 'Query' }
+  & { getCurrentUserPlaylists: Array<(
+    { __typename?: 'Playlist' }
+    & Pick<Playlist, 'playlistProviderId' | 'playlistId' | 'playlistUrl' | 'playlistName' | 'activityProviderId' | 'activityName' | 'activityUrl' | 'dateCreated'>
+  )> }
 );
 
 type getCurrentUserConfigQueryVariables = Exact<{ [key: string]: never; }>;
@@ -177,6 +228,9 @@ type updateCurrentUserConfigMutation = (
     photo
     providers {
       providerId
+      name
+      isActivityProvider
+      isPlaylistProvider
     }
   }
 }
@@ -199,6 +253,30 @@ type updateCurrentUserConfigMutation = (
     mutation logoutCurrentUser {
   logoutCurrentUser {
     userId
+  }
+}
+    `;
+ const getAllProvidersDocument = gql`
+    query getAllProviders {
+  getAllProviders {
+    providerId
+    name
+    isActivityProvider
+    isPlaylistProvider
+  }
+}
+    `;
+ const getCurrentUserPlaylistsDocument = gql`
+    query getCurrentUserPlaylists {
+  getCurrentUserPlaylists {
+    playlistProviderId
+    playlistId
+    playlistUrl
+    playlistName
+    activityProviderId
+    activityName
+    activityUrl
+    dateCreated
   }
 }
     `;
@@ -228,6 +306,55 @@ type updateCurrentUserConfigMutation = (
   }
 }
     `;
+export interface ProviderOptions {
+  __typename?: 'Provider';
+  providerId?: Provider['providerId'];
+  name?: Provider['name'];
+  isAuthProvider?: Provider['isAuthProvider'];
+  isActivityProvider?: Provider['isActivityProvider'];
+  isPlaylistProvider?: Provider['isPlaylistProvider'];
+}
+
+export function newProvider(
+  options: ProviderOptions = {},
+  cache: Record<string, any> = {}
+): Provider {
+  const o = (cache['Provider'] = {} as Provider);
+  o.__typename = 'Provider';
+  o.providerId = options.providerId ?? 'providerId';
+  o.name = options.name ?? 'name';
+  o.isAuthProvider = options.isAuthProvider ?? false;
+  o.isActivityProvider = options.isActivityProvider ?? false;
+  o.isPlaylistProvider = options.isPlaylistProvider ?? false;
+  return o;
+}
+
+function maybeNewProvider(
+  value: ProviderOptions | undefined,
+  cache: Record<string, any>,
+  isSet: boolean = false
+): Provider {
+  if (value === undefined) {
+    return isSet ? undefined : cache['Provider'] || newProvider({}, cache);
+  } else if (value.__typename) {
+    return value as Provider;
+  } else {
+    return newProvider(value, cache);
+  }
+}
+
+function maybeNewOrNullProvider(
+  value: ProviderOptions | undefined | null,
+  cache: Record<string, any>
+): Provider | null {
+  if (!value) {
+    return null;
+  } else if (value.__typename) {
+    return value as Provider;
+  } else {
+    return newProvider(value, cache);
+  }
+}
 export interface UserConfigOptions {
   __typename?: 'UserConfig';
   playlistCollaborative?: UserConfig['playlistCollaborative'];
@@ -281,6 +408,61 @@ function maybeNewOrNullUserConfig(
     return newUserConfig(value, cache);
   }
 }
+export interface PlaylistOptions {
+  __typename?: 'Playlist';
+  playlistProviderId?: Playlist['playlistProviderId'];
+  playlistId?: Playlist['playlistId'];
+  playlistUrl?: Playlist['playlistUrl'];
+  playlistName?: Playlist['playlistName'];
+  activityProviderId?: Playlist['activityProviderId'];
+  activityName?: Playlist['activityName'];
+  activityUrl?: Playlist['activityUrl'];
+  dateCreated?: Playlist['dateCreated'];
+}
+
+export function newPlaylist(
+  options: PlaylistOptions = {},
+  cache: Record<string, any> = {}
+): Playlist {
+  const o = (cache['Playlist'] = {} as Playlist);
+  o.__typename = 'Playlist';
+  o.playlistProviderId = options.playlistProviderId ?? 'playlistProviderId';
+  o.playlistId = options.playlistId ?? 'playlistId';
+  o.playlistUrl = options.playlistUrl ?? null;
+  o.playlistName = options.playlistName ?? null;
+  o.activityProviderId = options.activityProviderId ?? 'activityProviderId';
+  o.activityName = options.activityName ?? null;
+  o.activityUrl = options.activityUrl ?? null;
+  o.dateCreated = options.dateCreated ?? null;
+  return o;
+}
+
+function maybeNewPlaylist(
+  value: PlaylistOptions | undefined,
+  cache: Record<string, any>,
+  isSet: boolean = false
+): Playlist {
+  if (value === undefined) {
+    return isSet ? undefined : cache['Playlist'] || newPlaylist({}, cache);
+  } else if (value.__typename) {
+    return value as Playlist;
+  } else {
+    return newPlaylist(value, cache);
+  }
+}
+
+function maybeNewOrNullPlaylist(
+  value: PlaylistOptions | undefined | null,
+  cache: Record<string, any>
+): Playlist | null {
+  if (!value) {
+    return null;
+  } else if (value.__typename) {
+    return value as Playlist;
+  } else {
+    return newPlaylist(value, cache);
+  }
+}
 export interface UserOptions {
   __typename?: 'User';
   userId?: User['userId'];
@@ -289,7 +471,7 @@ export interface UserOptions {
   nameGiven?: User['nameGiven'];
   nameDisplay?: User['nameDisplay'];
   photo?: User['photo'];
-  providers?: Array<UserProviderOptions>;
+  providers?: Array<ProviderOptions>;
 }
 
 export function newUser(options: UserOptions = {}, cache: Record<string, any> = {}): User {
@@ -302,7 +484,7 @@ export function newUser(options: UserOptions = {}, cache: Record<string, any> = 
   o.nameDisplay = options.nameDisplay ?? null;
   o.photo = options.photo ?? null;
   o.providers = (options.providers ?? []).map((i) =>
-    maybeNewUserProvider(i, cache, options.hasOwnProperty('providers'))
+    maybeNewProvider(i, cache, options.hasOwnProperty('providers'))
   );
   return o;
 }
@@ -331,47 +513,6 @@ function maybeNewOrNullUser(
     return value as User;
   } else {
     return newUser(value, cache);
-  }
-}
-export interface UserProviderOptions {
-  __typename?: 'UserProvider';
-  providerId?: UserProvider['providerId'];
-}
-
-export function newUserProvider(
-  options: UserProviderOptions = {},
-  cache: Record<string, any> = {}
-): UserProvider {
-  const o = (cache['UserProvider'] = {} as UserProvider);
-  o.__typename = 'UserProvider';
-  o.providerId = options.providerId ?? 'providerId';
-  return o;
-}
-
-function maybeNewUserProvider(
-  value: UserProviderOptions | undefined,
-  cache: Record<string, any>,
-  isSet: boolean = false
-): UserProvider {
-  if (value === undefined) {
-    return isSet ? undefined : cache['UserProvider'] || newUserProvider({}, cache);
-  } else if (value.__typename) {
-    return value as UserProvider;
-  } else {
-    return newUserProvider(value, cache);
-  }
-}
-
-function maybeNewOrNullUserProvider(
-  value: UserProviderOptions | undefined | null,
-  cache: Record<string, any>
-): UserProvider | null {
-  if (!value) {
-    return null;
-  } else if (value.__typename) {
-    return value as UserProvider;
-  } else {
-    return newUserProvider(value, cache);
   }
 }
 let nextFactoryIds: Record<string, number> = {};
@@ -429,7 +570,7 @@ export function newdeleteCurrentUserResponse(
   };
 }
 interface deleteCurrentUserIntegrationsDataOptions {
-  deleteCurrentUserProviders?: UserProviderOptions[];
+  deleteCurrentUserProviders?: ProviderOptions[];
 }
 
 export function newdeleteCurrentUserIntegrationsData(
@@ -438,7 +579,7 @@ export function newdeleteCurrentUserIntegrationsData(
   return {
     __typename: 'Mutation' as const,
     deleteCurrentUserProviders:
-      data['deleteCurrentUserProviders']?.map((d) => newUserProvider(d)) || [],
+      data['deleteCurrentUserProviders']?.map((d) => newProvider(d)) || [],
   };
 }
 
@@ -476,6 +617,50 @@ export function newlogoutCurrentUserResponse(
     request: { query: logoutCurrentUserDocument },
     // TODO Remove the any by having interfaces have a __typename that pacifies mutation type unions
     result: { data: data instanceof Error ? undefined : (newlogoutCurrentUserData(data) as any) },
+    error: data instanceof Error ? data : undefined,
+  };
+}
+interface getAllProvidersDataOptions {
+  getAllProviders?: ProviderOptions[];
+}
+
+export function newgetAllProvidersData(data: getAllProvidersDataOptions) {
+  return {
+    __typename: 'Query' as const,
+    getAllProviders: data['getAllProviders']?.map((d) => newProvider(d)) || [],
+  };
+}
+
+export function newgetAllProvidersResponse(
+  data: getAllProvidersDataOptions | Error
+): MockedResponse<getAllProvidersQueryVariables, getAllProvidersQuery> {
+  return {
+    request: { query: getAllProvidersDocument },
+    // TODO Remove the any by having interfaces have a __typename that pacifies mutation type unions
+    result: { data: data instanceof Error ? undefined : (newgetAllProvidersData(data) as any) },
+    error: data instanceof Error ? data : undefined,
+  };
+}
+interface getCurrentUserPlaylistsDataOptions {
+  getCurrentUserPlaylists?: PlaylistOptions[];
+}
+
+export function newgetCurrentUserPlaylistsData(data: getCurrentUserPlaylistsDataOptions) {
+  return {
+    __typename: 'Query' as const,
+    getCurrentUserPlaylists: data['getCurrentUserPlaylists']?.map((d) => newPlaylist(d)) || [],
+  };
+}
+
+export function newgetCurrentUserPlaylistsResponse(
+  data: getCurrentUserPlaylistsDataOptions | Error
+): MockedResponse<getCurrentUserPlaylistsQueryVariables, getCurrentUserPlaylistsQuery> {
+  return {
+    request: { query: getCurrentUserPlaylistsDocument },
+    // TODO Remove the any by having interfaces have a __typename that pacifies mutation type unions
+    result: {
+      data: data instanceof Error ? undefined : (newgetCurrentUserPlaylistsData(data) as any),
+    },
     error: data instanceof Error ? data : undefined,
   };
 }

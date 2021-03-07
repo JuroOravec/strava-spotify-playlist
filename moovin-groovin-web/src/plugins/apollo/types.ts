@@ -16,15 +16,17 @@ export type Scalars = {
 
 export type GqlQuery = {
   __typename?: 'Query';
+  getAllProviders: Array<GqlProvider>;
   getCurrentUser: GqlUser;
   getCurrentUserConfig: GqlUserConfig;
+  getCurrentUserPlaylists: Array<GqlPlaylist>;
   hello: Maybe<Scalars['String']>;
 };
 
 export type GqlMutation = {
   __typename?: 'Mutation';
   deleteCurrentUser: GqlUser;
-  deleteCurrentUserProviders: Array<Maybe<GqlUserProvider>>;
+  deleteCurrentUserProviders: Array<Maybe<GqlProvider>>;
   hello: Maybe<Scalars['String']>;
   logoutCurrentUser: GqlUser;
   updateCurrentUserConfig: GqlUserConfig;
@@ -39,6 +41,26 @@ export type GqlMutationdeleteCurrentUserProvidersArgs = {
 export type GqlMutationupdateCurrentUserConfigArgs = {
   userConfigInput: GqlUserConfigInput;
 };
+
+export type GqlProvider = {
+  __typename?: 'Provider';
+  providerId: Scalars['String'];
+  name: Scalars['String'];
+  isAuthProvider: Scalars['Boolean'];
+  isActivityProvider: Scalars['Boolean'];
+  isPlaylistProvider: Scalars['Boolean'];
+};
+
+export type GqlAuthProvider = 
+  | 'FACEBOOK'
+  | 'GOOGLE';
+
+export type GqlPlaylistProvider = 
+  | 'SPOTIFY'
+  | 'APPLE';
+
+export type GqlActivityProvider = 
+  | 'STRAVA';
 
 export type GqlUserConfig = {
   __typename?: 'UserConfig';
@@ -75,6 +97,18 @@ export type GqlUserConfigInput = {
   activityDescriptionTemplate?: Maybe<Scalars['String']>;
 };
 
+export type GqlPlaylist = {
+  __typename?: 'Playlist';
+  playlistProviderId: Scalars['String'];
+  playlistId: Scalars['String'];
+  playlistUrl: Maybe<Scalars['String']>;
+  playlistName: Maybe<Scalars['String']>;
+  activityProviderId: Scalars['String'];
+  activityName: Maybe<Scalars['String']>;
+  activityUrl: Maybe<Scalars['String']>;
+  dateCreated: Maybe<Scalars['Int']>;
+};
+
 export type GqlUser = {
   __typename?: 'User';
   userId: Scalars['String'];
@@ -83,12 +117,7 @@ export type GqlUser = {
   nameGiven: Maybe<Scalars['String']>;
   nameDisplay: Maybe<Scalars['String']>;
   photo: Maybe<Scalars['String']>;
-  providers: Array<GqlUserProvider>;
-};
-
-export type GqlUserProvider = {
-  __typename?: 'UserProvider';
-  providerId: Scalars['String'];
+  providers: Array<GqlProvider>;
 };
 
 export type GqlgetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
@@ -100,8 +129,8 @@ export type GqlgetCurrentUserQuery = (
     { __typename?: 'User' }
     & Pick<GqlUser, 'userId' | 'email' | 'nameFamily' | 'nameGiven' | 'nameDisplay' | 'photo'>
     & { providers: Array<(
-      { __typename?: 'UserProvider' }
-      & Pick<GqlUserProvider, 'providerId'>
+      { __typename?: 'Provider' }
+      & Pick<GqlProvider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider'>
     )> }
   ) }
 );
@@ -125,8 +154,8 @@ export type GqldeleteCurrentUserIntegrationsMutationVariables = Exact<{
 export type GqldeleteCurrentUserIntegrationsMutation = (
   { __typename?: 'Mutation' }
   & { deleteCurrentUserProviders: Array<Maybe<(
-    { __typename?: 'UserProvider' }
-    & Pick<GqlUserProvider, 'providerId'>
+    { __typename?: 'Provider' }
+    & Pick<GqlProvider, 'providerId'>
   )>> }
 );
 
@@ -139,6 +168,28 @@ export type GqllogoutCurrentUserMutation = (
     { __typename?: 'User' }
     & Pick<GqlUser, 'userId'>
   ) }
+);
+
+export type GqlgetAllProvidersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GqlgetAllProvidersQuery = (
+  { __typename?: 'Query' }
+  & { getAllProviders: Array<(
+    { __typename?: 'Provider' }
+    & Pick<GqlProvider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider'>
+  )> }
+);
+
+export type GqlgetCurrentUserPlaylistsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GqlgetCurrentUserPlaylistsQuery = (
+  { __typename?: 'Query' }
+  & { getCurrentUserPlaylists: Array<(
+    { __typename?: 'Playlist' }
+    & Pick<GqlPlaylist, 'playlistProviderId' | 'playlistId' | 'playlistUrl' | 'playlistName' | 'activityProviderId' | 'activityName' | 'activityUrl' | 'dateCreated'>
+  )> }
 );
 
 export type GqlgetCurrentUserConfigQueryVariables = Exact<{ [key: string]: never; }>;
@@ -165,10 +216,12 @@ export type GqlupdateCurrentUserConfigMutation = (
   ) }
 );
 
-export type QueryKeySpecifier = ('getCurrentUser' | 'getCurrentUserConfig' | 'hello' | QueryKeySpecifier)[];
+export type QueryKeySpecifier = ('getAllProviders' | 'getCurrentUser' | 'getCurrentUserConfig' | 'getCurrentUserPlaylists' | 'hello' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
+	getAllProviders?: FieldPolicy<any> | FieldReadFunction<any>,
 	getCurrentUser?: FieldPolicy<any> | FieldReadFunction<any>,
 	getCurrentUserConfig?: FieldPolicy<any> | FieldReadFunction<any>,
+	getCurrentUserPlaylists?: FieldPolicy<any> | FieldReadFunction<any>,
 	hello?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type MutationKeySpecifier = ('deleteCurrentUser' | 'deleteCurrentUserProviders' | 'hello' | 'logoutCurrentUser' | 'updateCurrentUserConfig' | MutationKeySpecifier)[];
@@ -178,6 +231,14 @@ export type MutationFieldPolicy = {
 	hello?: FieldPolicy<any> | FieldReadFunction<any>,
 	logoutCurrentUser?: FieldPolicy<any> | FieldReadFunction<any>,
 	updateCurrentUserConfig?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type ProviderKeySpecifier = ('providerId' | 'name' | 'isAuthProvider' | 'isActivityProvider' | 'isPlaylistProvider' | ProviderKeySpecifier)[];
+export type ProviderFieldPolicy = {
+	providerId?: FieldPolicy<any> | FieldReadFunction<any>,
+	name?: FieldPolicy<any> | FieldReadFunction<any>,
+	isAuthProvider?: FieldPolicy<any> | FieldReadFunction<any>,
+	isActivityProvider?: FieldPolicy<any> | FieldReadFunction<any>,
+	isPlaylistProvider?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type UserConfigKeySpecifier = ('playlistCollaborative' | 'playlistPublic' | 'playlistAutoCreate' | 'playlistDescriptionTemplate' | 'playlistTitleTemplate' | 'activityDescriptionEnabled' | 'activityDescriptionTemplate' | UserConfigKeySpecifier)[];
 export type UserConfigFieldPolicy = {
@@ -189,6 +250,17 @@ export type UserConfigFieldPolicy = {
 	activityDescriptionEnabled?: FieldPolicy<any> | FieldReadFunction<any>,
 	activityDescriptionTemplate?: FieldPolicy<any> | FieldReadFunction<any>
 };
+export type PlaylistKeySpecifier = ('playlistProviderId' | 'playlistId' | 'playlistUrl' | 'playlistName' | 'activityProviderId' | 'activityName' | 'activityUrl' | 'dateCreated' | PlaylistKeySpecifier)[];
+export type PlaylistFieldPolicy = {
+	playlistProviderId?: FieldPolicy<any> | FieldReadFunction<any>,
+	playlistId?: FieldPolicy<any> | FieldReadFunction<any>,
+	playlistUrl?: FieldPolicy<any> | FieldReadFunction<any>,
+	playlistName?: FieldPolicy<any> | FieldReadFunction<any>,
+	activityProviderId?: FieldPolicy<any> | FieldReadFunction<any>,
+	activityName?: FieldPolicy<any> | FieldReadFunction<any>,
+	activityUrl?: FieldPolicy<any> | FieldReadFunction<any>,
+	dateCreated?: FieldPolicy<any> | FieldReadFunction<any>
+};
 export type UserKeySpecifier = ('userId' | 'email' | 'nameFamily' | 'nameGiven' | 'nameDisplay' | 'photo' | 'providers' | UserKeySpecifier)[];
 export type UserFieldPolicy = {
 	userId?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -199,10 +271,6 @@ export type UserFieldPolicy = {
 	photo?: FieldPolicy<any> | FieldReadFunction<any>,
 	providers?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type UserProviderKeySpecifier = ('providerId' | UserProviderKeySpecifier)[];
-export type UserProviderFieldPolicy = {
-	providerId?: FieldPolicy<any> | FieldReadFunction<any>
-};
 export type TypedTypePolicies = TypePolicies & {
 	Query?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | QueryKeySpecifier | (() => undefined | QueryKeySpecifier),
@@ -212,17 +280,21 @@ export type TypedTypePolicies = TypePolicies & {
 		keyFields?: false | MutationKeySpecifier | (() => undefined | MutationKeySpecifier),
 		fields?: MutationFieldPolicy,
 	},
+	Provider?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | ProviderKeySpecifier | (() => undefined | ProviderKeySpecifier),
+		fields?: ProviderFieldPolicy,
+	},
 	UserConfig?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | UserConfigKeySpecifier | (() => undefined | UserConfigKeySpecifier),
 		fields?: UserConfigFieldPolicy,
 	},
+	Playlist?: Omit<TypePolicy, "fields" | "keyFields"> & {
+		keyFields?: false | PlaylistKeySpecifier | (() => undefined | PlaylistKeySpecifier),
+		fields?: PlaylistFieldPolicy,
+	},
 	User?: Omit<TypePolicy, "fields" | "keyFields"> & {
 		keyFields?: false | UserKeySpecifier | (() => undefined | UserKeySpecifier),
 		fields?: UserFieldPolicy,
-	},
-	UserProvider?: Omit<TypePolicy, "fields" | "keyFields"> & {
-		keyFields?: false | UserProviderKeySpecifier | (() => undefined | UserProviderKeySpecifier),
-		fields?: UserProviderFieldPolicy,
 	}
 };
-// Generated on 2021-02-07T15:51:51+00:00
+// Generated on 2021-03-07T14:07:56+00:00

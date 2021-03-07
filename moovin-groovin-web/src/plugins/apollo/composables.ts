@@ -19,15 +19,17 @@ type Scalars = {
 
 type Query = {
   __typename?: 'Query';
+  getAllProviders: Array<Provider>;
   getCurrentUser: User;
   getCurrentUserConfig: UserConfig;
+  getCurrentUserPlaylists: Array<Playlist>;
   hello: Maybe<Scalars['String']>;
 };
 
 type Mutation = {
   __typename?: 'Mutation';
   deleteCurrentUser: User;
-  deleteCurrentUserProviders: Array<Maybe<UserProvider>>;
+  deleteCurrentUserProviders: Array<Maybe<Provider>>;
   hello: Maybe<Scalars['String']>;
   logoutCurrentUser: User;
   updateCurrentUserConfig: UserConfig;
@@ -42,6 +44,26 @@ type MutationdeleteCurrentUserProvidersArgs = {
 type MutationupdateCurrentUserConfigArgs = {
   userConfigInput: UserConfigInput;
 };
+
+type Provider = {
+  __typename?: 'Provider';
+  providerId: Scalars['String'];
+  name: Scalars['String'];
+  isAuthProvider: Scalars['Boolean'];
+  isActivityProvider: Scalars['Boolean'];
+  isPlaylistProvider: Scalars['Boolean'];
+};
+
+type AuthProvider = 
+  | 'FACEBOOK'
+  | 'GOOGLE';
+
+type PlaylistProvider = 
+  | 'SPOTIFY'
+  | 'APPLE';
+
+type ActivityProvider = 
+  | 'STRAVA';
 
 type UserConfig = {
   __typename?: 'UserConfig';
@@ -78,6 +100,18 @@ type UserConfigInput = {
   activityDescriptionTemplate?: Maybe<Scalars['String']>;
 };
 
+type Playlist = {
+  __typename?: 'Playlist';
+  playlistProviderId: Scalars['String'];
+  playlistId: Scalars['String'];
+  playlistUrl: Maybe<Scalars['String']>;
+  playlistName: Maybe<Scalars['String']>;
+  activityProviderId: Scalars['String'];
+  activityName: Maybe<Scalars['String']>;
+  activityUrl: Maybe<Scalars['String']>;
+  dateCreated: Maybe<Scalars['Int']>;
+};
+
 type User = {
   __typename?: 'User';
   userId: Scalars['String'];
@@ -86,12 +120,7 @@ type User = {
   nameGiven: Maybe<Scalars['String']>;
   nameDisplay: Maybe<Scalars['String']>;
   photo: Maybe<Scalars['String']>;
-  providers: Array<UserProvider>;
-};
-
-type UserProvider = {
-  __typename?: 'UserProvider';
-  providerId: Scalars['String'];
+  providers: Array<Provider>;
 };
 
 type getCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
@@ -103,8 +132,8 @@ type getCurrentUserQuery = (
     { __typename?: 'User' }
     & Pick<User, 'userId' | 'email' | 'nameFamily' | 'nameGiven' | 'nameDisplay' | 'photo'>
     & { providers: Array<(
-      { __typename?: 'UserProvider' }
-      & Pick<UserProvider, 'providerId'>
+      { __typename?: 'Provider' }
+      & Pick<Provider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider'>
     )> }
   ) }
 );
@@ -128,8 +157,8 @@ type deleteCurrentUserIntegrationsMutationVariables = Exact<{
 type deleteCurrentUserIntegrationsMutation = (
   { __typename?: 'Mutation' }
   & { deleteCurrentUserProviders: Array<Maybe<(
-    { __typename?: 'UserProvider' }
-    & Pick<UserProvider, 'providerId'>
+    { __typename?: 'Provider' }
+    & Pick<Provider, 'providerId'>
   )>> }
 );
 
@@ -142,6 +171,28 @@ type logoutCurrentUserMutation = (
     { __typename?: 'User' }
     & Pick<User, 'userId'>
   ) }
+);
+
+type getAllProvidersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+type getAllProvidersQuery = (
+  { __typename?: 'Query' }
+  & { getAllProviders: Array<(
+    { __typename?: 'Provider' }
+    & Pick<Provider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider'>
+  )> }
+);
+
+type getCurrentUserPlaylistsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+type getCurrentUserPlaylistsQuery = (
+  { __typename?: 'Query' }
+  & { getCurrentUserPlaylists: Array<(
+    { __typename?: 'Playlist' }
+    & Pick<Playlist, 'playlistProviderId' | 'playlistId' | 'playlistUrl' | 'playlistName' | 'activityProviderId' | 'activityName' | 'activityUrl' | 'dateCreated'>
+  )> }
 );
 
 type getCurrentUserConfigQueryVariables = Exact<{ [key: string]: never; }>;
@@ -180,6 +231,9 @@ type updateCurrentUserConfigMutation = (
     photo
     providers {
       providerId
+      name
+      isActivityProvider
+      isPlaylistProvider
     }
   }
 }
@@ -280,6 +334,64 @@ export function uselogoutCurrentUserMutation(options: VueApolloComposable.UseMut
   return VueApolloComposable.useMutation<logoutCurrentUserMutation, logoutCurrentUserMutationVariables>(logoutCurrentUserDocument, options);
 }
 export type logoutCurrentUserMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<logoutCurrentUserMutation, logoutCurrentUserMutationVariables>;
+ const getAllProvidersDocument = gql`
+    query getAllProviders {
+  getAllProviders {
+    providerId
+    name
+    isActivityProvider
+    isPlaylistProvider
+  }
+}
+    `;
+
+/**
+ * __usegetAllProvidersQuery__
+ *
+ * To run a query within a Vue component, call `usegetAllProvidersQuery` and pass it any options that fit your needs.
+ * When your component renders, `usegetAllProvidersQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = usegetAllProvidersQuery();
+ */
+export function usegetAllProvidersQuery(options: VueApolloComposable.UseQueryOptions<getAllProvidersQuery, getAllProvidersQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<getAllProvidersQuery, getAllProvidersQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<getAllProvidersQuery, getAllProvidersQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<getAllProvidersQuery, getAllProvidersQueryVariables>(getAllProvidersDocument, {}, options);
+}
+export type getAllProvidersQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<getAllProvidersQuery, getAllProvidersQueryVariables>;
+ const getCurrentUserPlaylistsDocument = gql`
+    query getCurrentUserPlaylists {
+  getCurrentUserPlaylists {
+    playlistProviderId
+    playlistId
+    playlistUrl
+    playlistName
+    activityProviderId
+    activityName
+    activityUrl
+    dateCreated
+  }
+}
+    `;
+
+/**
+ * __usegetCurrentUserPlaylistsQuery__
+ *
+ * To run a query within a Vue component, call `usegetCurrentUserPlaylistsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usegetCurrentUserPlaylistsQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = usegetCurrentUserPlaylistsQuery();
+ */
+export function usegetCurrentUserPlaylistsQuery(options: VueApolloComposable.UseQueryOptions<getCurrentUserPlaylistsQuery, getCurrentUserPlaylistsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<getCurrentUserPlaylistsQuery, getCurrentUserPlaylistsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<getCurrentUserPlaylistsQuery, getCurrentUserPlaylistsQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<getCurrentUserPlaylistsQuery, getCurrentUserPlaylistsQueryVariables>(getCurrentUserPlaylistsDocument, {}, options);
+}
+export type getCurrentUserPlaylistsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<getCurrentUserPlaylistsQuery, getCurrentUserPlaylistsQueryVariables>;
  const getCurrentUserConfigDocument = gql`
     query getCurrentUserConfig {
   getCurrentUserConfig {
@@ -345,4 +457,4 @@ export function useupdateCurrentUserConfigMutation(options: VueApolloComposable.
   return VueApolloComposable.useMutation<updateCurrentUserConfigMutation, updateCurrentUserConfigMutationVariables>(updateCurrentUserConfigDocument, options);
 }
 export type updateCurrentUserConfigMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<updateCurrentUserConfigMutation, updateCurrentUserConfigMutationVariables>;
-// Generated on 2021-02-07T15:51:51+00:00
+// Generated on 2021-03-07T14:07:56+00:00

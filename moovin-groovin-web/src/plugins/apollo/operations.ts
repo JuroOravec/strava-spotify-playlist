@@ -3,6 +3,8 @@
 export const namedOperations = {
   Query: {
     getCurrentUser: 'getCurrentUser',
+    getAllProviders: 'getAllProviders',
+    getCurrentUserPlaylists: 'getCurrentUserPlaylists',
     getCurrentUserConfig: 'getCurrentUserConfig'
   },
   Mutation: {
@@ -12,4 +14,4 @@ export const namedOperations = {
     updateCurrentUserConfig: 'updateCurrentUserConfig'
   }
 }
-// Generated on 2021-02-07T15:51:51+00:00
+// Generated on 2021-03-07T14:07:57+00:00
