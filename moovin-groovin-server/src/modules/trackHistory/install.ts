@@ -6,17 +6,17 @@ import {
 } from '../../lib/ServerModule';
 import logger from '../../lib/logger';
 import Ticker from './lib/Ticker';
-import type { SpotifyHistoryDeps } from './types';
-import type { SpotifyHistoryData } from './data';
-import type { SpotifyHistoryServices } from './services';
+import type { TrackHistoryDeps } from './types';
+import type { TrackHistoryData } from './data';
+import type { TrackHistoryServices } from './services';
 
-const createSpotifyHistoryInstaller = (): Installer => {
+const createTrackHistoryInstaller = (): Installer => {
   const install: Installer = async function install(
     this: ServerModule<
-      SpotifyHistoryServices,
+      TrackHistoryServices,
       Handlers,
-      SpotifyHistoryData,
-      SpotifyHistoryDeps
+      TrackHistoryData,
+      TrackHistoryDeps
     >
   ): Promise<void> {
     assertContext(this.context);
@@ -27,9 +27,9 @@ const createSpotifyHistoryInstaller = (): Installer => {
       tickOffset: this.data.tickOffset,
     });
     this.data.watcherTimer.on('tick', async () => {
-      logger.debug('Running spotifyHistory tick callback');
+      logger.debug('Running trackHistory tick callback');
       await this.services.onTrackHistoryTick();
-      logger.debug('Done running spotifyHistory tick callback');
+      logger.debug('Done running trackHistory tick callback');
     });
     this.data.watcherTimer.start();
   };
@@ -37,4 +37,4 @@ const createSpotifyHistoryInstaller = (): Installer => {
   return install;
 };
 
-export default createSpotifyHistoryInstaller;
+export default createTrackHistoryInstaller;

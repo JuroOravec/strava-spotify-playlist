@@ -1,9 +1,9 @@
 import type { ServerModuleName } from '../../types';
 import type AppServerModules from '../../types/AppServerModules';
 
-export type SpotifyHistoryDeps = Pick<
+export type TrackHistoryDeps = Pick<
   AppServerModules,
   | ServerModuleName.STORE_TOKEN
   | ServerModuleName.STORE_TRACK
-  | ServerModuleName.SPOTIFY
+  | ServerModuleName.PLAYLIST_SPOTIFY
 >;

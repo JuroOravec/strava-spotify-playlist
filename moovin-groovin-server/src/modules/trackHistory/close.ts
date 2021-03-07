@@ -4,11 +4,11 @@ import type {
   Services,
   Closer,
 } from '../../lib/ServerModule';
-import type { SpotifyHistoryData } from './data';
+import type { TrackHistoryData } from './data';
 
-const createSpotifyHistoryCloser = (): Closer => {
+const createTrackHistoryCloser = (): Closer => {
   const close: Closer = function close(
-    this: ServerModule<Services, Handlers, SpotifyHistoryData>
+    this: ServerModule<Services, Handlers, TrackHistoryData>
   ): void {
     this.data.watcherTimer?.stop();
   };
@@ -16,4 +16,4 @@ const createSpotifyHistoryCloser = (): Closer => {
   return close;
 };
 
-export default createSpotifyHistoryCloser;
+export default createTrackHistoryCloser;
