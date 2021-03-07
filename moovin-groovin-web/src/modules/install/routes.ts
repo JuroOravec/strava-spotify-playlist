@@ -1,6 +1,7 @@
 import type { RouteConfig } from 'vue-router';
 
 import addChildRoutes from '@/plugins/router/utils/addChildRoutes';
+import createDashboardRoutes from '@/modules/dashboard/routes';
 import createProfileRoutes from '@/modules/profile/routes';
 import createAuthRoutes from '@/modules/auth/routes';
 import createBaseRoutes from '@/modules/base/routes';
@@ -26,6 +27,8 @@ const loadProfilePage = () =>
   import(/* webpackChunkName: "profile" */ '@/modules/profile/components/ProfilePage.vue');
 const loadBasePage = () =>
   import(/* webpackChunkName: "base" */ '@/modules/base/components/Page.vue');
+const loadDashboardPage = () =>
+  import(/* webpackChunkName: "dashboard" */ '@/modules/dashboard/components/DashboardPage.vue');
 
 /**
  * Configure path prefixes.
@@ -49,6 +52,18 @@ const createRoutes = (): RouteConfig[] => {
         footer: AppFooter,
       },
       children: createProfileRoutes(),
+      meta: {
+        requireAuth: false,
+      },
+    },
+    {
+      path: '/dashboard',
+      components: {
+        default: loadDashboardPage,
+        appbar: Appbar,
+        footer: AppFooter,
+      },
+      children: createDashboardRoutes(),
       meta: {
         requireAuth: false,
       },

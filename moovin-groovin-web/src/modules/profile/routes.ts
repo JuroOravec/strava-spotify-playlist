@@ -20,9 +20,6 @@ const createRoutes = (): (RouteConfig & { name: ProfileRoute })[] => [
     name: ProfileRoute.INTEGRATIONS,
     path: '/integrations',
     component: ProfileIntegrations,
-    meta: {
-      requireAuth: false,
-    },
   },
   {
     name: ProfileRoute.UNKNOWN,
