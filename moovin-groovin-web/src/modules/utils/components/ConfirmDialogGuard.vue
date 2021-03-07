@@ -51,7 +51,7 @@ const ConfirmDialogGuard = defineComponent({
   name: 'ConfirmDialogGuard',
   inheritAttrs: false,
   props: {
-    confirmDialog: { type: Object, required: false, default: ConfirmDialog },
+    confirmDialog: { type: Object, required: false, default: () => ConfirmDialog },
     openOnRouteLeave: { type: Boolean, required: false, default: false },
     pauseNavigation: { type: Boolean, required: false, default: false },
     confirmEvents: {

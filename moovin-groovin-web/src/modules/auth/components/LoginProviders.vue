@@ -19,15 +19,15 @@
 import { defineComponent } from '@vue/composition-api';
 
 import useCurrentUser from '../composables/useCurrentUser';
-import useOpenAuthWindow, { AuthProviders } from '../composables/useOpenAuthWindow';
+import useOpenAuthWindow, { AuthProvider } from '../composables/useOpenAuthWindow';
 
 const loginProviders = [
   {
-    provider: AuthProviders.FACEBOOK,
+    provider: AuthProvider.FACEBOOK,
     title: 'Facebook',
   },
   {
-    provider: AuthProviders.GOOGLE,
+    provider: AuthProvider.GOOGLE,
     title: 'Google',
   },
 ];

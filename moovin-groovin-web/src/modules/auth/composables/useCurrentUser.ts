@@ -16,6 +16,7 @@ import isNotNil from '@/modules/utils/utils/isNotNil';
 import useRefWatcher, { UseRefWatcher } from '@/modules/utils-reactivity/composables/useRefWatcher';
 import { NotifType } from '@/modules/utils/composables/useNotifSnackbar';
 import useMutationWithNotif from '@/modules/utils/composables/useMutationWithNotif';
+import { Provider, transformProvider } from './useProviders';
 
 interface CurrentUser {
   userId: string;
@@ -24,7 +25,7 @@ interface CurrentUser {
   nameGiven: string | null;
   nameDisplay: string | null;
   photo: string | null;
-  providers: string[];
+  providers: Provider[];
 }
 
 interface UseCurrentUser {
@@ -57,6 +58,9 @@ const GET_CURRENT_USER = gql`
       photo
       providers {
         providerId
+        name
+        isActivityProvider
+        isPlaylistProvider
       }
     }
   }
@@ -96,7 +100,7 @@ const transformGetCurentUser = ({
   const { __typename, providers, ...user } = userData;
   return {
     ...user,
-    providers: providers.map(({ providerId }) => providerId),
+    providers: providers.map(transformProvider),
   };
 };
 

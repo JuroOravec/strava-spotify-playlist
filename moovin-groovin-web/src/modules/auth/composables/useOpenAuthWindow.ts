@@ -7,12 +7,12 @@ import type { EnvironmentConfig } from '@/plugins/config/config';
 interface UseOpenAuthWindow {
   openWindow: typeof openWindow;
   openAuthWindow: (
-    provider: AuthProviders,
+    provider: AuthProvider,
     options?: { params?: Record<string, string> } & Pick<OpenWindowOptions, 'onDidCloseWindow'>
   ) => void;
 }
 
-enum AuthProviders {
+enum AuthProvider {
   FACEBOOK = 'facebook',
   GOOGLE = 'google',
   STRAVA = 'strava',
@@ -30,14 +30,14 @@ const defaultWindowFeats: Partial<WindowFeatures> = {
   status: false,
 };
 
-const getAuthUrl = (urlTemplate: string, provider: AuthProviders) =>
+const getAuthUrl = (urlTemplate: string, provider: AuthProvider) =>
   urlTemplate.replace(/\$\{provider\}/gi, provider);
 
 const useOpenAuthWindow = (): UseOpenAuthWindow => {
   const config = inject<EnvironmentConfig>(ConfigKey);
 
   const openAuthWindow = (
-    provider: AuthProviders,
+    provider: AuthProvider,
     options: { params?: Record<string, string> } & Pick<OpenWindowOptions, 'onDidCloseWindow'> = {}
   ): void => {
     const { params = {}, onDidCloseWindow } = options;
@@ -63,4 +63,4 @@ const useOpenAuthWindow = (): UseOpenAuthWindow => {
 };
 
 export default useOpenAuthWindow;
-export { AuthProviders };
+export { AuthProvider };
