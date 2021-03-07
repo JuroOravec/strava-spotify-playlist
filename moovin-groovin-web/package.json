@@ -11,7 +11,12 @@
     "lint:fix": "npm run lint -- --fix",
     "typegen": "npm run typegen:schema && npm run typegen:ts",
     "typegen:schema": "graphql-codegen --config codegen.schema.yml",
-    "typegen:ts": "graphql-codegen --config codegen.yml"
+    "typegen:ts": "graphql-codegen --config codegen.yml",
+    "docgen": "vue-int --input /src --output vetur --recursive"
+  },
+  "vetur": {
+    "tags": "vetur/tags.json",
+    "attributes": "vetur/attributes.json"
   },
   "dependencies": {
     "@analytics/mixpanel": "^0.3.1",
@@ -85,6 +90,7 @@
     "ts-jest": "^26.4.4",
     "typescript": "^4.1.3",
     "vue-cli-plugin-vuetify": "~2.0.9",
+    "vue-intellisense": "^0.2.0",
     "vue-template-compiler": "^2.6.12",
     "vuetify-loader": "^1.6.0"
   }

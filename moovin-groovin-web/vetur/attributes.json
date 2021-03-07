@@ -1,0 +1,68 @@
+{
+  "list-menu/sections": {
+    "type": "array"
+  },
+  "profile-form-submit/submitIsLoading": {
+    "type": "boolean"
+  },
+  "profile-form-submit/discardIsLoading": {
+    "type": "boolean"
+  },
+  "profile-form-textarea/checkbox": {
+    "type": "boolean"
+  },
+  "profile-form-textarea/checkboxInputValue": {
+    "type": "boolean"
+  },
+  "profile-form-textarea/value": {
+    "type": "string"
+  },
+  "profile-form-textarea/defaultValue": {
+    "type": "string"
+  },
+  "profile-form-textarea/disabled": {
+    "type": "boolean"
+  },
+  "profile-integration/providerName": {
+    "type": "string"
+  },
+  "profile-integration/providerId": {
+    "type": "AuthProvider"
+  },
+  "profile-integration/integrated": {
+    "type": "boolean"
+  },
+  "confirm-dialog/value": {
+    "type": "boolean"
+  },
+  "confirm-dialog/contentClass": {
+    "type": "string"
+  },
+  "confirm-dialog-guard/confirmDialog": {
+    "type": "object"
+  },
+  "confirm-dialog-guard/openOnRouteLeave": {
+    "type": "boolean"
+  },
+  "confirm-dialog-guard/pauseNavigation": {
+    "type": "boolean"
+  },
+  "confirm-dialog-guard/confirmEvents": {
+    "type": "array"
+  },
+  "confirm-dialog-guard/cancelEvents": {
+    "type": "array"
+  },
+  "confirm-dialog-small/width": {
+    "type": "string"
+  },
+  "confirm-dialog-small/contentClass": {
+    "type": "string"
+  },
+  "notif-snackbar-confirm/content": {
+    "type": "string"
+  },
+  "notif-snackbar-error/content": {
+    "type": "string"
+  }
+}

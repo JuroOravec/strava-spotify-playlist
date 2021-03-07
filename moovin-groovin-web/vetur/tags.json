@@ -1,0 +1,169 @@
+{
+  "auth-callback": {
+    "attributes": [],
+    "description": ""
+  },
+  "auth-guard": {
+    "attributes": [],
+    "description": ""
+  },
+  "login-avatar": {
+    "attributes": [],
+    "description": ""
+  },
+  "login-menu": {
+    "attributes": [],
+    "description": ""
+  },
+  "login-providers": {
+    "attributes": [],
+    "description": ""
+  },
+  "app-footer": {
+    "attributes": [],
+    "description": ""
+  },
+  "appbar": {
+    "attributes": [],
+    "description": ""
+  },
+  "home": {
+    "attributes": [],
+    "description": ""
+  },
+  "list-menu": {
+    "attributes": [
+      "sections"
+    ],
+    "description": ""
+  },
+  "page": {
+    "attributes": [],
+    "description": ""
+  },
+  "privacy-policy": {
+    "attributes": [],
+    "description": ""
+  },
+  "app": {
+    "attributes": [],
+    "description": ""
+  },
+  "membership-buy-dialog": {
+    "attributes": [],
+    "description": ""
+  },
+  "membership-offer-dialog": {
+    "attributes": [],
+    "description": ""
+  },
+  "profile-account": {
+    "attributes": [],
+    "description": ""
+  },
+  "profile-card": {
+    "attributes": [],
+    "description": ""
+  },
+  "profile-form-checkbox": {
+    "attributes": [],
+    "description": ""
+  },
+  "profile-form-submit": {
+    "attributes": [
+      "submitIsLoading",
+      "discardIsLoading"
+    ],
+    "description": ""
+  },
+  "profile-form-textarea": {
+    "attributes": [
+      "checkbox",
+      "checkboxInputValue",
+      "value",
+      "defaultValue",
+      "disabled"
+    ],
+    "description": ""
+  },
+  "profile-integration": {
+    "attributes": [
+      "providerName",
+      "providerId",
+      "integrated"
+    ],
+    "description": ""
+  },
+  "profile-integrations": {
+    "attributes": [],
+    "description": ""
+  },
+  "profile-menu": {
+    "attributes": [],
+    "description": ""
+  },
+  "profile-page": {
+    "attributes": [],
+    "description": ""
+  },
+  "profile-preferences": {
+    "attributes": [],
+    "description": ""
+  },
+  "template-hint-dialog": {
+    "attributes": [],
+    "description": ""
+  },
+  "warning-irreversible": {
+    "attributes": [],
+    "description": ""
+  },
+  "confirm-dialog": {
+    "attributes": [
+      "value",
+      "contentClass"
+    ],
+    "description": "Wrapper around v-dialog that handles open/close logic"
+  },
+  "confirm-dialog-guard": {
+    "attributes": [
+      "confirmDialog",
+      "openOnRouteLeave",
+      "pauseNavigation",
+      "confirmEvents",
+      "cancelEvents"
+    ],
+    "description": ""
+  },
+  "confirm-dialog-small": {
+    "attributes": [
+      "width",
+      "contentClass"
+    ],
+    "description": ""
+  },
+  "consent-alert": {
+    "attributes": [],
+    "description": ""
+  },
+  "notif-snackbar": {
+    "attributes": [],
+    "description": ""
+  },
+  "notif-snackbar-confirm": {
+    "attributes": [
+      "content"
+    ],
+    "description": ""
+  },
+  "notif-snackbar-error": {
+    "attributes": [
+      "content"
+    ],
+    "description": ""
+  },
+  "save-dialog-small": {
+    "attributes": [],
+    "description": ""
+  }
+}

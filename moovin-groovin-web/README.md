@@ -40,6 +40,21 @@ npm run lint
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
+### Vetur docgen
+
+See <https://github.com/CyCraft/vue-intellisense>.
+
+If you reinstall packages, first make an edit to `@vue-intellisense/scripts/dist/index.cjs.js` as in [this PR](https://github.com/CyCraft/vue-intellisense/pull/10).
+
+Don't forget to add `vetur` to `package.json`
+
+```json
+  "vetur": {
+    "tags": "vetur/tags.json",
+    "attributes": "vetur/attributes.json"
+  },
+```
+
 ## Session Cookies
 
 To use the same session cookie as the one from prod instance, first find the cookie in the prod instance and copy its value.
