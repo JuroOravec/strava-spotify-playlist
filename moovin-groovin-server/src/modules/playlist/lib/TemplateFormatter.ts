@@ -3,14 +3,9 @@ import NodeCache from 'node-cache';
 
 import {
   OptionalPromise,
+  TemplateFormatter,
   HandlebarsTemplateFormatter as BaseHandlebarsTemplateFormatter,
 } from '@moovin-groovin/shared';
-import logger from '../../../lib/logger';
-import type {
-  ActivityTemplateContext,
-  PlaylistTemplateContext,
-  TemplateFormatter,
-} from '../types';
 
 type CompileOptions = NonNullable<Parameters<typeof Handlebars.compile>[1]>;
 
@@ -52,31 +47,6 @@ class HandlebarsTemplateFormatter
   ) {
     const { cache = createDefaultCache(), compileOptions = {} } = options;
     super({ cache, compileOptions });
-  }
-
-  formatPlaylistTitle(
-    template: string,
-    context: PlaylistTemplateContext
-  ): Promise<string> {
-    return this.format(template, context, { textLimit: 100 });
-  }
-
-  formatPlaylistDescription(
-    template: string,
-    context: PlaylistTemplateContext
-  ): Promise<string> {
-    return this.format(template, context, { textLimit: 300 });
-  }
-
-  formatActivityDescription(
-    template: string,
-    context: ActivityTemplateContext
-  ): Promise<string> {
-    return this.format(template, context, {
-      // NOTE: It _seems_ Strava doesn't have limit for activity description.
-      // Limit of 12k chars should cover a tracklist for an activity of 10 hours.
-      textLimit: 12000,
-    });
   }
 }
 

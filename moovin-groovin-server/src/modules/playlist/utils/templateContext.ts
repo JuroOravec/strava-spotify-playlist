@@ -1,37 +1,39 @@
 import lowerCase from 'lodash/lowerCase';
 
-import { setOnMissingPropStringifierProxy } from '@moovin-groovin/shared';
-import logger from '../../../lib/logger';
-import getActivityUrl from '../../strava/utils/getActivityUrl';
+import {
+  setOnMissingPropStringifierProxy,
+  unixTimestampToDate,
+} from '@moovin-groovin/shared';
+import getActivityUrl from '../../apiStrava/utils/getActivityUrl';
 import type {
   ActivityInput,
-  TrackWithMetadata,
   ActivityTemplateContext,
   PlaylistTemplateContext,
   TemplateContextActivity,
   TemplateContextTrack,
   TemplateContextMeta,
+  EnrichedTrack,
 } from '../types';
-import unixTimestampToDate from './unixTimestampToDate';
 
 /** Capture '01:23:45' in `2021-01-01T01:23:45.678Z"` */
 const timeFromIsoDateRegex = /(?<=T).*?(?=\.)/i;
 
-const createPlaylistTemplateContext = (
-  input: {
-    activity: ActivityInput;
-    tracks: TrackWithMetadata[];
-    meta: TemplateContextMeta;
-  },
-  options: {
-    missingValue?: string;
-  } = {}
-): {
+const createPlaylistTemplateContext = (input: {
+  activity: ActivityInput;
+  playlist: { tracks: EnrichedTrack[] };
+  meta: TemplateContextMeta;
+  missingValue?: string;
+}): {
   context: PlaylistTemplateContext;
   proxiedContext: PlaylistTemplateContext;
 } => {
-  const { tracks: inputTracks, activity: inputActivity, meta } = input;
-  const { missingValue = 'UNKNOWN' } = options;
+  const {
+    playlist,
+    activity: inputActivity,
+    meta,
+    missingValue = 'UNKNOWN',
+  } = input;
+  const { tracks: inputTracks } = playlist;
 
   const formatDuration = (durationInMs: number): string | undefined => {
     const isoDate = new Date(durationInMs).toISOString();
@@ -40,17 +42,14 @@ const createPlaylistTemplateContext = (
 
   const tracks = inputTracks.map(
     (track): TemplateContextTrack => ({
-      title: track.metadata?.name || missingValue,
-      album: track.metadata?.album.name || missingValue,
-      artist:
-        track.metadata?.artists.map((artist) => artist.name).join(', ') ||
-        missingValue,
+      trackId: track.trackId,
+      title: track.title || missingValue,
+      album: track.album || missingValue,
+      artist: track.artist || missingValue,
       duration:
-        (track.metadata && formatDuration(track.metadata.duration_ms)) ||
-        missingValue,
+        (track.duration && formatDuration(track.duration)) || missingValue,
       startTime:
-        (track.startTime && formatDuration(track.startTime * 1000)) ||
-        missingValue,
+        (track.startTime && formatDuration(track.startTime)) || missingValue,
     })
   );
 
@@ -120,25 +119,17 @@ const createPlaylistTemplateContext = (
   };
 };
 
-const createActivityTemplateContext = (
-  input: {
-    activity: ActivityInput;
-    tracks: TrackWithMetadata[];
-    playlist: { url: string; title: string };
-    meta: TemplateContextMeta;
-  },
-  options: {
-    missingValue?: string;
-  } = {}
-): {
+const createActivityTemplateContext = (input: {
+  activity: ActivityInput;
+  playlist: { url: string; title: string; tracks: EnrichedTrack[] };
+  meta: TemplateContextMeta;
+  missingValue?: string;
+}): {
   context: ActivityTemplateContext;
   proxiedContext: ActivityTemplateContext;
 } => {
   const { playlist } = input;
-  const { context, proxiedContext } = createPlaylistTemplateContext(
-    input,
-    options
-  ) as {
+  const { context, proxiedContext } = createPlaylistTemplateContext(input) as {
     context: ActivityTemplateContext;
     proxiedContext: ActivityTemplateContext;
   };

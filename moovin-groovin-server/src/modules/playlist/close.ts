@@ -4,11 +4,11 @@ import type {
   Handlers,
   Services,
 } from '../../lib/ServerModule';
-import type { StravaSpotifyData } from './data';
+import type { PlaylistData } from './data';
 
-const createStravaSpotifyCloser = (): Closer => {
+const createPlaylistCloser = (): Closer => {
   const close: Closer = async function close(
-    this: ServerModule<Services, Handlers, StravaSpotifyData>
+    this: ServerModule<Services, Handlers, PlaylistData>
   ): Promise<void> {
     await this.data.templateFormater?.close();
     this.data.templateFormater = null;
@@ -17,4 +17,4 @@ const createStravaSpotifyCloser = (): Closer => {
   return close;
 };
 
-export default createStravaSpotifyCloser;
+export default createPlaylistCloser;

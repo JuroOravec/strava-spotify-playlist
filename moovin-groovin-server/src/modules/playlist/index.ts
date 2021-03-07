@@ -2,24 +2,20 @@ import ServerModule, { Handlers } from '../../lib/ServerModule';
 import { ServerModuleName } from '../../types';
 import createInstaller from './install';
 import createCloser from './close';
-import createServices, { StravaSpotifyServices } from './services';
-import type { StravaSpotifyData, StravaSpotifyExternalOptions } from './data';
+import createServices, { PlaylistServices } from './services';
+import type { PlaylistData, PlaylistExternalOptions } from './data';
 
-type StravaSpotifyModuleOptions = StravaSpotifyExternalOptions;
+type PlaylistModuleOptions = PlaylistExternalOptions;
 
-type StravaSpotifyModule = ServerModule<
-  StravaSpotifyServices,
-  Handlers,
-  StravaSpotifyData
->;
+type PlaylistModule = ServerModule<PlaylistServices, Handlers, PlaylistData>;
 
 const createStravaWebhookModule = (
-  options: StravaSpotifyModuleOptions
-): StravaSpotifyModule => {
+  options: PlaylistModuleOptions
+): PlaylistModule => {
   const { appNamePublic } = options;
 
   return new ServerModule({
-    name: ServerModuleName.STRAVA_SPOTIFY,
+    name: ServerModuleName.PLAYLIST,
     install: createInstaller(),
     close: createCloser(),
     services: createServices(),
@@ -32,4 +28,4 @@ const createStravaWebhookModule = (
 };
 
 export default createStravaWebhookModule;
-export type { StravaSpotifyModule, StravaSpotifyModuleOptions };
+export type { PlaylistModule, PlaylistModuleOptions };

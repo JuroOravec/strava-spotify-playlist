@@ -1,21 +1,21 @@
-import type { OptionalPromise } from '@moovin-groovin/shared';
 import type AppServerModules from '../../types/AppServerModules';
 import type { ServerModuleName } from '../../types';
-import type { UserTrackModel } from '../storeTrack/types';
-import type { DetailedActivity } from '../strava/types';
+import type { DetailedActivity } from '../apiStrava/types';
+import { UserActivityPlaylistMeta } from '../storePlaylist/types';
 
-export type StravaSpotifyDeps = Pick<
+export type PlaylistDeps = Pick<
   AppServerModules,
+  | ServerModuleName.API_STRAVA
   | ServerModuleName.STORE_CONFIG
   | ServerModuleName.STORE_TOKEN
   | ServerModuleName.STORE_USER
   | ServerModuleName.STORE_PLAYLIST
-  | ServerModuleName.STRAVA
-  | ServerModuleName.SPOTIFY
-  | ServerModuleName.SPOTIFY_HISTORY
+  | ServerModuleName.PLAYLIST_SPOTIFY
+  | ServerModuleName.TRACK_HISTORY
 >;
 
 export interface ActivityInput {
+  activityProviderId: string;
   activityId: string;
   /** Unix timestamp (seconds since epoch) when activity started. */
   startTime: number;
@@ -24,13 +24,33 @@ export interface ActivityInput {
   title: string;
   description: string;
   activityType: DetailedActivity['type'];
+  descriptionLimit?: number;
 }
 
-export type TrackWithMetadata = UserTrackModel & {
-  metadata: SpotifyApi.TrackObjectFull | null;
-};
+export interface EnrichedTrack {
+  providerId: string;
+  trackId: string;
+  title: string;
+  album: string;
+  artist: string;
+  duration: number;
+  startTime: number;
+}
+
+export interface PlaylistResponse {
+  playlistId: string;
+  title: string;
+  url: string;
+}
+
+export interface EnrichedPlaylist
+  extends UserActivityPlaylistMeta,
+    Omit<Partial<PlaylistResponse>, 'playlistId'> {
+  tracks: EnrichedTrack[];
+}
 
 export interface TemplateContextTrack {
+  trackId: string;
   title: string;
   album: string;
   artist: string;
@@ -70,20 +90,3 @@ interface ActivityTemplateContextPlaylist extends TemplateContextPlaylist {
 export type ActivityTemplateContext = PlaylistTemplateContext & {
   playlist: ActivityTemplateContextPlaylist;
 };
-
-export interface TemplateFormatter {
-  install: () => OptionalPromise<void>;
-  close: () => OptionalPromise<void>;
-  formatPlaylistTitle: (
-    template: string,
-    context: PlaylistTemplateContext
-  ) => OptionalPromise<string>;
-  formatPlaylistDescription: (
-    template: string,
-    context: PlaylistTemplateContext
-  ) => OptionalPromise<string>;
-  formatActivityDescription: (
-    template: string,
-    context: ActivityTemplateContext
-  ) => OptionalPromise<string>;
-}
