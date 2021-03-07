@@ -17,4 +17,5 @@ FROM
   )
   LEFT JOIN user_activity_playlist
     ON
-      user_activity_playlist.internal_user_id = CAST(input.internal_user_id as uuid);
+      user_activity_playlist.internal_user_id = CAST(input.internal_user_id as uuid)
+ORDER BY user_activity_playlist.date_created DESC;
