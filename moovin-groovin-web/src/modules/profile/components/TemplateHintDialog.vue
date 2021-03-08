@@ -45,9 +45,9 @@
               >, like so <code v-pre>{{ activity.duration }}</code
               >.
             </p>
-            <v-img
-              v-img="{ src: require('../assets/template-tutorial-customize-playlist.png') }"
-              src="../assets/template-tutorial-customize-playlist.png"
+            <LightboxImg
+              :src="require('../assets/template-tutorial-customize-playlist.png')"
+              :max-width="600"
             />
             <p class="py-5">
               The above
@@ -57,9 +57,9 @@
               >. Using the example above, when you create a new playlist, its title and description
               will be formatted like so.
             </p>
-            <v-img
-              v-img="{ src: require('../assets/template-tutorial-customize-spotify-after.png') }"
-              src="../assets/template-tutorial-customize-spotify-after.png"
+            <LightboxImg
+              :src="require('../assets/template-tutorial-customize-spotify-after.png')"
+              :max-width="600"
               class="elevation-5"
             />
             <p class="py-8 ma-0">
@@ -68,9 +68,9 @@
                 >below is how the text would have looked if it was not formatted</span
               >.
             </p>
-            <v-img
-              v-img="{ src: require('../assets/template-tutorial-customize-spotify-before.png') }"
-              src="../assets/template-tutorial-customize-spotify-before.png"
+            <LightboxImg
+              :src="require('../assets/template-tutorial-customize-spotify-before.png')"
+              :max-width="600"
               class="elevation-5"
             />
 
@@ -130,6 +130,7 @@
 import { defineComponent } from '@vue/composition-api';
 
 import useRefRich from '@/modules/utils-reactivity/composables/useRefRich';
+import LightboxImg from '@/modules/utils/components/LightboxImg.vue';
 import { ProfileRoute } from '../types';
 
 const tagsHeaders = [
@@ -200,6 +201,9 @@ const tagsItems = [
 
 const TemplateHintDialog = defineComponent({
   name: 'TemplateHintDialog',
+  components: {
+    LightboxImg,
+  },
   inheritAttrs: false,
   setup() {
     const { ref: dialogIsOpen, setter: setDialogIsOpen } = useRefRich({ value: false });

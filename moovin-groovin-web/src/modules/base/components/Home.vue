@@ -22,11 +22,10 @@
     </ol>
 
     <div class="pt-12 pb-4">
-      <v-img
-        v-img="{ src: require('../assets/example-spotify.png') }"
-        src="../assets/example-spotify.png"
-        :max-width="900"
-        class="mx-auto"
+      <LightboxImg
+        :src="require('../assets/example-spotify.png')"
+        alt="Example Spotify playlist"
+        :max-width="600"
       />
     </div>
 
@@ -44,8 +43,13 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
 
+import LightboxImg from '@/modules/utils/components/LightboxImg.vue';
+
 const Home = defineComponent({
   name: 'Home',
+  components: {
+    LightboxImg,
+  },
 });
 
 export default Home;
