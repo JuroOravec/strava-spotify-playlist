@@ -330,3 +330,7 @@ Sender -> send to name@mydomain.com -> SES triggers SNS topic with email content
    - [Another guide](https://medium.com/responsetap-engineering/easily-create-email-addresses-for-your-route53-custom-domain-589d099dd0f2)
 
 NOTE: SES mail receiving is available only on the Ireland region in EU.
+
+## Gifs
+
+Use <https://ezgif.com/video-to-gif/>
