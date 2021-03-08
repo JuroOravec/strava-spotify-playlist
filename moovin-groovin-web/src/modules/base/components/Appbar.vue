@@ -1,5 +1,12 @@
 <template>
-  <v-app-bar app dark flat color="primary" class="Appbar" :class="expanded && 'Appbar--expanded'">
+  <v-app-bar
+    app
+    dark
+    flat
+    color="primary"
+    class="Appbar"
+    :class="{ 'Appbar--expanded': expanded, 'Appbar--logged-in': isLoggedIn }"
+  >
     <v-container class="py-0 fill-height">
       <v-row class="fill-height" justify="space-between" align="center">
         <v-col
@@ -100,6 +107,7 @@ const Appbar = defineComponent({
       links,
       expanded,
       setExpanded,
+      isLoggedIn,
     };
   },
 });
@@ -176,6 +184,15 @@ export default Appbar;
 
     .LoginAvatar {
       margin-top: -5 * $spacer;
+    }
+  }
+
+  &#{&}--logged-in {
+    .LoginAvatar {
+      &__avatar {
+        padding-bottom: 0 !important;
+        padding-top: 0 !important;
+      }
     }
   }
 }
