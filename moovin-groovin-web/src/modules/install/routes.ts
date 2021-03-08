@@ -5,6 +5,7 @@ import createDashboardRoutes from '@/modules/dashboard/routes';
 import createProfileRoutes from '@/modules/profile/routes';
 import createAuthRoutes from '@/modules/auth/routes';
 import createBaseRoutes from '@/modules/base/routes';
+import createNewsRoutes from '@/modules/news/routes';
 import Appbar from '@/modules/base/components/Appbar.vue';
 import AppFooter from '@/modules/base/components/AppFooter.vue';
 
@@ -29,6 +30,8 @@ const loadBasePage = () =>
   import(/* webpackChunkName: "base" */ '@/modules/base/components/Page.vue');
 const loadDashboardPage = () =>
   import(/* webpackChunkName: "dashboard" */ '@/modules/dashboard/components/DashboardPage.vue');
+const loadNewsPage = () =>
+  import(/* webpackChunkName: "news" */ '@/modules/base/components/Page.vue');
 
 /**
  * Configure path prefixes.
@@ -64,6 +67,18 @@ const createRoutes = (): RouteConfig[] => {
         footer: AppFooter,
       },
       children: createDashboardRoutes(),
+      meta: {
+        requireAuth: false,
+      },
+    },
+    {
+      path: '/news',
+      components: {
+        default: loadNewsPage,
+        appbar: Appbar,
+        footer: AppFooter,
+      },
+      children: createNewsRoutes(),
       meta: {
         requireAuth: false,
       },

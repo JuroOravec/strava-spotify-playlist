@@ -61,6 +61,7 @@ import type { Location } from 'vue-router';
 import LoginMenu from '@/modules/auth/components/LoginMenu.vue';
 import { ProfileRoute } from '@/modules/profile/types';
 import { DashboardRoute } from '@/modules/dashboard/types';
+import { NewsRoute } from '@/modules/news/types';
 import useCurrentUser from '@/modules/auth/composables/useCurrentUser';
 import useRefRich from '@/modules/utils-reactivity/composables/useRefRich';
 
@@ -69,6 +70,11 @@ const appbarLinks: {
   to: Location;
   requireAuth: boolean;
 }[] = [
+  {
+    title: 'News',
+    to: { name: NewsRoute.ROOT },
+    requireAuth: false,
+  },
   {
     title: 'Playlists',
     to: { name: DashboardRoute.ROOT },
