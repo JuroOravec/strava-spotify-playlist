@@ -1,5 +1,5 @@
 import ServerModule, { Services } from '../../lib/ServerModule';
-import { ServerModuleName, SetRequiredFields } from '../../types';
+import { AuthProvider, ServerModuleName, SetRequiredFields } from '../../types';
 import createCredentialsHandlers, { OAuthHandlers } from '../oauth/handlers';
 import createOAuth from './oauth';
 import type { OAuthGoogleData, OAuthGoogleExternalData } from './data';
@@ -16,7 +16,7 @@ const createOAuthGoogleModule = (
 ): OAuthGoogleModule => {
   return new ServerModule({
     name: ServerModuleName.OAUTH_GOOGLE,
-    handlers: createCredentialsHandlers(ServerModuleName.OAUTH_GOOGLE, {
+    handlers: createCredentialsHandlers(AuthProvider.GOOGLE, {
       scope: [
         'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile',
