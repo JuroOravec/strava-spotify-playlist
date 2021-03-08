@@ -20,6 +20,48 @@ Prefer to set the client wrappers to return results in the same order as the inp
 
 Prefer to format postgres queries using `pg-format` before passing them to postgres client.
 
+### Running locally
+
+1. [Install Postgres locally via Docker](https://hackernoon.com/dont-install-postgres-docker-pull-postgres-bee20e200198)
+
+2. [Install `psql` client on your machine](https://hackernoon.com/dont-install-postgres-docker-pull-postgres-bee20e200198)
+
+3. Update host, user, pwd in server's `.env`
+
+   > At this point you can connect to the Postgres DB, but the DB is still mepty. Next we load dump of production DB.
+
+4. Export SQL dump of current prod.
+
+   1. In TablePlus, open File > Backup...
+
+   2. Select connection to _production_ DB in left column.
+
+   3. Select right database in middle column.
+
+   4. Set Postgres version to `PostgreSQL 12.0`
+
+   5. Add option > `--create`
+
+   6. Click `Start backup...`
+
+   > The SQL dump file should now be downloaded onto your machine.
+
+5. Load SQL dump onto your local instance.
+
+   1. In TablePlus, open File > Restore...
+
+   2. Set Postgres version to `PostgreSQL 12.0`
+
+   3. Add option > `--create`
+
+   4. Select connection to _local_ DB in middle column.
+
+   5. Select right database in right column.
+
+   6. Resolve any possible issues.
+
+Now you have a local instance of Postgress with data from production on it.
+
 ---
 
 ## Web server cookies (session)
