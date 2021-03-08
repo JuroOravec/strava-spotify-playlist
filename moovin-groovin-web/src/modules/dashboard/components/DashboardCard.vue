@@ -14,9 +14,14 @@
       <slot name="title-append" />
     </v-row>
 
-    <v-card-subtitle v-if="$slots['subtitle']" class="pt-0">
-      <slot name="subtitle" />
-    </v-card-subtitle>
+    <v-row class="DashboardCard__title">
+      <v-col cols="auto" class="px-0">
+        <v-card-subtitle v-if="$slots['subtitle']" class="pt-0">
+          <slot name="subtitle" />
+        </v-card-subtitle>
+      </v-col>
+      <slot name="title-append" />
+    </v-row>
 
     <v-card-text class="DashboardCard__body">
       <slot />

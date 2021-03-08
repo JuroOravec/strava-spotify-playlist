@@ -152,6 +152,11 @@ export default Appbar;
 
   .LoginAvatar {
     margin-top: 3 * $spacer;
+
+    &__avatar {
+      padding-bottom: 2 * $spacer !important;
+      padding-top: 2 * $spacer !important;
+    }
   }
 
   &#{&}--expanded {
