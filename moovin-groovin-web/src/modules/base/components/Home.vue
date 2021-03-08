@@ -16,8 +16,8 @@
       <li>Go for a run or bike. Start a Strava activity and put on your fave songs on Spotify!</li>
       <li>When done, save your activity.</li>
       <li>
-        Take a nice shower, drink a glass of water and relax. In 20-30 mins, a new playlist will be
-        created for you with the songs you listened to during the activity:
+        Take a nice shower, drink a glass of water and relax. In 5-30 mins, a new playlist will be
+        created for you with the songs you listened to during the activity.
       </li>
     </ol>
 
