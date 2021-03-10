@@ -1,33 +1,88 @@
 import type { Handlers, ServerModule, Services } from '../../lib/ServerModule';
-import type { UserTrackModel, UserTrackRangesInput } from './types';
+import type {
+  UserTrackModel,
+  UserTrackRangesInput,
+  PlaylistTrackModel,
+  PlaylistTrackInputByPlaylist,
+  TrackModel,
+  TrackInput,
+  TrackMeta,
+} from './types';
 import type { StoreTrackData } from './data';
 import assertTrackStore from './utils/assertTrackStore';
 
 interface StoreTrackServices extends Services {
-  upsertUserTracks: (
-    userTracks: UserTrackModel[]
-  ) => Promise<(UserTrackModel | null)[]>;
+  deleteUserTracksOlderThan: (
+    timestamp: number
+  ) => Promise<UserTrackModel[] | null>;
+  getPlaylistTracksByPlaylist: (
+    input: PlaylistTrackInputByPlaylist
+  ) => Promise<PlaylistTrackModel[] | null>;
+  getPlaylistTracksByPlaylists: (
+    input: PlaylistTrackInputByPlaylist[]
+  ) => Promise<(PlaylistTrackModel[] | null)[]>;
+  getTrack: (input: TrackInput) => Promise<TrackModel[] | null>;
+  getTracks: (input: TrackInput[]) => Promise<(TrackModel[] | null)[]>;
   getUserTracksByRange: (
     input: UserTrackRangesInput
   ) => Promise<UserTrackModel[] | null>;
   getUserTracksByRanges: (
     input: UserTrackRangesInput[]
   ) => Promise<(UserTrackModel[] | null)[]>;
-  deleteUserTracksOlderThan: (
-    timestamp: number
-  ) => Promise<UserTrackModel[] | null>;
+  upsertPlaylistTracks: (
+    playlistTracks: PlaylistTrackModel[]
+  ) => Promise<(PlaylistTrackModel | null)[]>;
+  upsertTracks: (tracks: TrackModel[]) => Promise<(TrackMeta | null)[]>;
+  upsertUserTracks: (
+    userTracks: UserTrackModel[]
+  ) => Promise<(UserTrackModel | null)[]>;
 }
 
 type ThisModule = ServerModule<StoreTrackServices, Handlers, StoreTrackData>;
 
 const createStoreTrackServices = (): StoreTrackServices => {
-  async function upsertUserTracks(
+  async function deleteUserTracksOlderThan(
     this: ThisModule,
-    userTracks: UserTrackModel[]
-  ): Promise<(UserTrackModel | null)[]> {
-    if (!userTracks.length) return [];
+    timestamp: number
+  ): Promise<UserTrackModel[] | null> {
     assertTrackStore(this.data.trackStore);
-    return this.data.trackStore.upsert(userTracks);
+    return this.data.trackStore.deleteUserTracksOlderThan(timestamp);
+  }
+
+  async function getPlaylistTracksByPlaylist(
+    this: ThisModule,
+    input: PlaylistTrackInputByPlaylist
+  ): Promise<PlaylistTrackModel[] | null> {
+    const [result = null] = await this.services.getPlaylistTracksByPlaylists([
+      input,
+    ]);
+    return result;
+  }
+
+  async function getPlaylistTracksByPlaylists(
+    this: ThisModule,
+    input: PlaylistTrackInputByPlaylist[]
+  ): Promise<(PlaylistTrackModel[] | null)[]> {
+    if (!input.length) return [];
+    assertTrackStore(this.data.trackStore);
+    return this.data.trackStore.getPlaylistTracksByPlaylists(input);
+  }
+
+  async function getTrack(
+    this: ThisModule,
+    input: TrackInput
+  ): Promise<TrackModel[] | null> {
+    const [result = null] = await this.services.getTracks([input]);
+    return result;
+  }
+
+  async function getTracks(
+    this: ThisModule,
+    input: TrackInput[]
+  ): Promise<(TrackModel[] | null)[]> {
+    if (!input.length) return [];
+    assertTrackStore(this.data.trackStore);
+    return this.data.trackStore.getTracks(input);
   }
 
   async function getUserTracksByRange(
@@ -44,22 +99,47 @@ const createStoreTrackServices = (): StoreTrackServices => {
   ): Promise<(UserTrackModel[] | null)[]> {
     if (!input.length) return [];
     assertTrackStore(this.data.trackStore);
-    return this.data.trackStore.getByRanges(input);
+    return this.data.trackStore.getUserTracksByRanges(input);
   }
 
-  async function deleteUserTracksOlderThan(
+  async function upsertPlaylistTracks(
     this: ThisModule,
-    timestamp: number
-  ): Promise<UserTrackModel[] | null> {
+    playlistTracks: PlaylistTrackModel[]
+  ): Promise<(PlaylistTrackModel | null)[]> {
+    if (!playlistTracks.length) return [];
     assertTrackStore(this.data.trackStore);
-    return this.data.trackStore.deleteOlderThan(timestamp);
+    return this.data.trackStore.upsertPlaylistTracks(playlistTracks);
+  }
+
+  async function upsertTracks(
+    this: ThisModule,
+    tracks: TrackModel[]
+  ): Promise<(TrackModel | null)[]> {
+    if (!tracks.length) return [];
+    assertTrackStore(this.data.trackStore);
+    return this.data.trackStore.upsertTracks(tracks);
+  }
+
+  async function upsertUserTracks(
+    this: ThisModule,
+    userTracks: UserTrackModel[]
+  ): Promise<(UserTrackModel | null)[]> {
+    if (!userTracks.length) return [];
+    assertTrackStore(this.data.trackStore);
+    return this.data.trackStore.upsertUserTracks(userTracks);
   }
 
   return {
-    upsertUserTracks,
+    deleteUserTracksOlderThan,
+    getPlaylistTracksByPlaylist,
+    getPlaylistTracksByPlaylists,
+    getTrack,
+    getTracks,
     getUserTracksByRange,
     getUserTracksByRanges,
-    deleteUserTracksOlderThan,
+    upsertPlaylistTracks,
+    upsertTracks,
+    upsertUserTracks,
   };
 };
 

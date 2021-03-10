@@ -35,8 +35,8 @@ const createPlaylistTemplateContext = (input: {
   } = input;
   const { tracks: inputTracks } = playlist;
 
-  const formatDuration = (durationInMs: number): string | undefined => {
-    const isoDate = new Date(durationInMs).toISOString();
+  const formatDuration = (duration: number): string | undefined => {
+    const isoDate = new Date(duration * 1000).toISOString();
     return isoDate.match(timeFromIsoDateRegex)?.[0];
   };
 

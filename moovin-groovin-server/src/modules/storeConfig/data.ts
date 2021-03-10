@@ -18,7 +18,6 @@ const createDefaultUserConfig = (): UserConfig => ({
   playlistCollaborative: false,
   playlistPublic: false,
   playlistAutoCreate: false,
-  // TODO: Ensure on user input that none of the templates include `this` as key, or invalid syntax like `{{ a..b }}`
   playlistTitleTemplate: '[Strava] {{ activity.title }}',
   playlistDescriptionTemplate: [
     'Songs you listened to during your Strava {{ activity.type }} on',

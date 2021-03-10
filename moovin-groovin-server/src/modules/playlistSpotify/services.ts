@@ -25,7 +25,7 @@ interface PlaylistSpotifyServices extends Services {
   getRecentlyPlayedTracks: (
     input: {
       internalUserId: string;
-      providerUserId: GetRecentlyPlayedTracksArgs[0];
+      providerUserId: string;
       before?: number;
       after?: number;
     } & GetRecentlyPlayedTracksArgs[1]
@@ -108,15 +108,15 @@ const createPlaylistSpotifyServices = (): PlaylistSpotifyServices => {
 
     const enrichedTracks = tracks.map(
       (track, i): EnrichedTrack => ({
-        providerId: PlaylistProvider.SPOTIFY,
+        playlistProviderId: PlaylistProvider.SPOTIFY,
         trackId: tracksMetadata[i]?.id,
         title: tracksMetadata[i]?.name,
         album: tracksMetadata[i]?.album.name,
         artist: tracksMetadata[i]?.artists
           .map((artist) => artist.name)
           .join(', '),
-        duration: tracksMetadata[i]?.duration_ms,
-        startTime: track.startTime * 1000,
+        duration: Math.floor(tracksMetadata[i]?.duration_ms / 1000),
+        startTime: track.startTime,
       })
     );
 
