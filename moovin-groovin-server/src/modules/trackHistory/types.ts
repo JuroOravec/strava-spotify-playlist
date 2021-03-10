@@ -5,5 +5,5 @@ export type TrackHistoryDeps = Pick<
   AppServerModules,
   | ServerModuleName.STORE_TOKEN
   | ServerModuleName.STORE_TRACK
-  | ServerModuleName.PLAYLIST_SPOTIFY
+  | ServerModuleName.PLAYLIST
 >;

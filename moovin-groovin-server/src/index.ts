@@ -331,6 +331,12 @@ const main = async () => {
 
   const playlistModule = createPlaylistModule({
     appNamePublic: appName,
+    playlistProviders: ({ modules }: ModuleContext<AppServerModules>) => [
+      {
+        providerId: PlaylistProvider.SPOTIFY,
+        ...modules.playlistSpotify.services,
+      },
+    ],
   });
 
   // ///////////////////////////

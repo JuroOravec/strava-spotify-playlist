@@ -15,7 +15,6 @@ import ServerModule, {
 } from '../../lib/ServerModule';
 import logger from '../../lib/logger';
 import { PlaylistProvider } from '../../types';
-import resolvePlaylistModuleService from '../playlist/utils/resolvePlaylistModuleService';
 import type { UserTrackModel } from '../storeTrack/types';
 import type { UserTokenModel } from '../storeToken/types';
 import type { TrackHistoryData } from './data';
@@ -64,70 +63,32 @@ const createTrackHistoryServices = (): TrackHistoryServices => {
     return allTokens;
   }
 
-  async function getRecentlyPlayedTracks(input: {
-    modules: TrackHistoryDeps;
-    internalUserId: string;
-    providerId: string;
-    providerUserId: string;
-    after?: number;
-    before?: number;
-  }): Promise<UserTrackModel[]> {
-    const {
-      internalUserId,
-      modules,
-      providerId,
-      providerUserId,
-      before,
-      after,
-    } = input;
-
-    const getRecentlyPlayedTracksFn = resolvePlaylistModuleService({
-      modules,
-      providerId,
-      service: 'getRecentlyPlayedTracks',
-    });
-
-    const tracks = await getRecentlyPlayedTracksFn({
-      internalUserId,
-      providerUserId,
-      before,
-      after,
-    });
-
-    if (!tracks) {
-      throw Error(`Failed to get tracks from "${providerId}"`);
-    }
-
-    return tracks;
-  }
-
   async function onTrackHistoryTick(this: ThisModule) {
     assertContext(this.context);
-
-    const oneDayAgoTimestamp = unixTimestamp() - 60 * 60 * 24;
+    const { upsertUserTracks } = this.context.modules.storeTrack.services;
     const {
       deleteUserTracksOlderThan,
     } = this.context.modules.storeTrack.services;
+    const { playlistProviderApi } = this.context.modules.playlist.data;
+
+    const oneDayAgoTimestamp = unixTimestamp() - 60 * 60 * 24;
     await deleteUserTracksOlderThan(oneDayAgoTimestamp);
 
     (await getTrackHistoryTokens(this.context.modules)).reduce(
       async (aggPromise, { providerId, providerUserId, internalUserId }) => {
         await aggPromise;
-        assertContext(this.context);
-        const context = this.context;
 
         const { result: tracks } = await asyncSafeInvoke(
           () =>
-            getRecentlyPlayedTracks({
+            playlistProviderApi?.getRecentlyPlayedTracks({
               internalUserId,
-              modules: context.modules,
               providerId,
               providerUserId,
-            }),
+            }) ?? [],
           (e) => logger.error(e)
         );
 
-        this.context.modules.storeTrack.services.upsertUserTracks(tracks ?? []);
+        upsertUserTracks(tracks ?? []);
 
         await wait(this.data.delayPerUpdate);
       },
@@ -194,13 +155,15 @@ const createTrackHistoryServices = (): TrackHistoryServices => {
   ) {
     const { providers, ...options } = input;
 
+    assertContext(this.context);
+    const { getTokens } = this.context.modules.storeToken.services;
+    const { getUserTracksByRange } = this.context.modules.storeTrack.services;
+    const { playlistProviderApi } = this.context.modules.playlist.data;
+
     logger.debug({
       msg: 'Fetching played tracks',
       providers: providers.map((p) => p.providerId),
     });
-
-    assertContext(this.context);
-    const context = this.context;
 
     const providerIds = providers.map((p) => p.providerId);
 
@@ -216,9 +179,7 @@ const createTrackHistoryServices = (): TrackHistoryServices => {
     // Prevent user setting negative values since we use 0 as default
     const effectiveAfter = max([inclusiveAfterInSec, 0]) ?? 0;
 
-    const playlistTokens = await this.context.modules.storeToken.services.getTokens(
-      providers
-    );
+    const playlistTokens = await getTokens(providers);
 
     const internalUserId = playlistTokens.find((t) => t?.internalUserId)
       ?.internalUserId;
@@ -234,9 +195,8 @@ const createTrackHistoryServices = (): TrackHistoryServices => {
       providers.map(async ({ providerId, providerUserId }) => {
         const { result: tracks } = await asyncSafeInvoke(
           () =>
-            getRecentlyPlayedTracks({
+            playlistProviderApi?.getRecentlyPlayedTracks({
               internalUserId,
-              modules: context.modules,
               providerId,
               providerUserId,
               before: inclusiveBeforeInSec,
@@ -271,7 +231,6 @@ const createTrackHistoryServices = (): TrackHistoryServices => {
       );
     }
 
-    const { getUserTracksByRange } = this.context.modules.storeTrack.services;
     const oldTracks = await getUserTracksByRange({
       internalUserId,
       after: effectiveAfter,

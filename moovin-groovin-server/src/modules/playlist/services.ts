@@ -16,7 +16,6 @@ import type {
   UserActivityPlaylistInput,
   UserActivityPlaylistMeta,
 } from '../storePlaylist/types';
-import type { UserTrackModel } from '../storeTrack/types';
 import type { UserTokenModel } from '../storeToken/types';
 import type { UserConfig } from '../storeConfig/types';
 import { getScopesInfo } from '../oauthStrava/utils/scope';
@@ -32,7 +31,6 @@ import type {
   PlaylistDeps,
 } from './types';
 import type { PlaylistData } from './data';
-import resolvePlaylistModuleService from './utils/resolvePlaylistModuleService';
 
 interface UpdateActivityWithPlaylistOptions {
   activityToken: UserTokenModel;
@@ -94,143 +92,24 @@ type ThisModule = ServerModule<
 >;
 
 const createPlaylistServices = (): PlaylistServices => {
-  async function enrichTracks(input: {
-    modules: PlaylistDeps;
-    providerId: string;
-    providerUserId: string;
-    tracks: UserTrackModel[];
-  }): Promise<EnrichedTrack[]> {
-    const { providerId, tracks } = input;
-
-    const enrichTracksFn = resolvePlaylistModuleService({
-      ...input,
-      service: 'enrichTracks',
-    });
-
-    logger.debug(`Calling ${providerId} to enrich ${tracks.length} tracks`);
-    const enrichedTracks = await enrichTracksFn(input).catch((e) => {
-      logger.error(e);
-      return null;
-    });
-    logger.debug(
-      `Done calling ${providerId} to enrich ${tracks.length} tracks`
-    );
-
-    if (!enrichedTracks) {
-      throw Error(`Failed to enrich tracks from "${providerId}"`);
+  async function getTracksForActivity(
+    this: ThisModule,
+    input: {
+      activity: ActivityInput;
+      playlistTokens: UserTokenModel[];
     }
-    return enrichedTracks;
-  }
-
-  async function createPlaylist(input: {
-    modules: PlaylistDeps;
-    providerId: string;
-    providerUserId: string;
-    playlist: {
-      name: string;
-      description?: string;
-      collaborative?: boolean;
-      public?: boolean;
-    };
-  }): Promise<PlaylistResponse> {
-    const {
-      modules,
-      providerId,
-      providerUserId,
-      playlist: playlistInput,
-    } = input;
-
-    const createPlaylistFn = resolvePlaylistModuleService({
-      modules,
-      providerId,
-      service: 'createPlaylist',
-    });
-
-    logger.debug(`Calling ${providerId} to create playlist`);
-    const playlist = await createPlaylistFn({
-      providerUserId,
-      playlist: playlistInput,
-    }).catch((e) => {
-      logger.error(e);
-      return null;
-    });
-    logger.debug(`Done calling ${providerId} to create playlist`);
-
-    if (!playlist) {
-      throw Error(`Failed to create playlist in "${providerId}"`);
-    }
-    return playlist;
-  }
-
-  async function getPlaylist(input: {
-    modules: PlaylistDeps;
-    providerId: string;
-    providerUserId: string;
-    playlistId: string;
-  }): Promise<PlaylistResponse> {
-    const { providerId } = input;
-
-    const getPlaylistFn = resolvePlaylistModuleService({
-      ...input,
-      service: 'getPlaylist',
-    });
-
-    logger.debug(`Calling ${providerId} to get playlist`);
-    const playlist = await getPlaylistFn(input).catch((e) => {
-      logger.error(e);
-      return null;
-    });
-    logger.debug(`Done calling ${providerId} to get playlist`);
-
-    if (!playlist) {
-      throw Error(`Failed to get playlist from "${providerId}"`);
-    }
-    return playlist;
-  }
-
-  async function addTracksToPlaylist(input: {
-    modules: PlaylistDeps;
-    providerId: string;
-    providerUserId: string;
-    playlistId: string;
-    tracks: EnrichedTrack[];
-  }): Promise<string[]> {
-    const { providerId, playlistId, tracks } = input;
-
-    const addTracksToPlaylistFn = resolvePlaylistModuleService({
-      ...input,
-      service: 'addTracksToPlaylist',
-    });
-
-    logger.debug(`Calling ${providerId} to add ${tracks.length} playlist`);
-    const trackIds = await addTracksToPlaylistFn(input).catch((e) => {
-      logger.error(e);
-      return null;
-    });
-    logger.debug(`Done calling ${providerId} to add ${tracks.length} playlist`);
-
-    if (!trackIds) {
-      throw Error(
-        `Failed to add tracks to "${providerId}" playlist (ID "${playlistId}")`
-      );
-    }
-    return trackIds;
-  }
-
-  async function getTracksForActivity(input: {
-    modules: PlaylistDeps;
-    activity: ActivityInput;
-    playlistTokens: UserTokenModel[];
-  }): Promise<
+  ): Promise<
     {
       providerId: string;
       tracks: EnrichedTrack[];
       token: UserTokenModel | undefined;
     }[]
   > {
-    const { modules, activity, playlistTokens } = input;
+    assertContext(this.context);
+    const { activity, playlistTokens } = input;
     const { startTime, endTime } = activity;
-    const { getPlayedTracks } = modules.trackHistory.services;
+    const { getPlayedTracks } = this.context.modules.trackHistory.services;
+    const { playlistProviderApi } = this.data;
 
     const tracks = await getPlayedTracks({
       providers: playlistTokens,
@@ -257,12 +136,11 @@ const createPlaylistServices = (): PlaylistServices => {
         providerId,
         token,
         tracks: token
-          ? await enrichTracks({
-              modules,
+          ? (await playlistProviderApi?.enrichTracks({
               providerId,
               providerUserId: token?.providerUserId,
               tracks,
-            })
+            })) ?? []
           : [],
       }))
     );
@@ -311,6 +189,7 @@ const createPlaylistServices = (): PlaylistServices => {
       getUserPlaylistByUserAndActivity,
       insertUserPlaylist,
     } = this.context.modules.storePlaylist.services;
+    const { playlistProviderApi } = this.data;
 
     // There should never be oldPlaylist found, because that implies that
     // either Strava sent a webhook event more than once, or we've inserted
@@ -329,6 +208,10 @@ const createPlaylistServices = (): PlaylistServices => {
         `Playlist already exists for user activity (${playlistProviderId} userID: ${playlistUserId}, ${activityProviderId} activityID: ${activityId}).`
       );
     }
+
+    ///////////////////////////////////////
+    // Generate playlist title and desc
+    ///////////////////////////////////////
 
     const { proxiedContext: templateContext } = createPlaylistTemplateContext({
       activity,
@@ -393,12 +276,15 @@ const createPlaylistServices = (): PlaylistServices => {
       logger.debug('Done generating playlist description.');
     }
 
+    ////////////////////////
+    // Create playlist
+    ////////////////////////
+
     let playlist: UserActivityPlaylistMeta | null = oldPlaylist;
     let playlistData: PlaylistResponse | null = null;
 
     if (!playlist) {
       const createPlaylistInput = {
-        modules: this.context.modules,
         providerId: playlistProviderId,
         providerUserId: playlistUserId,
         playlist: {
@@ -409,7 +295,9 @@ const createPlaylistServices = (): PlaylistServices => {
         },
       };
 
-      playlistData = await createPlaylist(createPlaylistInput);
+      playlistData =
+        (await playlistProviderApi?.createPlaylist(createPlaylistInput)) ??
+        null;
 
       if (!playlistData) {
         logger.error({
@@ -434,12 +322,12 @@ const createPlaylistServices = (): PlaylistServices => {
 
       playlist = await insertUserPlaylist(insertPlaylistInput);
     } else {
-      playlistData = await getPlaylist({
-        modules: this.context.modules,
-        providerId: playlistProviderId,
-        providerUserId: playlistUserId,
-        playlistId: playlist.playlistId,
-      });
+      playlistData =
+        (await playlistProviderApi?.getPlaylist({
+          providerId: playlistProviderId,
+          providerUserId: playlistUserId,
+          playlistId: playlist.playlistId,
+        })) ?? null;
     }
 
     if (!playlistData) {
@@ -477,6 +365,7 @@ const createPlaylistServices = (): PlaylistServices => {
     const {
       updateUserPlaylistTracksAssigned,
     } = this.context.modules.storePlaylist.services;
+    const { playlistProviderApi } = this.data;
 
     const {
       activityProviderId,
@@ -518,7 +407,7 @@ const createPlaylistServices = (): PlaylistServices => {
       );
     }
 
-    const tracksByProviders = await getTracksForActivity({
+    const tracksByProviders = await getTracksForActivity.call(this, {
       modules,
       activity,
       playlistTokens: playlistTokens.filter(Boolean) as UserTokenModel[],
@@ -556,14 +445,14 @@ const createPlaylistServices = (): PlaylistServices => {
 
           const { playlistId } = playlist;
 
-          const { error: addTracksError } = await asyncSafeInvoke(() =>
-            addTracksToPlaylist({
-              modules,
-              providerId,
-              providerUserId: token.providerUserId,
-              playlistId,
-              tracks,
-            })
+          const { error: addTracksError } = await asyncSafeInvoke(
+            () =>
+              playlistProviderApi?.addTracksToPlaylist({
+                providerId,
+                providerUserId: token.providerUserId,
+                playlistId,
+                tracks,
+              }) ?? null
           );
 
           if (!addTracksError) {

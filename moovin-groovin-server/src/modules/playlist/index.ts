@@ -1,18 +1,21 @@
 import ServerModule, { Handlers } from '../../lib/ServerModule';
-import { ServerModuleName } from '../../types';
+import { ServerModuleName, SetRequiredFields } from '../../types';
 import createInstaller from './install';
 import createCloser from './close';
 import createServices, { PlaylistServices } from './services';
 import type { PlaylistData, PlaylistExternalOptions } from './data';
 
-type PlaylistModuleOptions = PlaylistExternalOptions;
+type PlaylistModuleOptions = SetRequiredFields<
+  PlaylistExternalOptions,
+  'appNamePublic'
+>;
 
 type PlaylistModule = ServerModule<PlaylistServices, Handlers, PlaylistData>;
 
 const createStravaWebhookModule = (
   options: PlaylistModuleOptions
 ): PlaylistModule => {
-  const { appNamePublic } = options;
+  const { appNamePublic, playlistProviders = [] } = options;
 
   return new ServerModule({
     name: ServerModuleName.PLAYLIST,
@@ -23,6 +26,8 @@ const createStravaWebhookModule = (
       ...options,
       templateFormater: null,
       appNamePublic,
+      playlistProviders,
+      playlistProviderApi: null,
     },
   });
 };

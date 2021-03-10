@@ -1,16 +1,20 @@
+import type { AnyServerModules, ModuleContext } from '../../lib/ServerModule';
 import type AppServerModules from '../../types/AppServerModules';
 import type { ServerModuleName } from '../../types';
 import type { DetailedActivity } from '../apiStrava/types';
-import { UserActivityPlaylistMeta } from '../storePlaylist/types';
+import type { UserActivityPlaylistMeta } from '../storePlaylist/types';
+import type { TrackModel } from '../storeTrack/types';
+import type { OptionalArray } from '@moovin-groovin/shared';
+import type { PlaylistProviderApiModule } from './lib/PlaylistProviderApi';
 
 export type PlaylistDeps = Pick<
   AppServerModules,
   | ServerModuleName.API_STRAVA
   | ServerModuleName.STORE_CONFIG
   | ServerModuleName.STORE_TOKEN
+  | ServerModuleName.STORE_TRACK
   | ServerModuleName.STORE_USER
   | ServerModuleName.STORE_PLAYLIST
-  | ServerModuleName.PLAYLIST_SPOTIFY
   | ServerModuleName.TRACK_HISTORY
 >;
 
@@ -27,13 +31,8 @@ export interface ActivityInput {
   descriptionLimit?: number;
 }
 
-export interface EnrichedTrack {
-  providerId: string;
-  trackId: string;
-  title: string;
-  album: string;
-  artist: string;
-  duration: number;
+export interface EnrichedTrack extends TrackModel {
+  /** Unix timestamp (seconds since epoch) when track started. */
   startTime: number;
 }
 
@@ -90,3 +89,9 @@ interface ActivityTemplateContextPlaylist extends TemplateContextPlaylist {
 export type ActivityTemplateContext = PlaylistTemplateContext & {
   playlist: ActivityTemplateContextPlaylist;
 };
+
+export type PlaylistProviderInput = OptionalArray<PlaylistProviderApiModule>;
+export type PlaylistProviderInputFn<
+  TModules extends AnyServerModules = AnyServerModules,
+  TInput extends PlaylistProviderInput = PlaylistProviderInput
+> = (ctx: ModuleContext<TModules>) => TInput;
