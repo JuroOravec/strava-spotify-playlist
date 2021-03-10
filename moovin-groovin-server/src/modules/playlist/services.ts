@@ -189,6 +189,10 @@ const createPlaylistServices = (): PlaylistServices => {
       getUserPlaylistByUserAndActivity,
       insertUserPlaylist,
     } = this.context.modules.storePlaylist.services;
+    const {
+      upsertTracks,
+      upsertPlaylistTracks,
+    } = this.context.modules.storeTrack.services;
     const { playlistProviderApi } = this.data;
 
     // There should never be oldPlaylist found, because that implies that
@@ -339,6 +343,17 @@ const createPlaylistServices = (): PlaylistServices => {
         `Failed to create a playlist for user activity (${playlistProviderId} userID: ${playlistUserId}, ${activityProviderId} activityID: ${activityId}).`
       );
     }
+
+    const { playlistId } = playlist;
+
+    ////////////////////////
+    // Save tracks data
+    ////////////////////////
+
+    await upsertTracks(tracks);
+    await upsertPlaylistTracks(
+      tracks.map((track) => ({ ...track, playlistId }))
+    );
 
     return {
       ...(playlistData ?? {}),
