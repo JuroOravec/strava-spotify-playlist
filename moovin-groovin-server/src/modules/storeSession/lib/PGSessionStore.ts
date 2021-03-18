@@ -7,12 +7,6 @@ class PGSessionStore
   implements SessionStore {
   async doInstall(): Promise<void> {
     this.queries = await getQueries();
-    const {
-      rows: [foundRow],
-    } = await this.query('sessionTableExists');
-
-    const sessionTableExists = foundRow?.table_exists ?? false;
-    if (!sessionTableExists) await this.query('createSessionTable');
   }
 }
 
