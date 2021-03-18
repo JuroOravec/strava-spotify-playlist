@@ -7,16 +7,9 @@ import type { EnvironmentConfig } from '@/plugins/config/config';
 interface UseOpenAuthWindow {
   openWindow: typeof openWindow;
   openAuthWindow: (
-    provider: AuthProvider,
+    provider: string,
     options?: { params?: Record<string, string> } & Pick<OpenWindowOptions, 'onDidCloseWindow'>
   ) => void;
-}
-
-enum AuthProvider {
-  FACEBOOK = 'facebook',
-  GOOGLE = 'google',
-  STRAVA = 'strava',
-  SPOTIFY = 'spotify',
 }
 
 const defaultWindowFeats: Partial<WindowFeatures> = {
@@ -30,19 +23,19 @@ const defaultWindowFeats: Partial<WindowFeatures> = {
   status: false,
 };
 
-const getAuthUrl = (urlTemplate: string, provider: AuthProvider) =>
-  urlTemplate.replace(/\$\{provider\}/gi, provider);
+const getAuthUrl = (urlTemplate: string, providerId: string) =>
+  urlTemplate.replace(/\$\{provider\}/gi, providerId);
 
 const useOpenAuthWindow = (): UseOpenAuthWindow => {
   const config = inject<EnvironmentConfig>(ConfigKey);
 
   const openAuthWindow = (
-    provider: AuthProvider,
+    providerId: string,
     options: { params?: Record<string, string> } & Pick<OpenWindowOptions, 'onDidCloseWindow'> = {}
   ): void => {
     const { params = {}, onDidCloseWindow } = options;
 
-    const authUrl = getAuthUrl(config?.LOGIN_URL ?? '', provider);
+    const authUrl = getAuthUrl(config?.LOGIN_URL ?? '', providerId);
 
     const urlHelper = new URL(authUrl);
     Object.entries(params).forEach(([key, val]) => urlHelper.searchParams.set(key, val));
@@ -50,7 +43,7 @@ const useOpenAuthWindow = (): UseOpenAuthWindow => {
     urlHelper.searchParams.set('redirect_url', config?.AUTH_CALLBACK_URL ?? '');
 
     openWindow(urlHelper.toString(), {
-      name: `moovin-groovin-login-${provider}`,
+      name: `moovin-groovin-login-${providerId}`,
       windowFeatures: defaultWindowFeats,
       onDidCloseWindow,
     });
@@ -63,4 +56,3 @@ const useOpenAuthWindow = (): UseOpenAuthWindow => {
 };
 
 export default useOpenAuthWindow;
-export { AuthProvider };

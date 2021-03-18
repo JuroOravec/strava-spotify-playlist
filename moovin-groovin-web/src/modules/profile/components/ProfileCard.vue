@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ProfileCard" :class="{ 'ProfileCard--no-title': !$slots['title'] }">
+  <v-card class="ProfileCard elevation-3" :class="{ 'ProfileCard--no-title': !$slots['title'] }">
     <v-row class="ProfileCard__title">
       <v-col cols="auto" class="px-0">
         <v-card-title>
@@ -30,14 +30,14 @@ export default ProfileCard;
 <style lang="scss">
 @import '~vuetify/src/styles/main';
 .ProfileCard {
-  @extend .elevation-3, .pa-3;
+  padding: 3 * $spacer;
 
   & + & {
-    @extend .mt-8;
+    margin-top: 8 * $spacer;
   }
 
   &__title {
-    @extend .my-3, .mx-0;
+    margin: 3 * $spacer 0;
 
     .col {
       padding-bottom: 0;
@@ -51,7 +51,8 @@ export default ProfileCard;
 
   &--no-title {
     .ProfileCard__title {
-      @extend .my-0;
+      margin-top: 0;
+      margin-bottom: 0;
     }
   }
 }

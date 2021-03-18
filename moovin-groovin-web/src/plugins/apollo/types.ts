@@ -56,8 +56,7 @@ export type GqlAuthProvider =
   | 'GOOGLE';
 
 export type GqlPlaylistProvider = 
-  | 'SPOTIFY'
-  | 'APPLE';
+  | 'SPOTIFY';
 
 export type GqlActivityProvider = 
   | 'STRAVA';
@@ -104,6 +103,7 @@ export type GqlPlaylist = {
   playlistUrl: Maybe<Scalars['String']>;
   playlistName: Maybe<Scalars['String']>;
   activityProviderId: Scalars['String'];
+  activityId: Scalars['String'];
   activityName: Maybe<Scalars['String']>;
   activityUrl: Maybe<Scalars['String']>;
   dateCreated: Maybe<Scalars['Int']>;
@@ -130,7 +130,7 @@ export type GqlgetCurrentUserQuery = (
     & Pick<GqlUser, 'userId' | 'email' | 'nameFamily' | 'nameGiven' | 'nameDisplay' | 'photo'>
     & { providers: Array<(
       { __typename?: 'Provider' }
-      & Pick<GqlProvider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider'>
+      & Pick<GqlProvider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider' | 'isAuthProvider'>
     )> }
   ) }
 );
@@ -177,7 +177,7 @@ export type GqlgetAllProvidersQuery = (
   { __typename?: 'Query' }
   & { getAllProviders: Array<(
     { __typename?: 'Provider' }
-    & Pick<GqlProvider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider'>
+    & Pick<GqlProvider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider' | 'isAuthProvider'>
   )> }
 );
 
@@ -250,13 +250,14 @@ export type UserConfigFieldPolicy = {
 	activityDescriptionEnabled?: FieldPolicy<any> | FieldReadFunction<any>,
 	activityDescriptionTemplate?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type PlaylistKeySpecifier = ('playlistProviderId' | 'playlistId' | 'playlistUrl' | 'playlistName' | 'activityProviderId' | 'activityName' | 'activityUrl' | 'dateCreated' | PlaylistKeySpecifier)[];
+export type PlaylistKeySpecifier = ('playlistProviderId' | 'playlistId' | 'playlistUrl' | 'playlistName' | 'activityProviderId' | 'activityId' | 'activityName' | 'activityUrl' | 'dateCreated' | PlaylistKeySpecifier)[];
 export type PlaylistFieldPolicy = {
 	playlistProviderId?: FieldPolicy<any> | FieldReadFunction<any>,
 	playlistId?: FieldPolicy<any> | FieldReadFunction<any>,
 	playlistUrl?: FieldPolicy<any> | FieldReadFunction<any>,
 	playlistName?: FieldPolicy<any> | FieldReadFunction<any>,
 	activityProviderId?: FieldPolicy<any> | FieldReadFunction<any>,
+	activityId?: FieldPolicy<any> | FieldReadFunction<any>,
 	activityName?: FieldPolicy<any> | FieldReadFunction<any>,
 	activityUrl?: FieldPolicy<any> | FieldReadFunction<any>,
 	dateCreated?: FieldPolicy<any> | FieldReadFunction<any>
@@ -297,4 +298,4 @@ export type TypedTypePolicies = TypePolicies & {
 		fields?: UserFieldPolicy,
 	}
 };
-// Generated on 2021-03-07T14:07:56+00:00
+// Generated on 2021-03-14T17:42:57+00:00

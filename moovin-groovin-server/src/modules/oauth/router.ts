@@ -28,6 +28,7 @@ const createRouter = (): RouterCreator => {
         // In fact, that means that we could do without the /login endpoint and just
         // use the callback.
         .get(`/${providerId}/login`, loginHandler)
+        .post(`/${providerId}/callback`, loginHandler, callbackHandler)
         .get(`/${providerId}/callback`, loginHandler, callbackHandler);
     });
 

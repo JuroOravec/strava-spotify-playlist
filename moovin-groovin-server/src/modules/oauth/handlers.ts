@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response, RequestHandler } from 'express';
 import { BadRequest } from 'express-openapi-validator/dist/framework/types';
 import passport, { AuthenticateOptions } from 'passport';
+import type { AuthorizationError } from 'passport-oauth2';
 
 import { asyncSafeInvoke, safeInvoke } from '@moovin-groovin/shared';
-import logger from '../../lib/logger';
 import type { ServerModule } from '../../lib/ServerModule';
 import { serializeState, deserializeState } from './utils/state';
 import { ServerModuleName } from '../../types';
@@ -70,8 +70,10 @@ const createOAuthHandlers = (
       failWithError: true,
       session: false,
       showDialog: true,
-      passReqToCallback: true,
-      state: serializeState({ redirectUrl, origState }),
+      state:
+        redirectUrl || origState
+          ? serializeState({ redirectUrl, origState })
+          : undefined,
       ...passportOptions,
     };
 
@@ -79,13 +81,14 @@ const createOAuthHandlers = (
     // params to the callback.
     // For context, see https://stackoverflow.com/q/48917804/9788634
     const passportAuthCallback = (
-      error: Error | null,
+      error: AuthorizationError | null,
       user: UserModel | null,
       info?: any
     ) => {
       if (error || !user?.internalUserId) {
         // We assume this handler will be followed by the callback handler
-        req.query.error = error?.message ?? 'Failed to find user.';
+        req.query.error =
+          error?.message ?? error?.code ?? 'Failed to find user.';
         return next();
       }
       req.login(user, (loginErr) => {

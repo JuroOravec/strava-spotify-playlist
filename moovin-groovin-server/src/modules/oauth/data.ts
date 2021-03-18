@@ -4,6 +4,7 @@ interface OAuthExternalData {
   callbackUrlRoot: string;
   providers: OAuthInput | OAuthInputFn<any>;
   initializePassport: boolean;
+  tokenExpiryCutoff: number;
 }
 
 interface OAuthInternalData {

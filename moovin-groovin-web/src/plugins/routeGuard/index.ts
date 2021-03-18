@@ -3,6 +3,8 @@ import { provide } from '@vue/composition-api';
 import type { NavigationGuard, NavigationGuardNext } from 'vue-router';
 import isNil from 'lodash/isNil';
 
+import applyMixinOnce from '@/modules/utils/utils/applyMixinOnce';
+
 interface RouteGuards {
   beforeEnter: Record<string, NavigationGuard[]>;
   beforeLeave: Record<string, NavigationGuard[]>;
@@ -40,6 +42,12 @@ const installRouteGuard = (vueClass: VueConstructor): RouteGuardPlugin => {
     if (!nextHasBeenCalled) next();
   };
 
+  applyMixinOnce(vueClass, {
+    setup() {
+      provide(RouteGuardKey, routeGuards);
+    },
+  });
+
   vueClass.mixin({
     name: 'RouteGuardMixin',
     beforeRouteEnter(to, from, next) {
@@ -47,9 +55,6 @@ const installRouteGuard = (vueClass: VueConstructor): RouteGuardPlugin => {
     },
     beforeRouteLeave(to, from, next) {
       onRouteGuard('beforeLeave', to, from, next);
-    },
-    setup() {
-      provide(RouteGuardKey, routeGuards);
     },
   });
 

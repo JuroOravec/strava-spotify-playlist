@@ -109,6 +109,40 @@ const transformMixpanelPlugin = (): AnalyticsPlugin => {
         mixpanel.alias(userId);
       }
     },
+
+    // Hook triggered on analytics.track
+    'track:mixpanel'({ payload, abort }: PluginContext<TrackPayload>) {
+      // Handle the payload differently based on the event
+      // switch (payload.event) {
+      //   case Events.LOGIN: {
+      //     // Update user property that counts logins
+      //     mixpanel.people.increment(traitName(UserProps.TIMES_LOGGED_IN_EE));
+      //     // Clear properties
+      //     payload.properties = {};
+      //     return;
+      //   }
+      //   case Events.LOGOUT: {
+      //     // Clear properties
+      //     payload.properties = {};
+      //     return;
+      //   }
+      //   case Events.PROGRAM: {
+      //     // Include the Program name in events if the program name changes.
+      //     // Note: In Mixpanel, registering properties means that those properties are copied
+      //     // to every subsequent event tracked.
+      //     // See https://help.mixpanel.com/hc/en-us/articles/360001355266-Event-Properties#super-properties-for-events.
+      //     mixpanel.register({
+      //       [propName(EventProps.DEPLOYMENT_PROGRAM)]: payload.properties.name || 'Null',
+      //     });
+      //     // We want to attach the program properties to subsequent events, but we're not
+      //     // particularly interested in tracking the program data as a separate event.
+      //     // So we prevent tracking of this event by calling and returning abort.
+      //     return abort();
+      //   }
+      //   default:
+      //     return;
+      // }
+    },
   };
 };
 

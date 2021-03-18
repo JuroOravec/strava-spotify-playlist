@@ -48,6 +48,9 @@ const passportVerifier: VerifyFunctionWithRequest = async function verifier(
 ) {
   const { error } = await asyncSafeInvoke(async () => {
     assertContext(this.context);
+    const {
+      processIntegrationProviderToken,
+    } = this.context.modules.oauth.services;
 
     const token: AuthToken = {
       accessToken,
@@ -58,9 +61,6 @@ const passportVerifier: VerifyFunctionWithRequest = async function verifier(
       scope: req.query.scope ?? null,
     };
 
-    const {
-      processIntegrationProviderToken,
-    } = this.context.modules.oauth.services;
     return processIntegrationProviderToken(
       token,
       req.user?.internalUserId,

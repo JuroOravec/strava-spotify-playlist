@@ -12,6 +12,7 @@ import createOAuthAccessTokenServices, {
 import createOAuth from './oauth';
 import type { OAuthSpotifyData, OAuthSpotifyExternalData } from './data';
 import type { OAuthSpotifyDeps } from './types';
+import { UserTokenModel } from '../storeToken/types';
 
 type OAuthSpotifyModuleOptions = SetRequiredFields<
   OAuthSpotifyExternalData,
@@ -27,16 +28,16 @@ type OAuthSpotifyModule = ServerModule<
 
 const doRefreshAccessToken = async function doRefreshAccessToken(
   this: OAuthSpotifyModule,
-  refreshToken: string
+  oldToken: UserTokenModel
 ) {
   const spotifyClient = this.context?.modules.apiSpotify.data.spotify;
-  spotifyClient?.setRefreshToken(refreshToken);
+  spotifyClient?.setRefreshToken(oldToken.refreshToken);
   const response = await spotifyClient?.refreshAccessToken();
   if (!response) throw Error('Unable to refresh Spotify access token');
   return {
     providerId: PlaylistProvider.SPOTIFY,
     accessToken: response?.body.access_token,
-    refreshToken: refreshToken,
+    refreshToken: oldToken.refreshToken,
     expiresAt: Math.round(unixTimestamp() + (response?.body.expires_in || 0)),
   };
 };
@@ -44,8 +45,6 @@ const doRefreshAccessToken = async function doRefreshAccessToken(
 const createOAuthSpotifyModule = (
   options: OAuthSpotifyModuleOptions
 ): OAuthSpotifyModule => {
-  const { tokenExpiryCutoff = 0 } = options;
-
   return new ServerModule({
     name: ServerModuleName.OAUTH_SPOTIFY,
     handlers: createOAuthHandlers(PlaylistProvider.SPOTIFY),
@@ -55,7 +54,6 @@ const createOAuthSpotifyModule = (
     oauth: createOAuth(),
     data: {
       ...options,
-      tokenExpiryCutoff,
     },
   });
 };

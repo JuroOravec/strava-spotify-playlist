@@ -25,7 +25,7 @@ function createStoreUserGraphqlSchema(this: ServerModule): DocumentNode {
 
     enum PlaylistProvider {
       SPOTIFY
-      APPLE
+      APPLE_MUSIC
     }
 
     enum ActivityProvider {

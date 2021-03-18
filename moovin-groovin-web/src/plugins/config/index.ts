@@ -1,6 +1,7 @@
 import type { VueConstructor } from 'vue';
 import { provide } from '@vue/composition-api';
 
+import applyMixinOnce from '@/modules/utils/utils/applyMixinOnce';
 import createConfig, { ApplicationConfig, EnvironmentConfig } from './config';
 
 const ConfigKey = Symbol('ConfigKey');
@@ -16,7 +17,7 @@ const installConfig = (
   const currEnv = (process.env.NODE_ENV || 'production') as keyof ApplicationConfig;
   const currentConfig = configs[currEnv];
 
-  vueClass.mixin({
+  applyMixinOnce(vueClass, {
     name: 'ConfigMixin',
     setup() {
       provide<EnvironmentConfig>(ConfigKey, currentConfig);

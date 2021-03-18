@@ -1,3 +1,4 @@
+import { OptionalPromise } from '@moovin-groovin/shared';
 import ServerModule, {
   assertContext,
   Data,
@@ -41,8 +42,8 @@ const createOAuthAccessTokenServices = (
   providerId: string,
   options: {
     doRefreshAccessToken: (
-      refreshToken: string
-    ) => RefreshedAuthToken | Promise<RefreshedAuthToken>;
+      oldToken: UserTokenModel
+    ) => OptionalPromise<RefreshedAuthToken | null>;
   }
 ): OAuthAccessTokenServices => {
   const { doRefreshAccessToken } = options;
@@ -57,7 +58,7 @@ const createOAuthAccessTokenServices = (
 
     const token = await getToken({ providerUserId, providerId });
     assertToken(token, providerId, providerUserId);
-    const newToken = await doRefreshAccessToken.call(this, token.refreshToken);
+    const newToken = await doRefreshAccessToken.call(this, token);
 
     await upsertToken({
       ...token,
@@ -67,7 +68,7 @@ const createOAuthAccessTokenServices = (
       internalUserId: token.internalUserId,
     });
 
-    return newToken.accessToken;
+    return newToken?.accessToken ?? token.accessToken;
   }
 
   async function getAccessToken(

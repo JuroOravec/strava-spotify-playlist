@@ -5,7 +5,8 @@ SELECT
   user_token.expires_at,
   user_token.access_token,
   user_token.refresh_token,
-  user_token.scope
+  user_token.scope,
+  user_token.extra
 FROM  
   (values
     %L

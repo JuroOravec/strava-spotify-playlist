@@ -4,6 +4,7 @@ import { ApolloClients } from '@vue/apollo-composable';
 import VueApollo from 'vue-apollo';
 import type { ApolloClient } from 'apollo-client';
 
+import applyMixinOnce from '@/modules/utils/utils/applyMixinOnce';
 import type { EnvironmentConfig } from '../config/config';
 import createApolloClients, { ApolloClientsOptions, VueApolloClients } from './clients';
 
@@ -32,7 +33,7 @@ const installApollo = (
     errorHandler: onError,
   });
 
-  vueClass.mixin({
+  applyMixinOnce(vueClass, {
     name: 'ApolloMixin',
     setup() {
       provide(ApolloClients, apolloClients);

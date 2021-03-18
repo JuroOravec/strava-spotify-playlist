@@ -8,7 +8,7 @@ const outDir = config.compilerOptions.outDir;
 
 // Copy all YAML and SQL files to build
 const filesToCopy = glob
-  .sync('**/*.{yml,yaml,*sql}', {
+  .sync('**/*.{yml,yaml,*sql,*p8}', {
     ignore: ['**/node_modules/**'],
   })
   .map((file) => ({

@@ -16,7 +16,11 @@ type OAuthModuleOptions = SetRequiredFields<
 type OAuthModule = ServerModule<OAuthServices, Handlers, OAuthData>;
 
 const createOAuthModule = (options: OAuthModuleOptions): OAuthModule => {
-  const { providers = [], initializePassport = true } = options;
+  const {
+    providers = [],
+    initializePassport = true,
+    tokenExpiryCutoff = 0,
+  } = options;
 
   return new ServerModule({
     name: ServerModuleName.OAUTH,
@@ -30,6 +34,7 @@ const createOAuthModule = (options: OAuthModuleOptions): OAuthModule => {
       ...options,
       providers,
       initializePassport,
+      tokenExpiryCutoff,
       resolvedProviders: null,
       cache: null,
     },

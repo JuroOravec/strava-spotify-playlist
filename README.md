@@ -24,7 +24,7 @@ Prefer to format postgres queries using `pg-format` before passing them to postg
 
 1. [Install Postgres locally via Docker](https://hackernoon.com/dont-install-postgres-docker-pull-postgres-bee20e200198)
 
-2. [Install `psql` client on your machine](https://hackernoon.com/dont-install-postgres-docker-pull-postgres-bee20e200198)
+2. [Install `psql` client on your machine](https://blog.timescale.com/tutorials/how-to-install-psql-on-mac-ubuntu-debian-windows/)
 
 3. Update host, user, pwd in server's `.env`
 

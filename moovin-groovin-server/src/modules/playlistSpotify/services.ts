@@ -13,6 +13,7 @@ import unixTimestamp from '../../utils/unixTimestamp';
 import type { ApiSpotifyServices } from '../apiSpotify/services';
 import type { UserTrackInput, UserTrackModel } from '../storeTrack/types';
 import type { EnrichedTrack, PlaylistResponse } from '../playlist/types';
+import type { PlaylistProviderApiModule } from '../playlist/lib/PlaylistProviderApi';
 import type { PlaylistSpotifyDeps } from './types';
 
 type GetRecentlyPlayedTracksArgs = Parameters<
@@ -21,7 +22,9 @@ type GetRecentlyPlayedTracksArgs = Parameters<
 
 type CreatePlaylistOptions = Parameters<Spotify['createPlaylist']>[2];
 
-interface PlaylistSpotifyServices extends Services {
+interface PlaylistSpotifyServices
+  extends Services,
+    Omit<PlaylistProviderApiModule, 'providerId'> {
   getRecentlyPlayedTracks: (
     input: {
       internalUserId: string;

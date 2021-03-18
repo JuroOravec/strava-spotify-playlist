@@ -59,8 +59,7 @@ type AuthProvider =
   | 'GOOGLE';
 
 type PlaylistProvider = 
-  | 'SPOTIFY'
-  | 'APPLE';
+  | 'SPOTIFY';
 
 type ActivityProvider = 
   | 'STRAVA';
@@ -107,6 +106,7 @@ type Playlist = {
   playlistUrl: Maybe<Scalars['String']>;
   playlistName: Maybe<Scalars['String']>;
   activityProviderId: Scalars['String'];
+  activityId: Scalars['String'];
   activityName: Maybe<Scalars['String']>;
   activityUrl: Maybe<Scalars['String']>;
   dateCreated: Maybe<Scalars['Int']>;
@@ -133,7 +133,7 @@ type getCurrentUserQuery = (
     & Pick<User, 'userId' | 'email' | 'nameFamily' | 'nameGiven' | 'nameDisplay' | 'photo'>
     & { providers: Array<(
       { __typename?: 'Provider' }
-      & Pick<Provider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider'>
+      & Pick<Provider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider' | 'isAuthProvider'>
     )> }
   ) }
 );
@@ -180,7 +180,7 @@ type getAllProvidersQuery = (
   { __typename?: 'Query' }
   & { getAllProviders: Array<(
     { __typename?: 'Provider' }
-    & Pick<Provider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider'>
+    & Pick<Provider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider' | 'isAuthProvider'>
   )> }
 );
 
@@ -234,6 +234,7 @@ type updateCurrentUserConfigMutation = (
       name
       isActivityProvider
       isPlaylistProvider
+      isAuthProvider
     }
   }
 }
@@ -341,6 +342,7 @@ export type logoutCurrentUserMutationCompositionFunctionResult = VueApolloCompos
     name
     isActivityProvider
     isPlaylistProvider
+    isAuthProvider
   }
 }
     `;
@@ -457,4 +459,4 @@ export function useupdateCurrentUserConfigMutation(options: VueApolloComposable.
   return VueApolloComposable.useMutation<updateCurrentUserConfigMutation, updateCurrentUserConfigMutationVariables>(updateCurrentUserConfigDocument, options);
 }
 export type updateCurrentUserConfigMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<updateCurrentUserConfigMutation, updateCurrentUserConfigMutationVariables>;
-// Generated on 2021-03-07T14:07:56+00:00
+// Generated on 2021-03-14T17:42:57+00:00

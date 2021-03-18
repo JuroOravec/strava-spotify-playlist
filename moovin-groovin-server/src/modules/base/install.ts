@@ -15,8 +15,10 @@ import type { BaseData } from './data';
 const createBaseInstaller = (): Installer => {
   const install: Installer = function install(
     this: ServerModule<Services, Handlers, BaseData>,
-    { app }: ModuleContext
+    context: ModuleContext
   ) {
+    const { app } = context;
+
     app.set('trust proxy', true);
     app.set('appPath', `${this.data.root}client`);
     app.use(
@@ -41,6 +43,17 @@ const createBaseInstaller = (): Installer => {
     app.use(bodyParser.text({ limit: process.env.REQUEST_LIMIT || '100kb' }));
     app.use(cookieParser(process.env.SESSION_SECRET));
     app.use(express.static(`${this.data.root}/public`));
+
+    // Specify view folders
+    const oneOrMoreViewDirs =
+      typeof this.data.viewDirs === 'function'
+        ? this.data.viewDirs(context)
+        : this.data.viewDirs;
+    const viewDirs = Array.isArray(oneOrMoreViewDirs)
+      ? oneOrMoreViewDirs
+      : [oneOrMoreViewDirs];
+
+    app.set('views', viewDirs);
   };
 
   return install;

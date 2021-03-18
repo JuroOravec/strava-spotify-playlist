@@ -56,8 +56,7 @@ type AuthProvider =
   | 'GOOGLE';
 
 type PlaylistProvider = 
-  | 'SPOTIFY'
-  | 'APPLE';
+  | 'SPOTIFY';
 
 type ActivityProvider = 
   | 'STRAVA';
@@ -104,6 +103,7 @@ type Playlist = {
   playlistUrl: Maybe<Scalars['String']>;
   playlistName: Maybe<Scalars['String']>;
   activityProviderId: Scalars['String'];
+  activityId: Scalars['String'];
   activityName: Maybe<Scalars['String']>;
   activityUrl: Maybe<Scalars['String']>;
   dateCreated: Maybe<Scalars['Int']>;
@@ -130,7 +130,7 @@ type getCurrentUserQuery = (
     & Pick<User, 'userId' | 'email' | 'nameFamily' | 'nameGiven' | 'nameDisplay' | 'photo'>
     & { providers: Array<(
       { __typename?: 'Provider' }
-      & Pick<Provider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider'>
+      & Pick<Provider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider' | 'isAuthProvider'>
     )> }
   ) }
 );
@@ -177,7 +177,7 @@ type getAllProvidersQuery = (
   { __typename?: 'Query' }
   & { getAllProviders: Array<(
     { __typename?: 'Provider' }
-    & Pick<Provider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider'>
+    & Pick<Provider, 'providerId' | 'name' | 'isActivityProvider' | 'isPlaylistProvider' | 'isAuthProvider'>
   )> }
 );
 
@@ -231,6 +231,7 @@ type updateCurrentUserConfigMutation = (
       name
       isActivityProvider
       isPlaylistProvider
+      isAuthProvider
     }
   }
 }
@@ -263,6 +264,7 @@ type updateCurrentUserConfigMutation = (
     name
     isActivityProvider
     isPlaylistProvider
+    isAuthProvider
   }
 }
     `;
@@ -415,6 +417,7 @@ export interface PlaylistOptions {
   playlistUrl?: Playlist['playlistUrl'];
   playlistName?: Playlist['playlistName'];
   activityProviderId?: Playlist['activityProviderId'];
+  activityId?: Playlist['activityId'];
   activityName?: Playlist['activityName'];
   activityUrl?: Playlist['activityUrl'];
   dateCreated?: Playlist['dateCreated'];
@@ -431,6 +434,7 @@ export function newPlaylist(
   o.playlistUrl = options.playlistUrl ?? null;
   o.playlistName = options.playlistName ?? null;
   o.activityProviderId = options.activityProviderId ?? 'activityProviderId';
+  o.activityId = options.activityId ?? 'activityId';
   o.activityName = options.activityName ?? null;
   o.activityUrl = options.activityUrl ?? null;
   o.dateCreated = options.dateCreated ?? null;

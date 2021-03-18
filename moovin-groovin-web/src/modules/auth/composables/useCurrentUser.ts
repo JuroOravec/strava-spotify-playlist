@@ -61,6 +61,7 @@ const GET_CURRENT_USER = gql`
         name
         isActivityProvider
         isPlaylistProvider
+        isAuthProvider
       }
     }
   }

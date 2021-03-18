@@ -13,6 +13,7 @@ interface UserTokenResponse {
   refresh_token: UserTokenModel['refreshToken'];
   expires_at: UserTokenModel['expiresAt'];
   scope: UserTokenModel['scope'];
+  extra: UserTokenModel['extra'];
 }
 
 interface UserTokenMetaResponse {
@@ -66,8 +67,9 @@ interface TokenStoreSQLQueries extends PGQueries {
         UserTokenResponse['provider_id'],
         UserTokenResponse['expires_at'],
         UserTokenResponse['access_token'],
-        UserTokenResponse['refresh_token'],
-        UserTokenResponse['scope'] | undefined
+        UserTokenResponse['refresh_token'] | undefined,
+        UserTokenResponse['scope'] | undefined,
+        UserTokenResponse['extra'] | undefined
       ]
     >[],
     UserTokenMetaResponse

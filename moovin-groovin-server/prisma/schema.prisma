@@ -1,0 +1,93 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["createMany"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_PG_URL")
+}
+
+model User {
+  internalUserId       String                 @id @map("internal_user_id") @db.Uuid
+  email                String?                @unique @db.VarChar
+  nameDisplay          String?                @map("name_display") @db.VarChar
+  nameFamily           String?                @map("name_family") @db.VarChar
+  nameGiven            String?                @map("name_given") @db.VarChar
+  photo                String?                @db.VarChar
+  loginProvider        String                 @map("login_provider") @db.VarChar
+  userActivityPlaylist UserActivityPlaylist[]
+  userConfig           UserConfig?
+  userToken            UserToken[]
+  userTrack            UserTrack[]
+
+  @@map("app_user")
+}
+
+model Session {
+  sid    String   @id @db.VarChar
+  sess   Json     @db.Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], name: "IDX_session_expire")
+  @@map("session")
+}
+
+model UserActivityPlaylist {
+  internalUserId     String  @map("internal_user_id") @db.Uuid
+  activityId         String  @map("activity_id") @db.VarChar
+  playlistId         String  @map("playlist_id") @db.VarChar
+  playlistUrl        String  @map("playlist_url") @db.VarChar
+  tracksAssigned     Boolean @default(false) @map("tracks_assigned")
+  activityProviderId String  @default("strava") @map("activity_provider_id") @db.VarChar
+  activityName       String? @map("activity_name") @db.VarChar
+  playlistProviderId String  @default("spotify") @map("playlist_provider_id") @db.VarChar
+  playlistName       String? @map("playlist_name") @db.VarChar
+  dateCreated        BigInt? @map("date_created")
+  user               User    @relation(fields: [internalUserId], references: [internalUserId])
+
+  @@id([playlistProviderId, playlistId])
+  @@unique([internalUserId, activityProviderId, activityId, playlistProviderId, playlistId], name: "unique_user_playlist_activity")
+  @@map("user_activity_playlist")
+}
+
+model UserConfig {
+  internalUserId              String  @id @map("internal_user_id") @db.Uuid
+  playlistCollaborative       Boolean @map("playlist_collaborative")
+  playlistPublic              Boolean @map("playlist_public")
+  playlistAutoCreate          Boolean @map("playlist_auto_create")
+  playlistDescriptionTemplate String? @map("playlist_description_template") @db.VarChar
+  playlistTitleTemplate       String? @map("playlist_title_template") @db.VarChar
+  activityDescriptionEnabled  Boolean @map("activity_description_enabled")
+  activityDescriptionTemplate String? @map("activity_description_template") @db.VarChar
+  user                        User    @relation(fields: [internalUserId], references: [internalUserId])
+
+  @@map("user_config")
+}
+
+model UserToken {
+  internalUserId String  @map("internal_user_id") @db.Uuid
+  providerUserId String  @map("provider_user_id") @db.VarChar
+  providerId     String  @map("provider_id") @db.VarChar
+  expiresAt      Int     @map("expires_at")
+  accessToken    String  @map("access_token") @db.VarChar
+  refreshToken   String? @map("refresh_token") @db.VarChar
+  scope          String? @db.VarChar
+  extra          Json?
+  user           User    @relation(fields: [internalUserId], references: [internalUserId])
+
+  @@id([providerUserId, providerId])
+  @@unique([internalUserId, providerId], name: "user_token_internal_user_id_provider_id_key")
+  @@map("user_token")
+}
+
+model UserTrack {
+  internalUserId       String   @db.Uuid @map("internal_user_id")
+  trackId              String   @db.VarChar @map("track_id")
+  startTime            BigInt   @map("start_time")
+  playlistProviderId   String   @default("spotify") @db.VarChar @map("playlist_provider_id")
+  user                 User     @relation(fields: [internalUserId], references: [internalUserId])
+
+  @@map("user_track")
+  @@id([internalUserId, playlistProviderId, trackId, startTime])
+}

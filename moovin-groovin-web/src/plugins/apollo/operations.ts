@@ -14,4 +14,4 @@ export const namedOperations = {
     updateCurrentUserConfig: 'updateCurrentUserConfig'
   }
 }
-// Generated on 2021-03-07T14:07:57+00:00
+// Generated on 2021-03-14T17:42:57+00:00

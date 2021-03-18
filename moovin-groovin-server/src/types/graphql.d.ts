@@ -272,7 +272,7 @@ export type GqlProviderResolvers<ContextType = ResolverContext, ParentType exten
 
 export type GqlAuthProviderResolvers = EnumResolverSignature<{ FACEBOOK?: any, GOOGLE?: any }, GqlResolversTypes['AuthProvider']>;
 
-export type GqlPlaylistProviderResolvers = EnumResolverSignature<{ SPOTIFY?: any, APPLE?: any }, GqlResolversTypes['PlaylistProvider']>;
+export type GqlPlaylistProviderResolvers = EnumResolverSignature<{ SPOTIFY?: any, APPLE_MUSIC?: any }, GqlResolversTypes['PlaylistProvider']>;
 
 export type GqlActivityProviderResolvers = EnumResolverSignature<{ STRAVA?: any }, GqlResolversTypes['ActivityProvider']>;
 
@@ -325,4 +325,4 @@ export type GqlResolvers<ContextType = ResolverContext> = {
 
 
 
-// Generated on 2021-03-07T14:13:09+00:00
+// Generated on 2021-03-18T21:00:03+00:00

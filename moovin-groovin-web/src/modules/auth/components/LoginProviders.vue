@@ -3,40 +3,33 @@
     <v-list>
       <v-list-item
         v-for="loginProvider in loginProviders"
-        :key="loginProvider.provider"
+        :key="loginProvider.providerId"
         class="LoginProviders__login"
-        :class="'LoginProviders__login--' + loginProvider.provider"
+        :class="'LoginProviders__login--' + loginProvider.providerId"
         link
-        @click="openAuthWindow(loginProvider.provider, { onDidCloseWindow: refetch })"
+        @click="openAuthWindow(loginProvider.providerId, { onDidCloseWindow: refetch })"
       >
-        <v-list-item-title>{{ loginProvider.title }}</v-list-item-title>
+        <v-list-item-title>{{ loginProvider.name }}</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-card>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { computed, defineComponent, unref } from '@vue/composition-api';
 
 import useCurrentUser from '../composables/useCurrentUser';
-import useOpenAuthWindow, { AuthProvider } from '../composables/useOpenAuthWindow';
-
-const loginProviders = [
-  {
-    provider: AuthProvider.FACEBOOK,
-    title: 'Facebook',
-  },
-  {
-    provider: AuthProvider.GOOGLE,
-    title: 'Google',
-  },
-];
+import useOpenAuthWindow from '../composables/useOpenAuthWindow';
+import useProviders from '../composables/useProviders';
 
 const LoginProviders = defineComponent({
   name: 'LoginProviders',
   setup() {
     const { openAuthWindow } = useOpenAuthWindow();
     const { refetch } = useCurrentUser();
+    const { providers } = useProviders();
+
+    const loginProviders = computed(() => unref(providers).filter((p) => p.isAuthProvider));
 
     return {
       loginProviders,

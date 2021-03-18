@@ -9,7 +9,8 @@ SELECT
   target_token.expires_at,
   target_token.access_token,
   target_token.refresh_token,
-  target_token.scope
+  target_token.scope,
+  target_token.extra
 FROM  
   (values
     %L

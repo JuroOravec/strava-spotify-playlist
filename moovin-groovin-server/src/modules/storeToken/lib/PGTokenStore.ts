@@ -3,7 +3,6 @@ import uniqWith from 'lodash/uniqWith';
 import isNil from 'lodash/isNil';
 import groupBy from 'lodash/groupBy';
 
-import logger from '../../../lib/logger';
 import PGStore from '../../../lib/PGStore';
 import type {
   TokenStore,
@@ -37,6 +36,7 @@ const transformAuthTokenResponse = (
   refreshToken: token.refresh_token,
   expiresAt: Number.parseInt(token.expires_at as any),
   scope: token.scope,
+  extra: token.extra,
 });
 
 const dedupeAuthToken = (tokenData: UserTokenModel[]): UserTokenModel[] =>
@@ -190,6 +190,7 @@ class PGTokenStore extends PGStore<TokenStoreSQLQueries> implements TokenStore {
           token.accessToken,
           token.refreshToken,
           token.scope,
+          token.extra,
         ] as const
     );
 

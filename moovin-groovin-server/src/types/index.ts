@@ -10,13 +10,16 @@ export enum ServerModuleName {
   HOST = 'host',
   GRAPHQL = 'graphql',
   OAUTH = 'oauth',
+  OAUTH_APPLE_MUSIC = 'oauthAppleMusic',
   OAUTH_FACEBOOK = 'oauthFacebook',
   OAUTH_GOOGLE = 'oauthGoogle',
   OAUTH_SPOTIFY = 'oauthSpotify',
   OAUTH_STRAVA = 'oauthStrava',
   OPENAPI = 'openapi',
   PLAYLIST = 'playlist',
+  PLAYLIST_APPLE = 'playlistApple',
   PLAYLIST_SPOTIFY = 'playlistSpotify',
+  PRISMA = 'prisma',
   ROUTER = 'router',
   SESSION = 'session',
   STORE_CONFIG = 'storeConfig',
@@ -35,6 +38,7 @@ export enum AuthProvider {
 }
 
 export enum PlaylistProvider {
+  // APPLE_MUSIC = 'apple-music',
   SPOTIFY = 'spotify',
 }
 

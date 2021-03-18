@@ -25,12 +25,14 @@
 //                       - https://stackoverflow.com/questions/62540038/how-to-forward-my-domain-registered-with-aws-route53-to-google-my-business
 //                       - https://stackoverflow.com/questions/45333803/redirect-to-domain-from-subdomain-aws-route53
 // TODO: nice to have - Rename SafeInvoke to capture or captureError
+// TODO: nice to have - ETA as templating engine? https://eta.js.org/docs/examples/express
 
 import { Pool } from 'pg';
 import { v5 as uuidV5 } from 'uuid';
 import isNil from 'lodash/isNil';
 import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
+import ms from 'ms';
 
 import './lib/env';
 import createServerContextManager from './lib/manageServerContext';
@@ -43,6 +45,7 @@ import createSessionModule from './modules/session';
 import createOpenApiModule from './modules/openapi';
 import createRouterModule from './modules/router';
 import createGraphqlModule from './modules/graphql';
+import createPrismaModule from './modules/prisma';
 import createStoreConfigModule from './modules/storeConfig';
 import createStoreTokenModule from './modules/storeToken';
 import createStoreUserModule from './modules/storeUser';
@@ -50,14 +53,16 @@ import createStoreSessionModule from './modules/storeSession';
 import createStoreTrackModule from './modules/storeTrack';
 import createStorePlaylistModule from './modules/storePlaylist';
 import createOAuthModule from './modules/oauth';
-import createOAuthGoogleModule from './modules/oauthGoogle';
 import createOAuthFacebookModule from './modules/oauthFacebook';
+import createOAuthGoogleModule from './modules/oauthGoogle';
+// import createOAuthAppleMusicModule from './modules/oauthAppleMusic';
 import createOAuthSpotifyModule from './modules/oauthSpotify';
-import createApiStravaModule from './modules/apiStrava';
 import createOAuthStravaModule from './modules/oauthStrava';
+import createApiStravaModule from './modules/apiStrava';
 import createApiSpotifyModule from './modules/apiSpotify';
 import createTrackHistoryModule from './modules/trackHistory';
 import createStravaWebhookModule from './modules/stravaWebhook';
+import createPlaylistAppleModule from './modules/playlistApple';
 import createPlaylistSpotifyModule from './modules/playlistSpotify';
 import createPlaylistModule from './modules/playlist';
 import createErrorHandlerModule from './modules/errorHandler';
@@ -175,37 +180,29 @@ const main = async () => {
     clientSecret: process.env.OAUTH_GOOGLE_CLIENT_SECRET || '',
   });
 
+  // const oauthAppleMusicModule = createOAuthAppleMusicModule({
+  //   teamId: process.env.OAUTH_APPLE_MUSIC_TEAM_ID || '',
+  //   keyId: process.env.OAUTH_APPLE_MUSIC_KEY_ID || '',
+  // });
+
   const oauthSpotifyModule = createOAuthSpotifyModule({
     clientId: process.env.OAUTH_SPOTIFY_CLIENT_ID || '',
     clientSecret: process.env.OAUTH_SPOTIFY_CLIENT_SECRET || '',
-    /** Ensure access token is valid for at least 5 minutes ahead of expiry */
-    tokenExpiryCutoff: 5 * 60,
   });
 
   const oauthStravaModule = createOAuthStravaModule({
     clientId: process.env.OAUTH_STRAVA_CLIENT_ID || '',
     clientSecret: process.env.OAUTH_STRAVA_CLIENT_SECRET || '',
-    /** Ensure access token is valid for at least 5 minutes ahead of expiry */
-    tokenExpiryCutoff: 5 * 60,
   });
 
   const oauthModule = createOAuthModule({
     callbackUrlRoot: `/api/v1/auth`,
     // Passport is initialized in session module to work correctly
     initializePassport: false,
+    /** Ensure access token is valid for at least 5 minutes ahead of expiry */
+    tokenExpiryCutoff: ms('5m'),
     providers: (({ modules }) => [
-      {
-        providerId: PlaylistProvider.SPOTIFY,
-        oauth: modules.oauthSpotify.oauth,
-        loginHandler: modules.oauthSpotify.handlers.authLogin,
-        callbackHandler: modules.oauthSpotify.handlers.authCallback,
-      },
-      {
-        providerId: ActivityProvider.STRAVA,
-        oauth: modules.oauthStrava.oauth,
-        loginHandler: modules.oauthStrava.handlers.authLogin,
-        callbackHandler: modules.oauthStrava.handlers.authCallback,
-      },
+      // Auth
       {
         providerId: AuthProvider.FACEBOOK,
         isAuthProvider: true,
@@ -219,6 +216,26 @@ const main = async () => {
         oauth: modules.oauthGoogle.oauth,
         loginHandler: modules.oauthGoogle.handlers.authLogin,
         callbackHandler: modules.oauthGoogle.handlers.authCallback,
+      },
+      // Playlist
+      // {
+      //   providerId: PlaylistProvider.APPLE_MUSIC,
+      //   oauth: modules.oauthAppleMusic.oauth,
+      //   loginHandler: modules.oauthAppleMusic.handlers.authLogin,
+      //   callbackHandler: modules.oauthAppleMusic.handlers.authCallback,
+      // },
+      {
+        providerId: PlaylistProvider.SPOTIFY,
+        oauth: modules.oauthSpotify.oauth,
+        loginHandler: modules.oauthSpotify.handlers.authLogin,
+        callbackHandler: modules.oauthSpotify.handlers.authCallback,
+      },
+      // Activity
+      {
+        providerId: ActivityProvider.STRAVA,
+        oauth: modules.oauthStrava.oauth,
+        loginHandler: modules.oauthStrava.handlers.authLogin,
+        callbackHandler: modules.oauthStrava.handlers.authCallback,
       },
     ]) as OAuthInputFn<AppServerModules>,
   });
@@ -252,6 +269,12 @@ const main = async () => {
   // ///////////////////////////
   // STORES
   // ///////////////////////////
+
+  const prismaModule = createPrismaModule({
+    clientOptions: {
+      log: !isProduction() ? ['info', 'warn'] : ['query', 'info', 'warn'],
+    },
+  });
 
   // Create a single pool connection shared by the store modules
   const pool = new Pool({
@@ -323,6 +346,7 @@ const main = async () => {
       : undefined,
   });
 
+  const playlistAppleModule = createPlaylistAppleModule();
   const playlistSpotifyModule = createPlaylistSpotifyModule();
 
   const trackHistory = createTrackHistoryModule({
@@ -332,6 +356,10 @@ const main = async () => {
   const playlistModule = createPlaylistModule({
     appNamePublic: appName,
     playlistProviders: ({ modules }: ModuleContext<AppServerModules>) => [
+      // {
+      //   providerId: PlaylistProvider.APPLE_MUSIC,
+      //   ...modules.playlistApple.services,
+      // },
       {
         providerId: PlaylistProvider.SPOTIFY,
         ...modules.playlistSpotify.services,
@@ -349,6 +377,7 @@ const main = async () => {
     name: appName,
     // Note: The order of modules determines their install order
     modules: [
+      prismaModule,
       storeUserModule,
       storeTokenModule,
       storeConfigModule,
@@ -358,6 +387,7 @@ const main = async () => {
       baseModule,
       hostModule,
       oauthModule,
+      // oauthAppleMusicModule,
       oauthFacebookModule,
       oauthGoogleModule,
       oauthSpotifyModule,
@@ -369,6 +399,7 @@ const main = async () => {
       apiSpotifyModule,
       apiStravaModule,
       stravaWebhookModule,
+      // playlistAppleModule,
       playlistSpotifyModule,
       playlistModule,
       graphqlModule,

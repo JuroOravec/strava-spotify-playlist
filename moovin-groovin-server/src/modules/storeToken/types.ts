@@ -12,6 +12,8 @@ export interface AuthToken {
   refreshToken: string;
   /** Permission scope for a particular user at particular service */
   scope: string | null;
+  /** Provider-specific extra data  */
+  extra?: any;
 }
 
 /** OAuth token for a third party service (provider) associated with a particular user */

@@ -10,7 +10,7 @@ import createLocaltunnel from './lib/localtunnel';
 import logger from '../../lib/logger';
 import type { HostData } from './data';
 
-const createBaseInstaller = (): Installer => {
+const createHostInstaller = (): Installer => {
   const install: Installer = async function install(
     this: ServerModule<Services, Handlers, HostData>
   ) {
@@ -29,4 +29,4 @@ const createBaseInstaller = (): Installer => {
   return install;
 };
 
-export default createBaseInstaller;
+export default createHostInstaller;

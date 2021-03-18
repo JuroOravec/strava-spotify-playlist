@@ -61,7 +61,7 @@ const openWindow = (url: string, options: OpenWindowOptions = {}): void => {
   // Listen until the window closes
   // See https://stackoverflow.com/a/48240128/9788634
   if (onDidCloseWindow) {
-    const timer = setInterval(() => { 
+    const timer = setInterval(() => {
       if (!newWindow.closed) return;
       clearInterval(timer);
       onDidCloseWindow();

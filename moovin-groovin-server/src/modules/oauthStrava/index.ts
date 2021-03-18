@@ -12,6 +12,7 @@ import createOAuthServices, {
 } from '../oauth/services/accessToken';
 import createOAuth from './oauth';
 import type { OAuthStravaData, OAuthStravaExternalData } from './data';
+import { UserTokenModel } from '../storeToken/types';
 
 type OAuthStravaModuleOptions = SetRequiredFields<
   OAuthStravaExternalData,
@@ -26,9 +27,9 @@ type OAuthStravaModule = ServerModule<
 
 const doRefreshAccessToken = async function doRefreshAccessToken(
   this: OAuthStravaModule,
-  refreshToken: string
+  oldToken: UserTokenModel
 ) {
-  const refreshedToken = await strava.oauth.refreshToken(refreshToken);
+  const refreshedToken = await strava.oauth.refreshToken(oldToken.refreshToken);
   return {
     providerId: ActivityProvider.STRAVA,
     accessToken: refreshedToken.access_token,
@@ -40,8 +41,6 @@ const doRefreshAccessToken = async function doRefreshAccessToken(
 const createOAuthStravaModule = (
   options: OAuthStravaModuleOptions
 ): OAuthStravaModule => {
-  const { tokenExpiryCutoff = 0 } = options;
-
   return new ServerModule({
     name: ServerModuleName.OAUTH_STRAVA,
     handlers: createOAuthHandlers(ActivityProvider.STRAVA),
@@ -51,7 +50,6 @@ const createOAuthStravaModule = (
     oauth: createOAuth(),
     data: {
       ...options,
-      tokenExpiryCutoff,
     },
   });
 };

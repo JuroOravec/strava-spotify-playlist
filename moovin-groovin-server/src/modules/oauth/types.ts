@@ -1,5 +1,6 @@
 import type { RequestHandler } from 'express';
 
+import type { OptionalArray } from '@moovin-groovin/shared';
 import type AppServerModules from '../../types/AppServerModules';
 import type {
   OAuthCreator,
@@ -20,7 +21,7 @@ export type OAuthOptions = {
   validateScope?: () => boolean;
 };
 
-export type OAuthInput = OAuthOptions | OAuthOptions[];
+export type OAuthInput = OptionalArray<OAuthOptions>;
 
 export type OAuthInputFn<
   TModules extends AnyServerModules = AnyServerModules

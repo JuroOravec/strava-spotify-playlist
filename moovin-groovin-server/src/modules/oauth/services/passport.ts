@@ -1,6 +1,5 @@
 import { v4 as genUuid } from 'uuid';
 
-import logger from '../../../lib/logger';
 import ServerModule, {
   assertContext,
   Data,
@@ -90,15 +89,13 @@ const createOAuthPassportServices = (): OAuthPassportServices => {
     isAuthenticated?: boolean
   ): Promise<UserTokenMeta | null> {
     assertContext(this.context);
+    const { upsertToken } = this.context.modules.storeToken.services;
 
     if (!isAuthenticated || !internalUserId) {
       throw new Error(
         'Not authenticated. Cannot add integration to unknown user.'
       );
     }
-
-    assertContext(this.context);
-    const { upsertToken } = this.context.modules.storeToken.services;
     return upsertToken({
       ...token,
       internalUserId,

@@ -1,16 +1,17 @@
-import capitalize from 'lodash/capitalize';
+import toLower from 'lodash/toLower';
+import startCase from 'lodash/startCase';
 import includes from 'lodash/includes';
 
-import { ServerModule } from '../../../lib/ServerModule';
+import type { ServerModule } from '../../../lib/ServerModule';
 import {
   AuthProvider,
   ActivityProvider,
   PlaylistProvider,
 } from '../../../types';
 import type { GqlResolvers } from '../../../types/graphql';
-import { OAuthData } from '../data';
-import { OAuthHandlers } from '../handlers';
-import { OAuthServices } from '../services';
+import type { OAuthData } from '../data';
+import type { OAuthHandlers } from '../handlers';
+import type { OAuthServices } from '../services';
 
 const authProviderIds = Object.values(AuthProvider);
 const activityProviderIds = Object.values(ActivityProvider);
@@ -32,7 +33,8 @@ function createOAuthGraphqlResolvers(
     },
 
     Provider: {
-      name: (parent) => capitalize(parent.providerId),
+      // Convert to Title Case, see https://stackoverflow.com/a/38084493/9788634
+      name: (parent) => startCase(toLower(parent.providerId)),
       isActivityProvider: (parent) =>
         includes(activityProviderIds, parent.providerId),
       isAuthProvider: (parent) => includes(authProviderIds, parent.providerId),

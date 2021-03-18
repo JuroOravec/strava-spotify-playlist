@@ -9,13 +9,17 @@ type BaseModuleOptions = Partial<BaseData>;
 type BaseModule = ServerModule<Services, Handlers, BaseData>;
 
 const createBaseModule = (options: BaseModuleOptions = {}): BaseModule => {
-  const { root = path.normalize(__dirname + '/../..') } = options;
+  const {
+    root = path.normalize(__dirname + '/../..'),
+    viewDirs = [],
+  } = options;
   return new ServerModule({
     name: ServerModuleName.BASE,
     install: createInstaller(),
     data: {
       ...options,
       root,
+      viewDirs,
     },
   });
 };

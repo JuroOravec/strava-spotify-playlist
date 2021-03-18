@@ -78,17 +78,18 @@ const createTrackHistoryServices = (): TrackHistoryServices => {
       async (aggPromise, { providerId, providerUserId, internalUserId }) => {
         await aggPromise;
 
-        const { result: tracks } = await asyncSafeInvoke(
-          () =>
-            playlistProviderApi?.getRecentlyPlayedTracks({
-              internalUserId,
-              providerId,
-              providerUserId,
-            }) ?? [],
+        await asyncSafeInvoke(
+          async () => {
+            const tracks =
+              (await playlistProviderApi?.getRecentlyPlayedTracks({
+                internalUserId,
+                providerId,
+                providerUserId,
+              })) ?? [];
+            return upsertUserTracks(tracks ?? []);
+          },
           (e) => logger.error(e)
         );
-
-        upsertUserTracks(tracks ?? []);
 
         await wait(this.data.delayPerUpdate);
       },

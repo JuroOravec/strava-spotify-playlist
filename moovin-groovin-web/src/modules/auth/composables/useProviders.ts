@@ -18,6 +18,7 @@ interface Provider {
   name: string;
   isActivityProvider: boolean;
   isPlaylistProvider: boolean;
+  isAuthProvider: boolean;
 }
 
 interface UseProviders {
@@ -37,6 +38,7 @@ gql`
       name
       isActivityProvider
       isPlaylistProvider
+      isAuthProvider
     }
   }
 `;
@@ -50,11 +52,13 @@ const transformProvider = ({
   name,
   isActivityProvider,
   isPlaylistProvider,
+  isAuthProvider,
 }: GqlgetAllProvidersQuery['getAllProviders'][0]): Provider => ({
   name,
   providerId,
   isActivityProvider,
   isPlaylistProvider,
+  isAuthProvider,
 });
 
 const transformGetAllProviders = ({

@@ -3,6 +3,7 @@ import type VueRouter from 'vue-router';
 import { Analytics } from 'analytics';
 import { getCurrentInstance, onBeforeUnmount, provide } from '@vue/composition-api';
 
+import applyMixinOnce from '@/modules/utils/utils/applyMixinOnce';
 import trackPageOnRouteChange, { StopHandle } from './track/trackPageOnRouteChange';
 import useAnalytics from './composables/useAnalytics';
 import type { AnalyticsConfig, AnalyticsInstance } from './types';
@@ -83,7 +84,7 @@ const installAnalytics = (
   if (installedVues.has(vueClass)) return analytics;
   installedVues.add(vueClass);
 
-  vueClass.mixin(createAnalyticsMixin());
+  applyMixinOnce(vueClass, createAnalyticsMixin());
 
   if (trackRouter) {
     vueClass.mixin(createAnalyticsTrackRouteMixin());

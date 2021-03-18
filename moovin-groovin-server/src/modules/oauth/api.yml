@@ -10,6 +10,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/RedirectUrlParam'
         - $ref: '#/components/parameters/StateParam'
+        - $ref: '#/components/parameters/IdTokenHintParam'
       responses:
         302:
           description: Redirects to auth URL
@@ -25,6 +26,7 @@ paths:
         - $ref: '#/components/parameters/ErrorDescriptionParam'
         - $ref: '#/components/parameters/ErrorReasonParam'
         - $ref: '#/components/parameters/RedirectUrlParam'
+        - $ref: '#/components/parameters/IdTokenHintParam'
         - $ref: '#/components/parameters/AuthUserParam'
         - $ref: '#/components/parameters/PromptParam'
       responses:
@@ -93,6 +95,14 @@ components:
         type: string
     AuthUserParam:
       name: authuser
+      in: query
+      allowReserved: false
+      allowEmptyValue: false
+      required: false
+      schema:
+        type: string
+    IdTokenHintParam:
+      name: id_token_hint
       in: query
       allowReserved: false
       allowEmptyValue: false
