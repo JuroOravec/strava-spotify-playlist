@@ -1,3 +1,6 @@
+// @ts-nocheck
+// TODO REMOVE NOCHECK
+
 import type Spotify from 'spotify-web-api-node';
 import Queue from 'better-queue';
 import chunk from 'lodash/chunk';

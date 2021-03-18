@@ -1,3 +1,6 @@
+// @ts-nocheck
+// TODO REMOVE NOCHECK
+
 import type AppServerModules from '../../types/AppServerModules';
 import type { ServerModuleName } from '../../types';
 

@@ -102,6 +102,10 @@ To have a service to sit behind a domain, we use Route 53.
 [Connect to EC2 instance using SSH](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstances.html?icmpid=docs_ec2_console)
 ([this one for Linux specifically](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html)).
 
+```
+sudo ssh -i ~/repos/strava-spotify-playlist/ssh/stravaspotifyplaylist-ec2-server.pem ec2-user@ec2-18-197-19-192.eu-central-1.compute.amazonaws.com    
+```
+
 #### Troubleshooting
 
 - `WARNING: UNPROTECTED PRIVATE KEY FILE! when trying to SSH into Amazon EC2 Instance`

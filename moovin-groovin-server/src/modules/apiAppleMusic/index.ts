@@ -1,3 +1,6 @@
+// @ts-nocheck
+// TODO REMOVE NOCHECK
+
 import ServerModule, { Handlers } from '../../lib/ServerModule';
 import { ServerModuleName, SetRequiredFields } from '../../types';
 import createInstaller from './install';
@@ -21,7 +24,7 @@ const createApiAppleMusicModule = (
   options: ApiAppleMusicModuleOptions
 ): ApiAppleMusicModule =>
   new ServerModule({
-    name: ServerModuleName.API_APPLEMUSIC,
+    name: ServerModuleName.API_APPLE_MUSIC,
     install: createInstaller(),
     close: createCloser(),
     services: createServices(),

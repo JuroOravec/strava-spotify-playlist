@@ -5,6 +5,7 @@ export enum ServerModuleName {
   ANALYTICS = 'analytics',
   API_SPOTIFY = 'apiSpotify',
   API_STRAVA = 'apiStrava',
+  API_APPLE_MUSIC = 'apiAppleMusic',
   BASE = 'base',
   ERR_HANDLER = 'errorHandler',
   HOST = 'host',
@@ -38,7 +39,7 @@ export enum AuthProvider {
 }
 
 export enum PlaylistProvider {
-  // APPLE_MUSIC = 'apple-music',
+  APPLE_MUSIC = 'apple-music',
   SPOTIFY = 'spotify',
 }
 
