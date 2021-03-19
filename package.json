@@ -2,8 +2,8 @@
   "name": "moovin-groovin",
   "private": true,
   "scripts": {
-    "build:server": "npm ci && npx lerna bootstrap && npx lerna run --scope \"*/server\" --scope \"*/shared\" build",
-    "build:web": "npm ci && npx lerna bootstrap && npx lerna run --scope \"*/web\" --scope \"*/shared\" build"
+    "build:server": "npm ci --also=dev && npx lerna bootstrap && npx lerna run --scope \"*/server\" typegen:prisma && npx lerna run --scope \"*/server\" --scope \"*/shared\" build",
+    "build:web": "npm ci --also=dev && npx lerna bootstrap && npx lerna run --scope \"*/web\" --scope \"*/shared\" build"
   },
   "devDependencies": {
     "lerna": "^3.22.1"

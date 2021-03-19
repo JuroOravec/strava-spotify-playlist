@@ -1,8 +1,13 @@
 import { RESTDataSource, RequestOptions } from 'apollo-datasource-rest';
+// @ts-ignore
 import type { ResponseRoot } from '@yujinakayama/apple-music/dist/serverTypes/responseRoot';
+// @ts-ignore
 import type { Album } from '@yujinakayama/apple-music/dist/serverTypes/Album';
+// @ts-ignore
 import type { Station } from '@yujinakayama/apple-music/dist/serverTypes/Station';
+// @ts-ignore
 import type { Song } from '@yujinakayama/apple-music/dist/serverTypes/Song';
+// @ts-ignore
 import type { Playlist } from '@yujinakayama/apple-music/dist/serverTypes/Playlist';
 import type { AppleMusicApiOptions } from '../types';
 
