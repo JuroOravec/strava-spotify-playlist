@@ -92,3 +92,7 @@ npm run test:debug
 #### Debug with VSCode
 
 Add these [contents](https://github.com/cdimascio/generator-express-no-stress/blob/next/assets/.vscode/launch.json) to your `.vscode/launch.json` file
+
+## Prisma
+
+https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project-typescript-postgres
