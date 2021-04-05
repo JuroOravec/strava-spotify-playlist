@@ -62,6 +62,50 @@ Prefer to format postgres queries using `pg-format` before passing them to postg
 
 Now you have a local instance of Postgress with data from production on it.
 
+### Connect to PostgresSQL-compatible AWS Aurora locally
+
+Follow this when you need to connect to prod DB that's running on AWS Aurora. Such as when you want to connect to AWS Aurora via TablePlus or local server instance.
+
+1. Create SSH Tunnel via remote server that's in the same VPN as the AWS Aurora instance.
+
+   ```sh
+   ssh <remote-server-user>@<remove-server-ip-or-address> -i /path/to/ssh/private-key.pem -L <local-port>:<aws-aurora-public-addresss>:<aws-aurora-port>
+   ```
+
+   Example (as of 2020-04-05):
+
+   ```sh
+   ssh ec2-user@ec2-18-197-19-192.eu-central-1.compute.amazonaws.com -i ~/repos/strava-spotify-playlist/ssh/stravaspotifyplaylist-ec2-server.pem -L 54321:moovin-groovin-prod-aurora.cluster-cyem19azm4hk.eu-central-1.rds.amazonaws.com:5432
+   ```
+
+   The command above ensures that, for as long the command is running, `127.0.0.1:54321` will forward to the AWS Aurora instance.
+
+2. Update local `.env` to use local address to connect to the DB
+
+   ```sh
+   DB_PG_HOST=127.0.0.1
+   DB_PG_PORT=54321
+   ```
+
+More on connecting to AWS Aurora
+
+- <https://forums.aws.amazon.com/thread.jspa?threadID=287793>
+
+More on SSH Tunnel
+
+- <https://unix.stackexchange.com/questions/412750/ssh-port-forwarding-with-private-key>
+- <https://www.howtogeek.com/168145/how-to-use-ssh-tunneling/>
+
+### Pricing
+
+[Article on AWS Aurora pricing](https://www.jeremydaly.com/aurora-serverless-the-good-the-bad-and-the-scalable/)
+
+#### Migrating from PostgresSQL RDS to AWS Aurora
+
+[AWS Guide](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.Migrating.html#AuroraPostgreSQL.Migrating.RDSPostgreSQL.Import.Console)
+
+[Exporting data from PostgreSQL v12 to v10](https://dba.stackexchange.com/a/284263)
+
 ---
 
 ## Web server cookies (session)
